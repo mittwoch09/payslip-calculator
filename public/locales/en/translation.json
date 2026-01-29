@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "Payslip Calculator",
+    "subtitle": "Singapore Construction Workers",
+    "disclaimer": "This is an estimate only. For disputes, consult MOM."
+  },
+  "home": {
+    "scan": "Scan Timecard",
+    "manual": "Enter Manually",
+    "scanDesc": "Take a photo of your timecard",
+    "manualDesc": "Type your hours manually"
+  },
+  "form": {
+    "date": "Date",
+    "clockIn": "Clock In",
+    "clockOut": "Clock Out",
+    "break": "Break (mins)",
+    "dayType": "Day Type",
+    "normal": "Normal Day",
+    "restDay": "Rest Day",
+    "publicHoliday": "Public Holiday",
+    "addDay": "Add Day",
+    "removeDay": "Remove",
+    "next": "Next",
+    "back": "Back",
+    "confirm": "Confirm"
+  },
+  "salary": {
+    "title": "Salary Details",
+    "monthly": "Monthly Basic Salary (SGD)",
+    "employeeName": "Your Name",
+    "employerName": "Company Name",
+    "deductions": "Deductions",
+    "accommodation": "Accommodation",
+    "meals": "Meals",
+    "advances": "Salary Advance",
+    "otherDeductions": "Other Deductions",
+    "allowances": "Allowances",
+    "transport": "Transport",
+    "food": "Food",
+    "otherAllowances": "Other Allowances",
+    "calculate": "Calculate Payslip"
+  },
+  "payslip": {
+    "title": "Payslip Estimate",
+    "period": "Pay Period",
+    "employee": "Employee",
+    "employer": "Employer",
+    "basicPay": "Basic Pay",
+    "otPay": "Overtime Pay",
+    "otHours": "OT Hours",
+    "otRate": "OT Rate",
+    "restDayPay": "Rest Day Pay",
+    "publicHolidayPay": "Public Holiday Pay",
+    "totalAllowances": "Total Allowances",
+    "grossPay": "Gross Pay",
+    "totalDeductions": "Total Deductions",
+    "netPay": "Net Pay",
+    "startOver": "Start Over",
+    "breakdown": "Detailed Breakdown"
+  },
+  "ocr": {
+    "processing": "Reading your timecard...",
+    "review": "Review Extracted Data",
+    "reviewDesc": "Please check and correct if needed",
+    "retake": "Retake Photo",
+    "upload": "Upload Image",
+    "capture": "Take Photo",
+    "noCamera": "Camera not available. Please upload an image instead."
+  },
+  "warnings": {
+    "otExceeded": "Warning: OT exceeds 72 hours/month limit",
+    "dailyExceeded": "Warning: Daily hours exceed 12-hour limit",
+    "accommodationCapped": "Accommodation deduction capped at 25% of salary",
+    "deductionsCapped": "Total deductions capped at 50% of salary",
+    "levyNotAllowed": "Employer levy cannot be deducted from worker's salary"
+  },
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ta": "தமிழ்",
+    "bn": "বাংলা",
+    "ms": "Bahasa Melayu"
+  }
+}

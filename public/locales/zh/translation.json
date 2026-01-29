@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "工资单计算器",
+    "subtitle": "新加坡建筑工人",
+    "disclaimer": "此为估算金额。如有争议，请咨询人力部(MOM)。"
+  },
+  "home": {
+    "scan": "扫描考勤卡",
+    "manual": "手动输入",
+    "scanDesc": "拍摄您的考勤卡照片",
+    "manualDesc": "手动输入您的工时"
+  },
+  "form": {
+    "date": "日期",
+    "clockIn": "上班时间",
+    "clockOut": "下班时间",
+    "break": "休息时间（分钟）",
+    "dayType": "日类型",
+    "normal": "普通工作日",
+    "restDay": "休息日",
+    "publicHoliday": "公共假期",
+    "addDay": "添加一天",
+    "removeDay": "删除",
+    "next": "下一步",
+    "back": "返回",
+    "confirm": "确认"
+  },
+  "salary": {
+    "title": "工资信息",
+    "monthly": "月基本工资（新币）",
+    "employeeName": "您的姓名",
+    "employerName": "公司名称",
+    "deductions": "扣除项",
+    "accommodation": "住宿",
+    "meals": "餐费",
+    "advances": "工资预支",
+    "otherDeductions": "其他扣除",
+    "allowances": "津贴",
+    "transport": "交通",
+    "food": "伙食",
+    "otherAllowances": "其他津贴",
+    "calculate": "计算工资单"
+  },
+  "payslip": {
+    "title": "工资单估算",
+    "period": "工资期间",
+    "employee": "员工",
+    "employer": "雇主",
+    "basicPay": "基本工资",
+    "otPay": "加班费",
+    "otHours": "加班小时",
+    "otRate": "加班费率",
+    "restDayPay": "休息日工资",
+    "publicHolidayPay": "公共假期工资",
+    "totalAllowances": "津贴总额",
+    "grossPay": "总工资",
+    "totalDeductions": "扣除总额",
+    "netPay": "实发工资",
+    "startOver": "重新开始",
+    "breakdown": "明细"
+  },
+  "ocr": {
+    "processing": "正在读取您的考勤卡...",
+    "review": "检查提取的数据",
+    "reviewDesc": "请检查并在需要时更正",
+    "retake": "重新拍照",
+    "upload": "上传图片",
+    "capture": "拍照",
+    "noCamera": "摄像头不可用。请上传图片。"
+  },
+  "warnings": {
+    "otExceeded": "警告：加班超过每月72小时限制",
+    "dailyExceeded": "警告：每日工时超过12小时限制",
+    "accommodationCapped": "住宿扣除上限为工资的25%",
+    "deductionsCapped": "总扣除上限为工资的50%",
+    "levyNotAllowed": "雇主人头税不得从工人工资中扣除"
+  },
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ta": "தமிழ்",
+    "bn": "বাংলা",
+    "ms": "Bahasa Melayu"
+  }
+}

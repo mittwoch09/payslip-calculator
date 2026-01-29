@@ -1,0 +1,85 @@
+{
+  "app": {
+    "title": "Kalkulator Slip Gaji",
+    "subtitle": "Pekerja Pembinaan Singapura",
+    "disclaimer": "Ini hanya anggaran. Untuk pertikaian, hubungi MOM."
+  },
+  "home": {
+    "scan": "Imbas Kad Masa",
+    "manual": "Masukkan Secara Manual",
+    "scanDesc": "Ambil gambar kad masa anda",
+    "manualDesc": "Taipkan waktu kerja anda"
+  },
+  "form": {
+    "date": "Tarikh",
+    "clockIn": "Waktu Masuk",
+    "clockOut": "Waktu Keluar",
+    "break": "Rehat (minit)",
+    "dayType": "Jenis Hari",
+    "normal": "Hari Biasa",
+    "restDay": "Hari Rehat",
+    "publicHoliday": "Cuti Umum",
+    "addDay": "Tambah Hari",
+    "removeDay": "Buang",
+    "next": "Seterusnya",
+    "back": "Kembali",
+    "confirm": "Sahkan"
+  },
+  "salary": {
+    "title": "Butiran Gaji",
+    "monthly": "Gaji Pokok Bulanan (SGD)",
+    "employeeName": "Nama Anda",
+    "employerName": "Nama Syarikat",
+    "deductions": "Potongan",
+    "accommodation": "Penginapan",
+    "meals": "Makanan",
+    "advances": "Pendahuluan Gaji",
+    "otherDeductions": "Potongan Lain",
+    "allowances": "Elaun",
+    "transport": "Pengangkutan",
+    "food": "Makanan",
+    "otherAllowances": "Elaun Lain",
+    "calculate": "Kira Slip Gaji"
+  },
+  "payslip": {
+    "title": "Anggaran Slip Gaji",
+    "period": "Tempoh Gaji",
+    "employee": "Pekerja",
+    "employer": "Majikan",
+    "basicPay": "Gaji Pokok",
+    "otPay": "Bayaran Lebih Masa",
+    "otHours": "Jam OT",
+    "otRate": "Kadar OT",
+    "restDayPay": "Bayaran Hari Rehat",
+    "publicHolidayPay": "Bayaran Cuti Umum",
+    "totalAllowances": "Jumlah Elaun",
+    "grossPay": "Gaji Kasar",
+    "totalDeductions": "Jumlah Potongan",
+    "netPay": "Gaji Bersih",
+    "startOver": "Mula Semula",
+    "breakdown": "Butiran Terperinci"
+  },
+  "ocr": {
+    "processing": "Membaca kad masa anda...",
+    "review": "Semak Data yang Diekstrak",
+    "reviewDesc": "Sila semak dan betulkan jika perlu",
+    "retake": "Ambil Gambar Semula",
+    "upload": "Muat Naik Gambar",
+    "capture": "Ambil Gambar",
+    "noCamera": "Kamera tidak tersedia. Sila muat naik gambar."
+  },
+  "warnings": {
+    "otExceeded": "Amaran: OT melebihi had 72 jam/bulan",
+    "dailyExceeded": "Amaran: Waktu harian melebihi had 12 jam",
+    "accommodationCapped": "Potongan penginapan dihadkan pada 25% gaji",
+    "deductionsCapped": "Jumlah potongan dihadkan pada 50% gaji",
+    "levyNotAllowed": "Levi majikan tidak boleh dipotong daripada gaji pekerja"
+  },
+  "lang": {
+    "en": "English",
+    "zh": "中文",
+    "ta": "தமிழ்",
+    "bn": "বাংলা",
+    "ms": "Bahasa Melayu"
+  }
+}
