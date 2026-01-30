@@ -12,9 +12,12 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "canvas": "^3.2.1",
     "i18next": "^25.8.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
+    "pdf-to-png-converter": "^3.11.0",
+    "pdfjs-dist": "^5.4.530",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-i18next": "^16.5.4",
