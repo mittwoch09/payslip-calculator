@@ -7,7 +7,7 @@ html {
 
 body {
   -webkit-tap-highlight-color: transparent;
-  overscroll-behavior: none;
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -30,11 +30,12 @@ input, select, textarea, button {
 }
 
 /* Prevent horizontal overflow on small screens */
-* {
+img, video, canvas, svg {
   max-width: 100%;
 }
 
-html, body {
+html, body, #root {
+  min-height: 100vh;
   overflow-x: hidden;
 }
 

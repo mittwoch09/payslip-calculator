@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOcr } from '../hooks/useOcr';
-import { parseTimecardText } from '../ocr/timecard-parser';
+import { parseTimecardText, parseTimecardLines } from '../ocr/timecard-parser';
+import type { TimecardPreviewRow } from '../ocr/timecard-parser';
 import CameraCapture from '../components/CameraCapture';
 import OcrPreview from '../components/OcrPreview';
 import SalaryInput from '../components/SalaryInput';
@@ -22,6 +23,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   const { processing, progress, processImage } = useOcr();
   const [step, setStep] = useState<Step>('camera');
   const [entries, setEntries] = useState<DayEntry[]>([]);
+  const [previewRows, setPreviewRows] = useState<TimecardPreviewRow[]>([]);
   const [salaryData, setSalaryData] = useState({
     employeeName: '',
     employerName: '',
@@ -33,10 +35,13 @@ export default function CapturePage({ onBack }: CapturePageProps) {
 
   const handleImage = async (source: string | File) => {
     setStep('processing');
-    const text = await processImage(source);
-    if (text) {
-      const parsed = parseTimecardText(text);
-      setEntries(parsed);
+    const ocrResult = await processImage(source);
+    if (ocrResult) {
+      const parsed = ocrResult.lines.length > 0
+        ? parseTimecardLines(ocrResult.lines)
+        : parseTimecardText(ocrResult.text);
+      setEntries(parsed.entries);
+      setPreviewRows(parsed.rows);
       setStep('preview');
     } else {
       setStep('camera');
@@ -96,9 +101,10 @@ export default function CapturePage({ onBack }: CapturePageProps) {
         <h2 className="text-2xl font-black mb-4">{t('ocr.review')}</h2>
         <OcrPreview
           entries={entries}
+          previewRows={previewRows}
           onChange={setEntries}
           onConfirm={() => setStep('salary')}
-          onRetake={() => { setStep('camera'); setEntries([]); }}
+          onRetake={() => { setStep('camera'); setEntries([]); setPreviewRows([]); }}
         />
       </div>
     );
