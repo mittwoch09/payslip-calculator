@@ -39,61 +39,61 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
 
   return (
     <div className="space-y-4">
-      <div className="bg-slate-800 rounded-xl p-4 space-y-3">
+      <div className="bg-slate-800 rounded-xl p-4 space-y-4">
         <div>
-          <label className="block text-sm text-slate-400 mb-1">{t('form.date')}</label>
+          <label className="block font-medium text-slate-300 mb-2">{t('form.date')}</label>
           <input
             type="date"
             value={current.date}
             onChange={e => setCurrent({ ...current, date: e.target.value })}
-            className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm text-slate-400 mb-1">{t('form.clockIn')}</label>
+            <label className="block font-medium text-slate-300 mb-2">{t('form.clockIn')}</label>
             <input
               type="time"
               value={current.clockIn}
               onChange={e => setCurrent({ ...current, clockIn: e.target.value })}
-              className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium"
             />
           </div>
           <div>
-            <label className="block text-sm text-slate-400 mb-1">{t('form.clockOut')}</label>
+            <label className="block font-medium text-slate-300 mb-2">{t('form.clockOut')}</label>
             <input
               type="time"
               value={current.clockOut}
               onChange={e => setCurrent({ ...current, clockOut: e.target.value })}
-              className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm text-slate-400 mb-1">{t('form.break')}</label>
+          <label className="block font-medium text-slate-300 mb-2">{t('form.break')}</label>
           <input
             type="number"
             value={current.breakMinutes}
             onChange={e => setCurrent({ ...current, breakMinutes: Number(e.target.value) })}
-            className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium"
             min={0}
             max={120}
           />
         </div>
 
         <div>
-          <label className="block text-sm text-slate-400 mb-1">{t('form.dayType')}</label>
+          <label className="block font-medium text-slate-300 mb-2">{t('form.dayType')}</label>
           <div className="flex gap-2">
             {dayTypeOptions.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => setCurrent({ ...current, dayType: opt.value })}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex-1 min-h-12 rounded-lg font-bold transition-colors ${
                   current.dayType === opt.value
                     ? 'bg-blue-600 text-white'
-                    : 'bg-slate-700 text-slate-300'
+                    : 'bg-slate-700 text-slate-300 active:bg-slate-600'
                 }`}
               >
                 {t(opt.labelKey)}
@@ -104,25 +104,25 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
 
         <button
           onClick={addEntry}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-3 font-semibold text-base"
+          className="w-full bg-emerald-600 active:bg-emerald-700 text-white rounded-lg min-h-12 font-bold text-lg"
         >
           {t('form.addDay')}
         </button>
       </div>
 
       {entries.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-3">
           {entries.map((entry, i) => (
-            <div key={i} className="bg-slate-800 rounded-lg p-3 flex items-center justify-between">
-              <div className="text-sm">
-                <div className="font-medium">{entry.date}</div>
-                <div className="text-slate-400">
+            <div key={i} className="bg-slate-800 rounded-lg p-4 flex items-center justify-between gap-3">
+              <div>
+                <div className="font-bold text-base">{entry.date}</div>
+                <div className="text-slate-300 text-sm">
                   {entry.clockIn} - {entry.clockOut} | {t(`form.${entry.dayType === 'publicHoliday' ? 'publicHoliday' : entry.dayType === 'rest' ? 'restDay' : 'normal'}`)}
                 </div>
               </div>
               <button
                 onClick={() => removeEntry(i)}
-                className="text-red-400 hover:text-red-300 px-2 py-1 text-sm"
+                className="text-red-400 active:text-red-300 min-w-12 min-h-12 font-bold shrink-0"
               >
                 {t('form.removeDay')}
               </button>
@@ -134,7 +134,7 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
       {entries.length > 0 && (
         <button
           onClick={onNext}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-4 font-semibold text-lg"
+          className="w-full bg-blue-600 active:bg-blue-700 text-white rounded-xl min-h-14 font-bold text-xl"
         >
           {t('form.next')}
         </button>

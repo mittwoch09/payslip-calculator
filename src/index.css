@@ -2,19 +2,46 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  font-size: 16px;
 }
 
 body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-input, select, textarea {
+/* Ensure all inputs are large enough for outdoor use */
+input, select, textarea, button {
   font-size: 16px;
+  min-height: 44px;
+}
+
+/* High contrast for outdoor visibility */
+* {
+  text-shadow: none;
 }
 
 @supports (padding: env(safe-area-inset-bottom)) {
   main {
     padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
   }
+}
+
+/* Prevent horizontal overflow on small screens */
+* {
+  max-width: 100%;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+
+/* Enhance touch feedback */
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active {
+  transform: scale(0.98);
+  transition: transform 0.1s;
 }

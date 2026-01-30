@@ -25,32 +25,32 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
 
   return (
     <div className="space-y-4">
-      <div className="bg-slate-800 rounded-xl p-4 space-y-3">
+      <div className="bg-slate-800 rounded-xl p-4 space-y-4">
         <div>
-          <label className="block text-sm text-slate-400 mb-1">{t('salary.employeeName')}</label>
+          <label className="block font-medium text-slate-300 mb-2">{t('salary.employeeName')}</label>
           <input
             type="text"
             value={data.employeeName}
             onChange={e => update({ employeeName: e.target.value })}
-            className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
           />
         </div>
         <div>
-          <label className="block text-sm text-slate-400 mb-1">{t('salary.employerName')}</label>
+          <label className="block font-medium text-slate-300 mb-2">{t('salary.employerName')}</label>
           <input
             type="text"
             value={data.employerName}
             onChange={e => update({ employerName: e.target.value })}
-            className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
           />
         </div>
         <div>
-          <label className="block text-sm text-slate-400 mb-1">{t('salary.monthly')}</label>
+          <label className="block font-bold text-white mb-2 text-lg">{t('salary.monthly')}</label>
           <input
             type="number"
             value={data.monthlySalary || ''}
             onChange={e => update({ monthlySalary: Number(e.target.value) })}
-            className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base text-xl font-bold"
+            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-14 text-2xl font-bold"
             placeholder="1000"
             min={0}
           />
@@ -61,23 +61,23 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
       <div className="bg-slate-800 rounded-xl overflow-hidden">
         <button
           onClick={() => setShowDeductions(!showDeductions)}
-          className="w-full px-4 py-3 flex items-center justify-between text-left"
+          className="w-full px-4 min-h-14 flex items-center justify-between text-left"
         >
-          <span className="font-medium">{t('salary.deductions')}</span>
-          <span className="text-slate-400">{showDeductions ? '▲' : '▼'}</span>
+          <span className="font-bold text-lg">{t('salary.deductions')}</span>
+          <span className="text-slate-400 text-2xl">{showDeductions ? '▲' : '▼'}</span>
         </button>
         {showDeductions && (
-          <div className="px-4 pb-4 space-y-3">
+          <div className="px-4 pb-4 space-y-4">
             {(['accommodation', 'meals', 'advances', 'otherDeductions'] as const).map(field => {
               const key = field === 'otherDeductions' ? 'other' : field;
               return (
                 <div key={field}>
-                  <label className="block text-sm text-slate-400 mb-1">{t(`salary.${field}`)}</label>
+                  <label className="block font-medium text-slate-300 mb-2">{t(`salary.${field}`)}</label>
                   <input
                     type="number"
                     value={data.deductions[key as keyof typeof data.deductions] || ''}
                     onChange={e => update({ deductions: { ...data.deductions, [key]: Number(e.target.value) } })}
-                    className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
                     min={0}
                     placeholder="0"
                   />
@@ -92,23 +92,23 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
       <div className="bg-slate-800 rounded-xl overflow-hidden">
         <button
           onClick={() => setShowAllowances(!showAllowances)}
-          className="w-full px-4 py-3 flex items-center justify-between text-left"
+          className="w-full px-4 min-h-14 flex items-center justify-between text-left"
         >
-          <span className="font-medium">{t('salary.allowances')}</span>
-          <span className="text-slate-400">{showAllowances ? '▲' : '▼'}</span>
+          <span className="font-bold text-lg">{t('salary.allowances')}</span>
+          <span className="text-slate-400 text-2xl">{showAllowances ? '▲' : '▼'}</span>
         </button>
         {showAllowances && (
-          <div className="px-4 pb-4 space-y-3">
+          <div className="px-4 pb-4 space-y-4">
             {(['transport', 'food', 'otherAllowances'] as const).map(field => {
               const key = field === 'otherAllowances' ? 'other' : field;
               return (
                 <div key={field}>
-                  <label className="block text-sm text-slate-400 mb-1">{t(`salary.${field}`)}</label>
+                  <label className="block font-medium text-slate-300 mb-2">{t(`salary.${field}`)}</label>
                   <input
                     type="number"
                     value={data.allowances[key as keyof typeof data.allowances] || ''}
                     onChange={e => update({ allowances: { ...data.allowances, [key]: Number(e.target.value) } })}
-                    className="w-full bg-slate-700 text-white rounded-lg px-3 py-3 text-base"
+                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
                     min={0}
                     placeholder="0"
                   />
@@ -122,14 +122,14 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 bg-slate-700 hover:bg-slate-600 text-white rounded-xl py-4 font-semibold"
+          className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
         >
           {t('form.back')}
         </button>
         <button
           onClick={onCalculate}
           disabled={!data.monthlySalary}
-          className="flex-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:text-slate-400 text-white rounded-xl py-4 font-semibold text-lg"
+          className="flex-[2] bg-blue-600 active:bg-blue-700 disabled:bg-slate-600 disabled:text-slate-400 text-white rounded-xl min-h-14 font-bold text-xl"
         >
           {t('salary.calculate')}
         </button>

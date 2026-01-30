@@ -14,15 +14,15 @@ export default function OcrPreview({ entries, onChange, onConfirm, onRetake }: O
 
   return (
     <div className="space-y-4">
-      <div className="bg-blue-900/30 border border-blue-700 rounded-xl p-3">
-        <p className="text-blue-300 text-sm">{t('ocr.reviewDesc')}</p>
+      <div className="bg-blue-900/40 border-2 border-blue-600 rounded-xl p-4">
+        <p className="text-blue-200 font-medium">{t('ocr.reviewDesc')}</p>
       </div>
 
       <TimecardForm entries={entries} onChange={onChange} onNext={onConfirm} />
 
       <button
         onClick={onRetake}
-        className="w-full bg-slate-700 hover:bg-slate-600 text-white rounded-xl py-3 font-medium"
+        className="w-full bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
       >
         {t('ocr.retake')}
       </button>

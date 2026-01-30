@@ -52,7 +52,7 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
         />
         <button
           onClick={() => { setStep('timecard'); setEntries([]); setResult(null); }}
-          className="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl py-4 font-semibold"
+          className="w-full mt-4 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
         >
           {t('payslip.startOver')}
         </button>
@@ -63,7 +63,7 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
   if (step === 'salary') {
     return (
       <div>
-        <h2 className="text-lg font-bold mb-4">{t('salary.title')}</h2>
+        <h2 className="text-2xl font-black mb-4">{t('salary.title')}</h2>
         <SalaryInput
           data={salaryData}
           onChange={setSalaryData}
@@ -76,9 +76,9 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-4">
-        <button onClick={onBack} className="text-blue-400 text-sm">{t('form.back')}</button>
-        <h2 className="text-lg font-bold">{t('home.manual')}</h2>
+      <div className="flex items-center gap-4 mb-4">
+        <button onClick={onBack} className="text-blue-400 font-bold min-h-12 px-2">{t('form.back')}</button>
+        <h2 className="text-2xl font-black">{t('home.manual')}</h2>
       </div>
       <TimecardForm
         entries={entries}

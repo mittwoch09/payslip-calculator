@@ -68,7 +68,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
         />
         <button
           onClick={() => { setStep('camera'); setEntries([]); setResult(null); }}
-          className="w-full mt-4 bg-slate-700 hover:bg-slate-600 text-white rounded-xl py-4 font-semibold"
+          className="w-full mt-4 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
         >
           {t('payslip.startOver')}
         </button>
@@ -79,7 +79,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   if (step === 'salary') {
     return (
       <div>
-        <h2 className="text-lg font-bold mb-4">{t('salary.title')}</h2>
+        <h2 className="text-2xl font-black mb-4">{t('salary.title')}</h2>
         <SalaryInput
           data={salaryData}
           onChange={setSalaryData}
@@ -93,7 +93,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   if (step === 'preview') {
     return (
       <div>
-        <h2 className="text-lg font-bold mb-4">{t('ocr.review')}</h2>
+        <h2 className="text-2xl font-black mb-4">{t('ocr.review')}</h2>
         <OcrPreview
           entries={entries}
           onChange={setEntries}
@@ -106,12 +106,12 @@ export default function CapturePage({ onBack }: CapturePageProps) {
 
   if (step === 'processing' || processing) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 gap-4">
-        <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
-        <p className="text-slate-300">{t('ocr.processing')}</p>
+      <div className="flex flex-col items-center justify-center py-16 gap-6">
+        <div className="w-20 h-20 border-[6px] border-blue-400 border-t-transparent rounded-full animate-spin" />
+        <p className="text-slate-200 text-xl font-bold">{t('ocr.processing')}</p>
         {progress > 0 && (
-          <div className="w-48 bg-slate-700 rounded-full h-2">
-            <div className="bg-blue-500 h-2 rounded-full transition-all" style={{ width: `${progress}%` }} />
+          <div className="w-64 bg-slate-700 rounded-full h-3">
+            <div className="bg-blue-500 h-3 rounded-full transition-all" style={{ width: `${progress}%` }} />
           </div>
         )}
       </div>
@@ -120,9 +120,9 @@ export default function CapturePage({ onBack }: CapturePageProps) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-4">
-        <button onClick={onBack} className="text-blue-400 text-sm">{t('form.back')}</button>
-        <h2 className="text-lg font-bold">{t('home.scan')}</h2>
+      <div className="flex items-center gap-4 mb-4">
+        <button onClick={onBack} className="text-blue-400 font-bold min-h-12 px-2">{t('form.back')}</button>
+        <h2 className="text-2xl font-black">{t('home.scan')}</h2>
       </div>
       <CameraCapture
         onCapture={handleImage}
