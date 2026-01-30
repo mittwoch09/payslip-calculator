@@ -1,16 +1,27 @@
 import { useTranslation } from 'react-i18next';
 import type { DayEntry } from '../types/timecard';
-import TimecardForm from './TimecardForm';
+import type { TimecardPreviewRow } from '../ocr/timecard-parser';
+import { useEditableTimecard } from '../hooks/useEditableTimecard';
+import EditableOcrPreview from './EditableOcrPreview';
 
 interface OcrPreviewProps {
   entries: DayEntry[];
+  previewRows: TimecardPreviewRow[];
   onChange: (entries: DayEntry[]) => void;
-  onConfirm: () => void;
+  onConfirm: (entries: DayEntry[]) => void;
   onRetake: () => void;
+  year?: number;
 }
 
-export default function OcrPreview({ entries, onChange, onConfirm, onRetake }: OcrPreviewProps) {
+export default function OcrPreview({ entries, previewRows, onChange, onConfirm, onRetake, year }: OcrPreviewProps) {
   const { t } = useTranslation();
+  const { rows, updateTime, toggleOff, updateExtraOt, getEntries } = useEditableTimecard(entries, previewRows, year);
+
+  const handleConfirm = () => {
+    const fresh = getEntries();
+    onChange(fresh);
+    onConfirm(fresh);
+  };
 
   return (
     <div className="space-y-4">
@@ -18,7 +29,19 @@ export default function OcrPreview({ entries, onChange, onConfirm, onRetake }: O
         <p className="text-blue-200 font-medium">{t('ocr.reviewDesc')}</p>
       </div>
 
-      <TimecardForm entries={entries} onChange={onChange} onNext={onConfirm} />
+      <EditableOcrPreview
+        rows={rows}
+        onUpdateTime={updateTime}
+        onToggleOff={toggleOff}
+        onUpdateExtraOt={updateExtraOt}
+      />
+
+      <button
+        onClick={handleConfirm}
+        className="w-full bg-blue-600 active:bg-blue-700 text-white rounded-xl min-h-14 font-bold text-xl"
+      >
+        {t('form.confirm')}
+      </button>
 
       <button
         onClick={onRetake}

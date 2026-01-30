@@ -146,7 +146,7 @@ function toRawTime(time: string): string {
 function parseLineFlags(line: string): { isOff: boolean; plusOne: boolean } {
   return {
     isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b)/i.test(line),
-    plusOne: /\+\s*[1lI|]\b/i.test(line),
+    plusOne: /\+\s*[1lI|](?:\b|(?=OT|$))/i.test(line),
   };
 }
 
@@ -441,9 +441,11 @@ function parseLines(
   return { entries, rows };
 }
 
-export function parseTimecardText(text: string): TimecardParseResult {
+export function parseTimecardText(text: string, overrideYear?: number, overrideMonth?: number): TimecardParseResult {
   const lines = text.split('\n').filter(line => line.trim().length > 0);
-  const { year, month } = extractYearMonth(text);
+  const extracted = extractYearMonth(text);
+  const year = overrideYear ?? extracted.year;
+  const month = overrideMonth ?? extracted.month;
   const { entries, rows } = parseLines(lines, year, month);
   return { entries, rows: fillMissingDays(rows, year, month) };
 }
@@ -483,9 +485,11 @@ function groupLinesByRow(ocrLines: OcrLineWithBox[], threshold: number = 15): st
 }
 
 // Parse structured OCR output (with bounding boxes) for better table-aware parsing
-export function parseTimecardLines(ocrLines: OcrLineWithBox[]): TimecardParseResult {
+export function parseTimecardLines(ocrLines: OcrLineWithBox[], overrideYear?: number, overrideMonth?: number): TimecardParseResult {
   const allText = ocrLines.map((l) => l.text).join('\n');
-  const { year, month } = extractYearMonth(allText);
+  const extracted = extractYearMonth(allText);
+  const year = overrideYear ?? extracted.year;
+  const month = overrideMonth ?? extracted.month;
 
   // If lines have bounding boxes, group by row for table-aware parsing
   const hasBoxes = ocrLines.some((l) => l.box && l.box.length >= 4);
@@ -495,4 +499,40 @@ export function parseTimecardLines(ocrLines: OcrLineWithBox[]): TimecardParseRes
 
   const { entries, rows } = parseLines(textLines, year, month);
   return { entries, rows: fillMissingDays(rows, year, month) };
+}
+
+/**
+ * Remap existing preview rows and entries to a new year/month.
+ * Keeps the day-of-month, swaps the year-month prefix, and fills missing days.
+ */
+export function remapYearMonth(
+  prevRows: TimecardPreviewRow[],
+  prevEntries: DayEntry[],
+  year: number,
+  month: number,
+): { rows: TimecardPreviewRow[]; entries: DayEntry[] } {
+  const prefix = `${year}-${month.toString().padStart(2, '0')}`;
+  const totalDays = daysInMonth(year, month);
+
+  const remapDate = (d: string) => {
+    const day = parseInt(d.slice(8), 10);
+    if (day < 1 || day > totalDays) return null;
+    return `${prefix}-${day.toString().padStart(2, '0')}`;
+  };
+
+  const rows: TimecardPreviewRow[] = prevRows
+    .map(r => {
+      const nd = remapDate(r.date);
+      return nd ? { ...r, date: nd } : null;
+    })
+    .filter((r): r is TimecardPreviewRow => r !== null);
+
+  const entries: DayEntry[] = prevEntries
+    .map(e => {
+      const nd = remapDate(e.date);
+      return nd ? { ...e, date: nd } : null;
+    })
+    .filter((e): e is DayEntry => e !== null);
+
+  return { rows: fillMissingDays(rows, year, month), entries };
 }

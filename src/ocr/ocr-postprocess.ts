@@ -179,11 +179,26 @@ function isValidTime4(s: string): boolean {
 }
 
 /**
+ * Normalize OCR misreads of "+1" marker.
+ * Common OCR errors: "+" → "t"/"T"/"f"/"F", "1" → "3"/"l"/"I"/"i"/"|"
+ * Pattern appears after time digits, e.g. "0700 1900 t 3" should be "0700 1900 +1"
+ */
+function normalizePlusOne(text: string): string {
+  // Match isolated single char (t/T/f/F/+) + optional space + single char (1/3/l/I/i/|)
+  // after digit context (preceded by digit or space-after-digit) and before space/end/digit
+  return text.replace(
+    /(\d{3,})\s+([tTfF+])\s*([1l3Ii|])(?=\s|$)/g,
+    '$1 +1'
+  );
+}
+
+/**
  * Apply all OCR corrections to a single line of text.
  */
 export function correctOcrLine(raw: string): string {
   let text = raw;
   text = normalizeOff(text);
+  text = normalizePlusOne(text);
   text = fixLettersInDigitContext(text);
   text = fixPunctuationInDigits(text);
   text = rejoinTimeFragments(text);
