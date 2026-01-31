@@ -96,6 +96,8 @@ export default function CapturePage({ onBack }: CapturePageProps) {
           periodStart={dates[0] ?? ''}
           periodEnd={dates[dates.length - 1] ?? ''}
           monthlySalary={salaryData.monthlySalary}
+          hourlyRate={salaryData.hourlyRateOverride}
+          otRate={salaryData.otRateOverride}
         />
         <div className="flex gap-3 mt-4">
           <button
