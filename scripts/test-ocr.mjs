@@ -25,6 +25,7 @@ const LETTER_TO_DIGIT = {
   D: '0', O: '0', o: '0', g: '9', q: '9', I: '1', l: '1', B: '8',
   S: '5', s: '5', Z: '2', z: '2', e: '0', w: '0', W: '0', t: '1',
   T: '1', n: '0', m: '0', U: '0', u: '0', r: '1', R: '1', f: '7', F: '7',
+  '+': '7',  // PP-OCRv5 reads handwritten 7 as +
 };
 
 function fixLettersInDigitContext(text) {
@@ -53,6 +54,11 @@ function fixPunctuationInDigits(text) {
   text = text.replace(/(\d{2,})[/|\\](\d)(?!\d)/g, '$10$2');
   text = text.replace(/(\d{3,})[/|\\](\d+)/g, '$1$2');
   text = text.replace(/(\d+)[/|\\](\d{3,})/g, '$1$2');
+
+  // Replace dots between digit groups in time-like context: 7.00 → 7:00, 19.00 → 19:00
+  // Pattern: 1-2 digit hour, dot, exactly 2 digits (minutes)
+  text = text.replace(/\b(\d{1,2})\.(\d{2})\b/g, '$1:$2');
+
   return text;
 }
 
@@ -176,7 +182,7 @@ function fixHandwritingDigits(text) {
 
 function splitMergedDayDigits(text) {
   // Pattern: 9-10 digit sequence starting with a valid day (1-31) followed by 8 digits (two 4-digit times)
-  return text.replace(/\b(\d{9,10})\b/g, (_match, digits) => {
+  text = text.replace(/\b(\d{9,10})\b/g, (_match, digits) => {
     // Try 2-digit day prefix: e.g., "2707301930" → day=27, rest="07301930"
     if (digits.length >= 10) {
       const day2 = parseInt(digits.substring(0, 2));
@@ -203,6 +209,25 @@ function splitMergedDayDigits(text) {
     }
     return digits;
   });
+
+  // Pattern: 8 digits merged without split (e.g., "07801930" → "0780 1930")
+  // Split into two 4-digit chunks if both are valid times OR if second is valid
+  text = text.replace(/\b(\d{8})\b(?![\d])/g, (_match, eight) => {
+    // Check if it's already been handled by the 4+4 split in rejoinTimeFragments
+    const first4 = eight.substring(0, 4);
+    const last4 = eight.substring(4);
+    // Only split if not already valid as two times (to avoid duplicate processing)
+    if (isValidTime4(first4) && isValidTime4(last4)) {
+      return eight; // Already handled elsewhere
+    }
+    // If second half is valid time, split anyway (e.g., "0780 1930" where 0780 is invalid but 1930 is valid)
+    if (isValidTime4(last4)) {
+      return `${first4} ${last4}`;
+    }
+    return eight;
+  });
+
+  return text;
 }
 
 function normalizePlusOne(text) {
@@ -375,7 +400,7 @@ function isValidFourDigitTime(value) {
 
 function parseLineFlags(line) {
   return {
-    isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b|\bSUN\w*\b|\bcuday\b)/i.test(line),
+    isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b|\bSUN\w*\b|\bSnpoy\b|\bSDNDEY\b|\bcuday\b)/i.test(line),
     plusOne: /\+\s*[1lI|](?:\b|(?=OT|$))/i.test(line),
   };
 }
@@ -424,6 +449,7 @@ function parseDayEntry(line, year, month) {
   }
 
   // Try colon-format: "3 7:00-19:00" or "3 7:00 19:00"
+  // Also handles patterns like "400-19:00" → day 4, "00-19:00"
   const colonFormatMatch = line.match(/^\s*(\d{1,2})\s+(\d{1,2}):(\d{2})\s*[-–\s]\s*(\d{1,2}):(\d{2})/);
   if (colonFormatMatch) {
     const day = parseInt(colonFormatMatch[1]);
@@ -436,6 +462,51 @@ function parseDayEntry(line, year, month) {
       const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
       const clockIn = `${inH.toString().padStart(2, '0')}:${inM.toString().padStart(2, '0')}`;
       const clockOut = `${outH.toString().padStart(2, '0')}:${outM.toString().padStart(2, '0')}`;
+      return {
+        date: dateStr,
+        clockIn,
+        clockOut,
+        plusOne,
+      };
+    }
+  }
+
+  // Try pattern with leading day merged: "400-19:00" → day 4, clockIn "00", clockOut "19:00"
+  // Pattern: digit(s) + 2-digit-hour + colon + minute + dash + time
+  const mergedDayColonMatch = line.match(/^\s*(\d)(\d{2}):(\d{2})\s*[-–]\s*(\d{1,2}):(\d{2})/);
+  if (mergedDayColonMatch) {
+    const day = parseInt(mergedDayColonMatch[1]);
+    const inH = parseInt(mergedDayColonMatch[2]);
+    const inM = parseInt(mergedDayColonMatch[3]);
+    const outH = parseInt(mergedDayColonMatch[4]);
+    const outM = parseInt(mergedDayColonMatch[5]);
+
+    if (isValidDate(year, month, day) && inH <= 23 && inM <= 59 && outH <= 23 && outM <= 59) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const clockIn = `${inH.toString().padStart(2, '0')}:${inM.toString().padStart(2, '0')}`;
+      const clockOut = `${outH.toString().padStart(2, '0')}:${outM.toString().padStart(2, '0')}`;
+      return {
+        date: dateStr,
+        clockIn,
+        clockOut,
+        plusOne,
+      };
+    }
+  }
+
+  // Try pattern "1000-1900" → day 10, clockIn "00", clockOut "1900" or clockIn "1000" clockOut "1900"
+  // Heuristic: if starts with 10-31, it's likely a day number
+  const mergedDayNoColonMatch = line.match(/^\s*(\d{2})(\d{2})\s*[-–]\s*(\d{4})/);
+  if (mergedDayNoColonMatch) {
+    const possibleDay = parseInt(mergedDayNoColonMatch[1]);
+    const firstHour = mergedDayNoColonMatch[2];
+    const outTime = mergedDayNoColonMatch[3];
+
+    // Only if possibleDay is 10-31 (clear day range) and outTime is valid
+    if (possibleDay >= 10 && possibleDay <= 31 && isValidDate(year, month, possibleDay) && isValidFourDigitTime(outTime)) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${possibleDay.toString().padStart(2, '0')}`;
+      const clockIn = `${firstHour.substring(0, 2)}:${firstHour.substring(2, 4)}`;
+      const clockOut = `${outTime.substring(0, 2)}:${outTime.substring(2, 4)}`;
       return {
         date: dateStr,
         clockIn,

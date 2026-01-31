@@ -34,6 +34,7 @@ const LETTER_TO_DIGIT: Record<string, string> = {
   R: '1',
   f: '7',
   F: '7',
+  '+': '7',  // PP-OCRv5 reads handwritten 7 as +
 };
 
 /** Replace OCR-confused letters with digits when surrounded by digit context */
@@ -60,7 +61,8 @@ function fixLettersInDigitContext(text: string): string {
 }
 
 /** Replace stray punctuation in digit sequences with 0 (OCR misread): 19/0 → 1900
- *  Only when surrounded by 2+ digits on at least one side (avoids date separators like 01/11) */
+ *  Only when surrounded by 2+ digits on at least one side (avoids date separators like 01/11)
+ *  Also handles dots as time separators: 19.00 → 19:00 in time context */
 function fixPunctuationInDigits(text: string): string {
   // Slash/pipe between digits where only 1 digit follows: replace slash with 0 (e.g., "19/0" → "1900")
   text = text.replace(/(\d{2,})[/|\\](\d)(?!\d)/g, '$10$2');
@@ -68,6 +70,11 @@ function fixPunctuationInDigits(text: string): string {
   // Avoid date patterns like "01/11" by requiring at least 3 digits on one side
   text = text.replace(/(\d{3,})[/|\\](\d+)/g, '$1$2');
   text = text.replace(/(\d+)[/|\\](\d{3,})/g, '$1$2');
+
+  // Replace dots between digit groups in time-like context: 7.00 → 7:00, 19.00 → 19:00
+  // Pattern: 1-2 digit hour, dot, exactly 2 digits (minutes)
+  text = text.replace(/\b(\d{1,2})\.(\d{2})\b/g, '$1:$2');
+
   return text;
 }
 
@@ -208,10 +215,11 @@ function fixHandwritingDigits(text: string): string {
   return text;
 }
 
-/** Split merged day number + time digits: "2707301930" → "27 0730 1930" */
+/** Split merged day number + time digits: "2707301930" → "27 0730 1930"
+ *  Also handles merged day + single time: "07801930" → "0780 1930" or "400-19:00" → "4 00-19:00" */
 function splitMergedDayDigits(text: string): string {
   // Pattern: 9-10 digit sequence starting with a valid day (1-31) followed by 8 digits (two 4-digit times)
-  return text.replace(/\b(\d{9,10})\b/g, (_match, digits) => {
+  text = text.replace(/\b(\d{9,10})\b/g, (_match, digits) => {
     // Try 2-digit day prefix: e.g., "2707301930" → day=27, rest="07301930"
     if (digits.length >= 10) {
       const day2 = parseInt(digits.substring(0, 2));
@@ -238,6 +246,25 @@ function splitMergedDayDigits(text: string): string {
     }
     return digits;
   });
+
+  // Pattern: 8 digits merged without split (e.g., "07801930" → "0780 1930")
+  // Split into two 4-digit chunks if both are valid times OR if second is valid
+  text = text.replace(/\b(\d{8})\b(?![\d])/g, (_match, eight) => {
+    // Check if it's already been handled by the 4+4 split in rejoinTimeFragments
+    const first4 = eight.substring(0, 4);
+    const last4 = eight.substring(4);
+    // Only split if not already valid as two times (to avoid duplicate processing)
+    if (isValidTime4(first4) && isValidTime4(last4)) {
+      return eight; // Already handled elsewhere
+    }
+    // If second half is valid time, split anyway (e.g., "0780 1930" where 0780 is invalid but 1930 is valid)
+    if (isValidTime4(last4)) {
+      return `${first4} ${last4}`;
+    }
+    return eight;
+  });
+
+  return text;
 }
 
 /**

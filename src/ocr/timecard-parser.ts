@@ -216,7 +216,7 @@ function toRawTime(time: string): string {
 
 function parseLineFlags(line: string): { isOff: boolean; plusOne: boolean } {
   return {
-    isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b|\bSUN\w*\b|\bcuday\b)/i.test(line),
+    isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b|\bSUN\w*\b|\bSnpoy\b|\bSDNDEY\b|\bcuday\b)/i.test(line),
     plusOne: /\+\s*[1lI|](?:\b|(?=OT|$))/i.test(line),
   };
 }
@@ -352,6 +352,7 @@ function parseDayEntry(
   }
 
   // Try colon-format: "3 7:00-19:00" or "3 7:00 19:00"
+  // Also handles patterns like "400-19:00" → day 4, "00-19:00"
   const colonFormatMatch = line.match(/^\s*(\d{1,2})\s+(\d{1,2}):(\d{2})\s*[-–\s]\s*(\d{1,2}):(\d{2})/);
   if (colonFormatMatch) {
     const day = parseInt(colonFormatMatch[1]);
@@ -364,6 +365,61 @@ function parseDayEntry(
       const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
       const clockIn = `${inH.toString().padStart(2, '0')}:${inM.toString().padStart(2, '0')}`;
       const clockOut = `${outH.toString().padStart(2, '0')}:${outM.toString().padStart(2, '0')}`;
+      const entry: DayEntry = {
+        date: dateStr,
+        dayType: 'normal' as DayType,
+        clockIn,
+        clockOut,
+        breakMinutes: 60,
+      };
+      if (plusOne) {
+        entry.extraOtHours = 1;
+      }
+      return entry;
+    }
+  }
+
+  // Try pattern with leading day merged: "400-19:00" → day 4, clockIn "00", clockOut "19:00"
+  // Pattern: digit(s) + 2-digit-hour + colon + minute + dash + time
+  const mergedDayColonMatch = line.match(/^\s*(\d)(\d{2}):(\d{2})\s*[-–]\s*(\d{1,2}):(\d{2})/);
+  if (mergedDayColonMatch) {
+    const day = parseInt(mergedDayColonMatch[1]);
+    const inH = parseInt(mergedDayColonMatch[2]);
+    const inM = parseInt(mergedDayColonMatch[3]);
+    const outH = parseInt(mergedDayColonMatch[4]);
+    const outM = parseInt(mergedDayColonMatch[5]);
+
+    if (isValidDate(year, month, day) && inH <= 23 && inM <= 59 && outH <= 23 && outM <= 59) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const clockIn = `${inH.toString().padStart(2, '0')}:${inM.toString().padStart(2, '0')}`;
+      const clockOut = `${outH.toString().padStart(2, '0')}:${outM.toString().padStart(2, '0')}`;
+      const entry: DayEntry = {
+        date: dateStr,
+        dayType: 'normal' as DayType,
+        clockIn,
+        clockOut,
+        breakMinutes: 60,
+      };
+      if (plusOne) {
+        entry.extraOtHours = 1;
+      }
+      return entry;
+    }
+  }
+
+  // Try pattern "1000-1900" → day 10, clockIn "00", clockOut "1900" or clockIn "1000" clockOut "1900"
+  // Heuristic: if starts with 10-31, it's likely a day number
+  const mergedDayNoColonMatch = line.match(/^\s*(\d{2})(\d{2})\s*[-–]\s*(\d{4})/);
+  if (mergedDayNoColonMatch) {
+    const possibleDay = parseInt(mergedDayNoColonMatch[1]);
+    const firstHour = mergedDayNoColonMatch[2];
+    const outTime = mergedDayNoColonMatch[3];
+
+    // Only if possibleDay is 10-31 (clear day range) and outTime is valid
+    if (possibleDay >= 10 && possibleDay <= 31 && isValidDate(year, month, possibleDay) && isValidFourDigitTime(outTime)) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${possibleDay.toString().padStart(2, '0')}`;
+      const clockIn = `${firstHour.substring(0, 2)}:${firstHour.substring(2, 4)}`;
+      const clockOut = format4DigitTime(outTime);
       const entry: DayEntry = {
         date: dateStr,
         dayType: 'normal' as DayType,
