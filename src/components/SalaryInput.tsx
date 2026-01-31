@@ -197,7 +197,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
         </div>
       )}
 
-      <div className="flex gap-3">
+      <div className="sticky bottom-0 z-40 bg-amber-50 pt-2 pb-4 -mx-4 px-4 flex gap-3">
         <button
           onClick={onBack}
           className="flex-1 bg-white border-2 border-black text-black min-h-12 font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"

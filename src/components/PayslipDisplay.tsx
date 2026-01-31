@@ -1,8 +1,10 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { PayslipResult } from '../types/payslip';
 import { calcHourlyRate } from '../engine/calculator';
 import { OT_MULTIPLIER } from '../engine/constants';
 import { downloadPayslipImage } from '../utils/export';
+import ScrollButtons from './ScrollButtons';
 import '../styles/print.css';
 
 interface PayslipDisplayProps {
@@ -27,6 +29,7 @@ function Row({ label, amount, bold, large }: { label: string; amount: number; bo
 
 export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate: propsHourlyRate, otRate: propsOtRate }: PayslipDisplayProps) {
   const { t } = useTranslation();
+  const bottomRef = useRef<HTMLDivElement>(null);
   const hourlyRate = propsHourlyRate ?? calcHourlyRate(monthlySalary);
   const otRate = propsOtRate ?? (hourlyRate * OT_MULTIPLIER);
 
@@ -50,8 +53,14 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
           <p>{t('payslip.period')}: <span className="text-black font-bold">{periodStart} to {periodEnd}</span></p>
         </div>
         <div className="mt-3 pt-3 border-t-2 border-black grid grid-cols-2 gap-2 text-sm">
-          <p className="text-gray-600">{t('payslip.hourlyRate')}: <span className="text-black font-bold">${hourlyRate.toFixed(2)}/h</span></p>
-          <p className="text-gray-600">{t('payslip.otRate')}: <span className="text-black font-bold">${otRate.toFixed(2)}/h</span></p>
+          <div>
+            <p className="text-gray-500">{t('payslip.hourlyRate')}</p>
+            <p className="text-black font-bold text-base">${hourlyRate.toFixed(2)}/h</p>
+          </div>
+          <div>
+            <p className="text-gray-500">{t('payslip.otRate')}</p>
+            <p className="text-black font-bold text-base">${otRate.toFixed(2)}/h</p>
+          </div>
         </div>
       </div>
 
@@ -128,6 +137,9 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
       </div>
 
       <p className="no-print text-gray-400 text-sm text-center leading-relaxed">{t('app.disclaimer')}</p>
+      <div ref={bottomRef} />
+
+      <ScrollButtons bottomRef={bottomRef} />
     </div>
   );
 }

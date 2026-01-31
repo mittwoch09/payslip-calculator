@@ -44,6 +44,7 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
     });
     setResult(payslipResult);
     setStep('result');
+    window.scrollTo(0, 0);
 
     // Save to history
     addToHistory({

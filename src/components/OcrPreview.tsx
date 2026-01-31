@@ -1,8 +1,10 @@
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { DayEntry } from '../types/timecard';
 import type { TimecardPreviewRow } from '../ocr/timecard-parser';
 import { useEditableTimecard } from '../hooks/useEditableTimecard';
 import EditableOcrPreview from './EditableOcrPreview';
+import ScrollButtons from './ScrollButtons';
 
 interface OcrPreviewProps {
   entries: DayEntry[];
@@ -16,6 +18,7 @@ interface OcrPreviewProps {
 export default function OcrPreview({ entries, previewRows, onChange, onConfirm, onRetake, year }: OcrPreviewProps) {
   const { t } = useTranslation();
   const { rows, updateTime, toggleOff, updateExtraOt, getEntries } = useEditableTimecard(entries, previewRows, year);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const handleConfirm = () => {
     const fresh = getEntries();
@@ -36,6 +39,8 @@ export default function OcrPreview({ entries, previewRows, onChange, onConfirm, 
         onUpdateExtraOt={updateExtraOt}
       />
 
+      <div ref={bottomRef} />
+
       <button
         onClick={handleConfirm}
         className="w-full bg-black text-white border-2 border-black min-h-14 font-bold text-xl shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
@@ -49,6 +54,8 @@ export default function OcrPreview({ entries, previewRows, onChange, onConfirm, 
       >
         {t('ocr.retake')}
       </button>
+
+      <ScrollButtons bottomRef={bottomRef} />
     </div>
   );
 }

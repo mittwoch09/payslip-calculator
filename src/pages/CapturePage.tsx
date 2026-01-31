@@ -71,6 +71,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
     setEntries(data);
     setResult(payslipResult);
     setStep('result');
+    window.scrollTo(0, 0);
 
     // Save to history
     addToHistory({
