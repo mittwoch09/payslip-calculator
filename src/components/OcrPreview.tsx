@@ -25,8 +25,8 @@ export default function OcrPreview({ entries, previewRows, onChange, onConfirm, 
 
   return (
     <div className="space-y-4">
-      <div className="bg-blue-900/40 border-2 border-blue-600 rounded-xl p-4">
-        <p className="text-blue-200 font-medium">{t('ocr.reviewDesc')}</p>
+      <div className="bg-violet-100 border-2 border-black p-4">
+        <p className="text-black font-medium">{t('ocr.reviewDesc')}</p>
       </div>
 
       <EditableOcrPreview
@@ -38,14 +38,14 @@ export default function OcrPreview({ entries, previewRows, onChange, onConfirm, 
 
       <button
         onClick={handleConfirm}
-        className="w-full bg-blue-600 active:bg-blue-700 text-white rounded-xl min-h-14 font-bold text-xl"
+        className="w-full bg-black text-white border-2 border-black min-h-14 font-bold text-xl shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
       >
         {t('form.confirm')}
       </button>
 
       <button
         onClick={onRetake}
-        className="w-full bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
+        className="w-full bg-white text-black border-2 border-black min-h-14 font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
       >
         {t('ocr.retake')}
       </button>

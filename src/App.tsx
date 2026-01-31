@@ -11,7 +11,7 @@ export default function App() {
   const [page, setPage] = useState<Page>('home');
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Loading...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-amber-50 flex items-center justify-center text-black">Loading...</div>}>
       <Layout>
         {page === 'home' && <HomePage onNavigate={setPage} />}
         {page === 'entry' && <EntryPage onBack={() => setPage('home')} />}

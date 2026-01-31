@@ -65,9 +65,9 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
 
   return (
     <div className="space-y-4">
-      <div className="bg-slate-800 rounded-xl p-4 space-y-4">
+      <div className="bg-white border-2 border-black p-4 space-y-4">
         <div>
-          <label className="block font-medium text-slate-300 mb-2">{t('form.date')}</label>
+          <label className="block font-bold text-black mb-1">{t('form.date')}</label>
           <input
             type="date"
             value={current.date}
@@ -75,14 +75,14 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
               setCurrent({ ...current, date: e.target.value });
               clearFieldError('date');
             }}
-            className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium ${getError('date') ? 'border-2 border-red-500' : ''}`}
+            className={`w-full bg-white border-2 ${getError('date') ? 'border-red-500' : 'border-black'} text-black px-4 min-h-12 text-lg font-medium`}
           />
-          {getError('date') && <div className="text-red-400 text-sm mt-1">{t(getError('date')!.message)}</div>}
+          {getError('date') && <div className="text-red-600 text-sm mt-1 font-bold">{t(getError('date')!.message)}</div>}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block font-medium text-slate-300 mb-2">{t('form.clockIn')}</label>
+            <label className="block font-bold text-black mb-1">{t('form.clockIn')}</label>
             <input
               type="time"
               value={current.clockIn}
@@ -90,12 +90,12 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
                 setCurrent({ ...current, clockIn: e.target.value });
                 clearFieldError('clockIn');
               }}
-              className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium ${getError('clockIn') ? 'border-2 border-red-500' : ''}`}
+              className={`w-full bg-white border-2 ${getError('clockIn') ? 'border-red-500' : 'border-black'} text-black px-4 min-h-12 text-lg font-medium`}
             />
-            {getError('clockIn') && <div className="text-red-400 text-sm mt-1">{t(getError('clockIn')!.message)}</div>}
+            {getError('clockIn') && <div className="text-red-600 text-sm mt-1 font-bold">{t(getError('clockIn')!.message)}</div>}
           </div>
           <div>
-            <label className="block font-medium text-slate-300 mb-2">{t('form.clockOut')}</label>
+            <label className="block font-bold text-black mb-1">{t('form.clockOut')}</label>
             <input
               type="time"
               value={current.clockOut}
@@ -103,14 +103,14 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
                 setCurrent({ ...current, clockOut: e.target.value });
                 clearFieldError('clockOut');
               }}
-              className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium ${getError('clockOut') ? 'border-2 border-red-500' : ''}`}
+              className={`w-full bg-white border-2 ${getError('clockOut') ? 'border-red-500' : 'border-black'} text-black px-4 min-h-12 text-lg font-medium`}
             />
-            {getError('clockOut') && <div className="text-red-400 text-sm mt-1">{t(getError('clockOut')!.message)}</div>}
+            {getError('clockOut') && <div className="text-red-600 text-sm mt-1 font-bold">{t(getError('clockOut')!.message)}</div>}
           </div>
         </div>
 
         <div>
-          <label className="block font-medium text-slate-300 mb-2">{t('form.break')}</label>
+          <label className="block font-bold text-black mb-1">{t('form.break')}</label>
           <input
             type="number"
             value={current.breakMinutes}
@@ -118,24 +118,24 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
               setCurrent({ ...current, breakMinutes: Number(e.target.value) });
               clearFieldError('breakMinutes');
             }}
-            className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium ${getError('breakMinutes') ? 'border-2 border-red-500' : ''}`}
+            className={`w-full bg-white border-2 ${getError('breakMinutes') ? 'border-red-500' : 'border-black'} text-black px-4 min-h-12 text-lg font-medium`}
             min={0}
             max={120}
           />
-          {getError('breakMinutes') && <div className="text-red-400 text-sm mt-1">{t(getError('breakMinutes')!.message)}</div>}
+          {getError('breakMinutes') && <div className="text-red-600 text-sm mt-1 font-bold">{t(getError('breakMinutes')!.message)}</div>}
         </div>
 
         <div>
-          <label className="block font-medium text-slate-300 mb-2">{t('form.dayType')}</label>
+          <label className="block font-bold text-black mb-1">{t('form.dayType')}</label>
           <div className="flex gap-2">
             {dayTypeOptions.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => setCurrent({ ...current, dayType: opt.value })}
-                className={`flex-1 min-h-12 rounded-lg font-bold transition-colors ${
+                className={`flex-1 min-h-12 font-bold border-2 border-black ${
                   current.dayType === opt.value
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-slate-700 text-slate-300 active:bg-slate-600'
+                    ? 'bg-black text-white'
+                    : 'bg-white text-black'
                 }`}
               >
                 {t(opt.labelKey)}
@@ -145,12 +145,12 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
         </div>
 
         <div>
-          <label className="block font-medium text-slate-300 mb-2">{t('form.extraOt')}</label>
+          <label className="block font-bold text-black mb-1">{t('form.extraOt')}</label>
           <input
             type="number"
             value={current.extraOtHours}
             onChange={e => setCurrent({ ...current, extraOtHours: Number(e.target.value) })}
-            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg font-medium"
+            className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-lg font-medium"
             min={0}
             max={24}
             step={0.5}
@@ -159,7 +159,7 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
 
         <button
           onClick={addEntry}
-          className="w-full bg-emerald-600 active:bg-emerald-700 text-white rounded-lg min-h-12 font-bold text-lg"
+          className="w-full bg-lime-300 border-2 border-black text-black min-h-12 font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
         >
           {t('form.addDay')}
         </button>
@@ -168,17 +168,17 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
       {entries.length > 0 && (
         <div className="space-y-3">
           {entries.map((entry, i) => (
-            <div key={i} className="bg-slate-800 rounded-lg p-4 flex items-center justify-between gap-3">
+            <div key={i} className="bg-white border-2 border-black p-4 flex items-center justify-between gap-3">
               <div>
                 <div className="font-bold text-base">{entry.date}</div>
-                <div className="text-slate-300 text-sm">
+                <div className="text-black text-sm">
                   {entry.clockIn} - {entry.clockOut} | {t(`form.${entry.dayType === 'publicHoliday' ? 'publicHoliday' : entry.dayType === 'rest' ? 'restDay' : 'normal'}`)}
                   {entry.extraOtHours && entry.extraOtHours > 0 && ` | +${entry.extraOtHours}h ${t('form.extraOtShort')}`}
                 </div>
               </div>
               <button
                 onClick={() => removeEntry(i)}
-                className="text-red-400 active:text-red-300 min-w-12 min-h-12 font-bold shrink-0"
+                className="text-red-600 min-w-12 min-h-12 font-bold shrink-0"
               >
                 {t('form.removeDay')}
               </button>
@@ -191,11 +191,11 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
         <div>
           <button
             onClick={handleNext}
-            className="w-full bg-blue-600 active:bg-blue-700 text-white rounded-xl min-h-14 font-bold text-xl"
+            className="w-full bg-black text-white border-2 border-black min-h-14 font-bold text-xl shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
           >
             {t('form.next')}
           </button>
-          {getError('entries') && <div className="text-red-400 text-sm mt-2 text-center">{t(getError('entries')!.message)}</div>}
+          {getError('entries') && <div className="text-red-600 text-sm mt-2 text-center font-bold">{t(getError('entries')!.message)}</div>}
         </div>
       )}
     </div>

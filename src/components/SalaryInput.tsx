@@ -49,27 +49,27 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
 
   return (
     <div className="space-y-3">
-      <div className="bg-slate-800 rounded-xl p-4 space-y-3">
+      <div className="bg-white border-2 border-black p-4 space-y-3">
         <div>
-          <label className="block font-medium text-slate-300 mb-2">{t('salary.employeeName')}</label>
+          <label className="block font-bold text-black mb-1">{t('salary.employeeName')}</label>
           <input
             type="text"
             value={data.employeeName}
             onChange={e => update({ employeeName: e.target.value })}
-            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+            className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-lg"
           />
         </div>
         <div>
-          <label className="block font-medium text-slate-300 mb-2">{t('salary.employerName')}</label>
+          <label className="block font-bold text-black mb-1">{t('salary.employerName')}</label>
           <input
             type="text"
             value={data.employerName}
             onChange={e => update({ employerName: e.target.value })}
-            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+            className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-lg"
           />
         </div>
         <div>
-          <label className="block font-bold text-white mb-2 text-base">{t('salary.monthly')}</label>
+          <label className="block font-bold text-black mb-1 text-base">{t('salary.monthly')}</label>
           <input
             type="number"
             value={data.monthlySalary || ''}
@@ -77,51 +77,51 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
               update({ monthlySalary: Number(e.target.value) });
               setErrors([]);
             }}
-            className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-xl font-bold ${getError('monthlySalary') ? 'border-2 border-red-500' : ''}`}
+            className={`w-full bg-white border-2 ${getError('monthlySalary') ? 'border-red-500' : 'border-black'} text-black px-4 min-h-12 text-xl font-bold`}
             placeholder="1000"
             min={0}
           />
-          {getError('monthlySalary') && <div className="text-red-400 text-sm mt-1">{t(getError('monthlySalary')!.message)}</div>}
+          {getError('monthlySalary') && <div className="text-red-600 text-sm mt-1 font-bold">{t(getError('monthlySalary')!.message)}</div>}
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block font-medium text-slate-300 mb-2 text-sm">{t('salary.hourlyRate')}</label>
+            <label className="block font-bold text-black mb-1 text-sm">{t('salary.hourlyRate')}</label>
             <input
               type="number"
               value={data.hourlyRateOverride || ''}
               onChange={e => update({ hourlyRateOverride: Number(e.target.value) || undefined })}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
+              className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-base"
               placeholder={autoHourlyRate}
               min={0}
               step="0.01"
             />
           </div>
           <div>
-            <label className="block font-medium text-slate-300 mb-2 text-sm">{t('salary.otRate')}</label>
+            <label className="block font-bold text-black mb-1 text-sm">{t('salary.otRate')}</label>
             <input
               type="number"
               value={data.otRateOverride || ''}
               onChange={e => update({ otRateOverride: Number(e.target.value) || undefined })}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
+              className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-base"
               placeholder={autoOtRate}
               min={0}
               step="0.01"
             />
           </div>
         </div>
-        <p className="text-slate-500 text-xs">
+        <p className="text-gray-500 text-xs">
           Optional: leave empty to auto-calculate from monthly salary
         </p>
       </div>
 
       {/* Deductions accordion */}
-      <div className="bg-slate-800 rounded-xl overflow-hidden">
+      <div className="bg-white border-2 border-black overflow-hidden">
         <button
           onClick={() => setShowDeductions(!showDeductions)}
-          className="w-full px-4 min-h-12 flex items-center justify-between text-left"
+          className="w-full px-4 min-h-12 flex items-center justify-between text-left font-bold"
         >
-          <span className="font-bold text-base">{t('salary.deductions')}</span>
-          <span className="text-slate-400 text-2xl">{showDeductions ? '▲' : '▼'}</span>
+          <span className="text-base">{t('salary.deductions')}</span>
+          <span className="text-black text-xl font-bold">{showDeductions ? '▲' : '▼'}</span>
         </button>
         {showDeductions && (
           <div className="px-4 pb-4 space-y-3">
@@ -129,12 +129,12 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
               const key = field === 'otherDeductions' ? 'other' : field;
               return (
                 <div key={field}>
-                  <label className="block font-medium text-slate-300 mb-2">{t(`salary.${field}`)}</label>
+                  <label className="block font-bold text-black mb-1">{t(`salary.${field}`)}</label>
                   <input
                     type="number"
                     value={data.deductions[key as keyof typeof data.deductions] || ''}
                     onChange={e => update({ deductions: { ...data.deductions, [key]: Number(e.target.value) } })}
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
+                    className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-base"
                     min={0}
                     placeholder="0"
                   />
@@ -146,13 +146,13 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
       </div>
 
       {/* Allowances accordion */}
-      <div className="bg-slate-800 rounded-xl overflow-hidden">
+      <div className="bg-white border-2 border-black overflow-hidden">
         <button
           onClick={() => setShowAllowances(!showAllowances)}
-          className="w-full px-4 min-h-12 flex items-center justify-between text-left"
+          className="w-full px-4 min-h-12 flex items-center justify-between text-left font-bold"
         >
-          <span className="font-bold text-base">{t('salary.allowances')}</span>
-          <span className="text-slate-400 text-2xl">{showAllowances ? '▲' : '▼'}</span>
+          <span className="text-base">{t('salary.allowances')}</span>
+          <span className="text-black text-xl font-bold">{showAllowances ? '▲' : '▼'}</span>
         </button>
         {showAllowances && (
           <div className="px-4 pb-4 space-y-3">
@@ -160,12 +160,12 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
               const key = field === 'otherAllowances' ? 'other' : field;
               return (
                 <div key={field}>
-                  <label className="block font-medium text-slate-300 mb-2">{t(`salary.${field}`)}</label>
+                  <label className="block font-bold text-black mb-1">{t(`salary.${field}`)}</label>
                   <input
                     type="number"
                     value={data.allowances[key as keyof typeof data.allowances] || ''}
                     onChange={e => update({ allowances: { ...data.allowances, [key]: Number(e.target.value) } })}
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
+                    className="w-full bg-white border-2 border-black text-black px-4 min-h-12 text-base"
                     min={0}
                     placeholder="0"
                   />
@@ -181,7 +181,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
           {onSaveDefault && (
             <button
               onClick={onSaveDefault}
-              className="text-blue-400 active:text-blue-300 font-medium text-sm underline"
+              className="text-black font-bold text-sm underline"
             >
               {t('salary.saveDefault')}
             </button>
@@ -189,7 +189,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
           {onClearDefault && (
             <button
               onClick={onClearDefault}
-              className="text-slate-400 active:text-slate-300 font-medium text-sm"
+              className="text-gray-500 font-bold text-sm"
             >
               {t('salary.clearDefault')}
             </button>
@@ -200,14 +200,14 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-12 font-bold text-lg"
+          className="flex-1 bg-white border-2 border-black text-black min-h-12 font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
         >
           {t('form.back')}
         </button>
         <button
           onClick={handleCalculate}
           disabled={!data.monthlySalary}
-          className="flex-[2] bg-blue-600 active:bg-blue-700 disabled:bg-slate-600 disabled:text-slate-400 text-white rounded-xl min-h-12 font-bold text-xl"
+          className="flex-[2] bg-black text-white border-2 border-black min-h-12 font-bold text-xl shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] disabled:bg-gray-200 disabled:text-gray-400 disabled:border-gray-300 disabled:shadow-none"
         >
           {submitLabel ?? t('salary.calculate')}
         </button>

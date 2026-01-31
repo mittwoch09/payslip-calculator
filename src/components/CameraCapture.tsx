@@ -34,11 +34,11 @@ export default function CameraCapture({ onCapture, onFileUpload }: CameraCapture
   return (
     <div className="space-y-4">
       {error ? (
-        <div className="bg-slate-800 rounded-xl p-8 text-center">
-          <p className="text-yellow-300 text-lg font-bold">{t('ocr.noCamera')}</p>
+        <div className="bg-amber-100 border-2 border-black p-8 text-center">
+          <p className="text-black text-lg font-bold">{t('ocr.noCamera')}</p>
         </div>
       ) : (
-        <div className="relative rounded-xl overflow-hidden bg-black">
+        <div className="relative overflow-hidden border-2 border-black bg-black">
           <video
             ref={videoRef}
             autoPlay
@@ -48,14 +48,14 @@ export default function CameraCapture({ onCapture, onFileUpload }: CameraCapture
           {stream && (
             <button
               onClick={handleCapture}
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 w-20 h-20 bg-white rounded-full border-[6px] border-blue-500 active:bg-blue-100 shadow-2xl"
+              className="absolute bottom-6 left-1/2 -translate-x-1/2 w-20 h-20 bg-white rounded-full border-4 border-black active:bg-gray-100 shadow-[4px_4px_0_black]"
               aria-label={t('ocr.capture')}
             />
           )}
         </div>
       )}
 
-      <label className="block w-full bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg">
+      <label className="block w-full bg-white border-2 border-black text-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]">
         {t('ocr.upload')}
         <input
           type="file"

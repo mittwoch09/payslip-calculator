@@ -102,20 +102,20 @@ export default function CapturePage({ onBack }: CapturePageProps) {
         <div className="flex gap-3 mt-4">
           <button
             onClick={() => setStep('salary')}
-            className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-base"
+            className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editSalary')}
           </button>
           <button
             onClick={() => setStep('preview')}
-            className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-base"
+            className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editTimecard')}
           </button>
         </div>
         <button
           onClick={() => { setStep('salary'); setEntries([]); setPreviewRows([]); setResult(null); }}
-          className="w-full mt-2 bg-slate-800 active:bg-slate-700 text-slate-400 rounded-xl min-h-12 font-bold text-sm"
+          className="w-full mt-2 bg-gray-100 border-2 border-black text-gray-600 font-bold text-sm min-h-12"
         >
           {t('payslip.startOver')}
         </button>
@@ -126,7 +126,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   if (step === 'preview') {
     return (
       <div>
-        <h2 className="text-2xl font-black mb-4">{t('ocr.review')}</h2>
+        <h2 className="text-2xl font-black text-black mb-4">{t('ocr.review')}</h2>
         <OcrPreview
           entries={entries}
           previewRows={previewRows}
@@ -142,11 +142,11 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   if (step === 'processing' || processing) {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-6">
-        <div className="w-20 h-20 border-[6px] border-blue-400 border-t-transparent rounded-full animate-spin" />
-        <p className="text-slate-200 text-xl font-bold">{t('ocr.processing')}</p>
+        <div className="w-20 h-20 border-[6px] border-black border-t-transparent rounded-full animate-spin" />
+        <p className="text-black text-xl font-bold">{t('ocr.processing')}</p>
         {progress > 0 && (
-          <div className="w-64 bg-slate-700 rounded-full h-3">
-            <div className="bg-blue-500 h-3 rounded-full transition-all" style={{ width: `${progress}%` }} />
+          <div className="w-64 bg-gray-200 border-2 border-black h-3">
+            <div className="bg-lime-400 h-3 transition-all" style={{ width: `${progress}%` }} />
           </div>
         )}
       </div>
@@ -157,8 +157,8 @@ export default function CapturePage({ onBack }: CapturePageProps) {
     return (
       <div>
         <div className="flex items-center gap-4 mb-4">
-          <button onClick={() => setStep('salary')} className="text-blue-400 font-bold min-h-12 px-2">{t('form.back')}</button>
-          <h2 className="text-2xl font-black">{t('home.scan')}</h2>
+          <button onClick={() => setStep('salary')} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
+          <h2 className="text-2xl font-black text-black">{t('home.scan')}</h2>
         </div>
         <CameraCapture
           onCapture={handleImage}
@@ -171,15 +171,15 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   // salary step (initial) — includes year & month picker
   return (
     <div>
-      <h2 className="text-2xl font-black mb-4">{t('salary.title')}</h2>
+      <h2 className="text-2xl font-black text-black mb-4">{t('salary.title')}</h2>
 
       <div className="flex gap-3 mb-4">
         <div className="flex-1">
-          <label className="block text-slate-300 text-sm font-bold mb-1">{t('salary.year')}</label>
+          <label className="block text-black text-sm font-bold mb-1">{t('salary.year')}</label>
           <select
             value={payYear}
             onChange={e => setPayYear(Number(e.target.value))}
-            className="w-full bg-slate-800 border-2 border-slate-600 rounded-xl min-h-12 px-3 text-white text-lg"
+            className="w-full bg-white border-2 border-black min-h-12 px-3 text-black text-lg"
           >
             {[2024, 2025, 2026, 2027].map(y => (
               <option key={y} value={y}>{y}</option>
@@ -187,11 +187,11 @@ export default function CapturePage({ onBack }: CapturePageProps) {
           </select>
         </div>
         <div className="flex-1">
-          <label className="block text-slate-300 text-sm font-bold mb-1">{t('salary.month')}</label>
+          <label className="block text-black text-sm font-bold mb-1">{t('salary.month')}</label>
           <select
             value={payMonth}
             onChange={e => setPayMonth(Number(e.target.value))}
-            className="w-full bg-slate-800 border-2 border-slate-600 rounded-xl min-h-12 px-3 text-white text-lg"
+            className="w-full bg-white border-2 border-black min-h-12 px-3 text-black text-lg"
           >
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i + 1} value={i + 1}>{(i + 1).toString().padStart(2, '0')}</option>

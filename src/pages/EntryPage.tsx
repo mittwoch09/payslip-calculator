@@ -75,20 +75,20 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
         <div className="flex gap-3 mt-4">
           <button
             onClick={() => setStep('salary')}
-            className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-base"
+            className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editSalary')}
           </button>
           <button
             onClick={() => setStep('timecard')}
-            className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-base"
+            className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editTimecard')}
           </button>
         </div>
         <button
           onClick={() => { setStep('timecard'); setEntries([]); setResult(null); }}
-          className="w-full mt-2 bg-slate-800 active:bg-slate-700 text-slate-400 rounded-xl min-h-12 font-bold text-sm"
+          className="w-full mt-2 bg-gray-100 border-2 border-black text-gray-600 font-bold text-sm min-h-12"
         >
           {t('payslip.startOver')}
         </button>
@@ -99,7 +99,7 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
   if (step === 'salary') {
     return (
       <div>
-        <h2 className="text-2xl font-black mb-4">{t('salary.title')}</h2>
+        <h2 className="text-2xl font-black text-black mb-4">{t('salary.title')}</h2>
         <SalaryInput
           data={salaryData}
           onChange={setSalaryData}
@@ -124,8 +124,8 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
   return (
     <div>
       <div className="flex items-center gap-4 mb-4">
-        <button onClick={onBack} className="text-blue-400 font-bold min-h-12 px-2">{t('form.back')}</button>
-        <h2 className="text-2xl font-black">{t('home.manual')}</h2>
+        <button onClick={onBack} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
+        <h2 className="text-2xl font-black text-black">{t('home.manual')}</h2>
       </div>
       <TimecardForm
         entries={entries}

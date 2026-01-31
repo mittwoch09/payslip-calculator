@@ -14,7 +14,7 @@ export default function LanguageSwitcher() {
     <select
       value={i18n.language}
       onChange={e => i18n.changeLanguage(e.target.value)}
-      className="bg-slate-700 text-white text-sm font-bold rounded-lg px-2 py-1 border border-slate-600 outline-none"
+      className="bg-white text-black text-sm font-bold border-2 border-black px-2 py-1 outline-none shadow-[2px_2px_0_black]"
     >
       {languages.map(({ code, label }) => (
         <option key={code} value={code}>{label}</option>

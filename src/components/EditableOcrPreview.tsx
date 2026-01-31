@@ -10,9 +10,9 @@ interface EditableOcrPreviewProps {
 }
 
 const DAY_TYPE_BADGE: Record<DayType, { short: string; cls: string }> = {
-  normal: { short: 'N', cls: 'bg-slate-700 text-slate-400' },
-  rest: { short: 'R', cls: 'bg-orange-500/20 text-orange-300' },
-  publicHoliday: { short: 'PH', cls: 'bg-red-500/20 text-red-300' },
+  normal: { short: 'N', cls: 'bg-gray-100 border border-black text-black' },
+  rest: { short: 'R', cls: 'bg-orange-200 border border-black text-black' },
+  publicHoliday: { short: 'PH', cls: 'bg-red-200 border border-black text-black' },
 };
 
 const SHORT_DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -22,11 +22,11 @@ function dayLabel(dateStr: string): string {
 }
 
 function dayColor(dateStr: string, dayType: DayType): string {
-  if (dayType === 'publicHoliday') return 'text-red-400';
+  if (dayType === 'publicHoliday') return 'text-red-600';
   const dl = dayLabel(dateStr);
-  if (dl === 'Su') return 'text-orange-400';
-  if (dl === 'Sa') return 'text-blue-400';
-  return 'text-slate-400';
+  if (dl === 'Su') return 'text-orange-600';
+  if (dl === 'Sa') return 'text-violet-600';
+  return 'text-gray-500';
 }
 
 function formatOcrPlaceholder(raw: string): string {
@@ -53,7 +53,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
   return (
     <div className="space-y-1">
       {rows.length === 0 && (
-        <div className="px-4 py-6 text-sm text-slate-400">{t('ocrPreview.empty')}</div>
+        <div className="px-4 py-6 text-sm text-gray-500">{t('ocrPreview.empty')}</div>
       )}
       {rows.map((row, i) => {
         const hasOcrData = row.ocrRawIn !== '' || row.ocrRawOut !== '';
@@ -68,11 +68,11 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
         return (
           <div
             key={row.date}
-            className={`bg-slate-800/60 rounded-lg px-3 py-2 space-y-1 ${edited ? 'border-l-4 border-amber-500/60' : 'border-l-4 border-transparent'}`}
+            className={`bg-white border-2 border-black px-3 py-2 space-y-1 mb-1 ${edited ? 'border-l-4 border-l-amber-500' : ''}`}
           >
             {/* Row 1: date, day, badge, hours info, OFF toggle */}
             <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-slate-200 text-sm">
+              <span className="font-semibold text-black text-sm">
                 {row.date.slice(5)}
               </span>
               <span className={`text-sm font-medium ${dayColor(row.date, row.dayType)}`}>
@@ -82,25 +82,25 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                 {badge.short}
               </span>
               {!row.isOff && hours !== null && hours > 0 && (
-                <span className="text-slate-400 text-xs">
+                <span className="text-gray-500 text-xs">
                   {hours.toFixed(1)}h
                 </span>
               )}
               {!row.isOff && otHours !== null && otHours > 0 && (
-                <span className="text-emerald-300 text-xs font-semibold">
+                <span className="text-green-700 text-xs font-semibold">
                   +{otHours.toFixed(1)}OT
                 </span>
               )}
               {row.extraOtHours !== undefined && row.extraOtHours > 0 && (
-                <span className="text-emerald-400 text-[10px] font-bold">+{row.extraOtHours}</span>
+                <span className="text-green-700 text-[10px] font-bold">+{row.extraOtHours}</span>
               )}
               <div className="flex-1" />
               <button
                 onClick={() => onToggleOff(i)}
-                className={`min-h-[36px] min-w-[48px] px-2 rounded-lg text-[11px] font-bold transition-colors ${
+                className={`min-h-[36px] min-w-[48px] px-2 text-[11px] font-bold transition-colors ${
                   row.isOff
-                    ? 'bg-amber-500/30 text-amber-200 border border-amber-500/50'
-                    : 'bg-slate-700 text-slate-500 active:bg-slate-600'
+                    ? 'bg-amber-200 text-black border-2 border-black'
+                    : 'bg-white text-gray-400 border-2 border-black'
                 }`}
               >
                 {t('ocrPreview.offLabel')}
@@ -115,18 +115,18 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                   value={row.clockIn}
                   placeholder={formatOcrPlaceholder(row.ocrRawIn)}
                   onChange={e => onUpdateTime(i, 'clockIn', e.target.value)}
-                  className="flex-1 bg-slate-700 text-white rounded-lg px-3 min-h-[48px] text-base font-medium"
+                  className="flex-1 bg-white border-2 border-black text-black px-3 min-h-[48px] text-base font-medium"
                 />
-                <span className="text-slate-500 text-sm shrink-0">→</span>
+                <span className="text-black text-sm shrink-0">→</span>
                 <input
                   type="time"
                   value={row.clockOut}
                   placeholder={formatOcrPlaceholder(row.ocrRawOut)}
                   onChange={e => onUpdateTime(i, 'clockOut', e.target.value)}
-                  className="flex-1 bg-slate-700 text-white rounded-lg px-3 min-h-[48px] text-base font-medium"
+                  className="flex-1 bg-white border-2 border-black text-black px-3 min-h-[48px] text-base font-medium"
                 />
                 {row.extraOtHours !== undefined && row.extraOtHours > 0 && (
-                  <span className="text-emerald-400 text-sm font-bold shrink-0">+{row.extraOtHours}</span>
+                  <span className="text-green-700 text-sm font-bold shrink-0">+{row.extraOtHours}</span>
                 )}
               </div>
             )}
@@ -134,31 +134,25 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
             {/* Extra OT edit for all working days */}
             {!row.isOff && (
               <div className="flex items-center gap-2 pt-0.5">
-                <span className="text-emerald-400 text-xs shrink-0">Extra OT</span>
-                <input
-                  type="number"
-                  inputMode="decimal"
-                  min={0}
-                  max={24}
-                  step={0.5}
-                  value={row.extraOtHours ?? 0}
-                  onChange={e => {
-                    const v = parseFloat(e.target.value);
-                    onUpdateExtraOt(i, isNaN(v) || v <= 0 ? undefined : v);
-                  }}
-                  className="w-16 bg-slate-700 text-white rounded-lg px-2 min-h-[36px] text-sm font-medium text-center"
-                />
-                <span className="text-slate-500 text-xs shrink-0">hrs</span>
-                <div className="flex-1" />
+                <span className="text-green-700 text-xs font-bold shrink-0">Extra OT</span>
                 <button
-                  onClick={() => onUpdateExtraOt(i, row.extraOtHours !== undefined ? undefined : 1)}
-                  className={`min-h-[36px] px-3 rounded-lg text-xs font-bold transition-colors ${
-                    row.extraOtHours !== undefined
-                      ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-500/50'
-                      : 'bg-slate-700 text-slate-400'
-                  }`}
+                  onClick={() => {
+                    const cur = row.extraOtHours ?? 0;
+                    onUpdateExtraOt(i, cur <= 0.5 ? undefined : cur - 0.5);
+                  }}
+                  className="min-h-[36px] min-w-[36px] bg-white border-2 border-black text-black text-lg font-black"
                 >
-                  {row.extraOtHours !== undefined ? '✓' : '✗'}
+                  −
+                </button>
+                <span className="min-w-[40px] text-center text-sm font-bold text-black">{row.extraOtHours ?? 0}h</span>
+                <button
+                  onClick={() => {
+                    const cur = row.extraOtHours ?? 0;
+                    onUpdateExtraOt(i, Math.min(24, cur + 0.5));
+                  }}
+                  className="min-h-[36px] min-w-[36px] bg-green-200 border-2 border-black text-black text-lg font-black"
+                >
+                  +
                 </button>
               </div>
             )}

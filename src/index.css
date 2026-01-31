@@ -43,6 +43,6 @@ html, body, #root {
 button:active,
 input[type="button"]:active,
 input[type="submit"]:active {
-  transform: scale(0.98);
+  transform: translate(2px, 2px);
   transition: transform 0.1s;
 }
