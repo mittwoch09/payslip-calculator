@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OCR model files (regenerate from node_modules/@gutenye/ocr-models)
+public/models/*.onnx
+# ONNX Runtime WASM (from node_modules/onnxruntime-web)
+public/*.wasm
