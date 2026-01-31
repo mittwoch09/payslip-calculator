@@ -32,6 +32,8 @@ const LETTER_TO_DIGIT: Record<string, string> = {
   u: '0',
   r: '1',
   R: '1',
+  f: '7',
+  F: '7',
 };
 
 /** Replace OCR-confused letters with digits when surrounded by digit context */
@@ -178,6 +180,66 @@ function isValidTime4(s: string): boolean {
   return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
 }
 
+/** Fix common handwriting-to-digit misreads that only occur in specific positions */
+function fixHandwritingDigits(text: string): string {
+  // Leading F/f before 3+ digits → 7 (handwritten 7 looks like F)
+  text = text.replace(/\b[Ff](\d{3,})/g, '7$1');
+
+  // Leading $ before colon-digit (handwritten 7 misread as $): "$:60" → "7:60"
+  text = text.replace(/\$(:?\d)/g, '7$1');
+
+  // "±" in digit context → nothing or hyphen (OCR artifact from handwritten dash)
+  text = text.replace(/(\d)±(\d)/g, '$1 $2');
+
+  // "8" at start of time-like 4-digit sequence where 8xxx is invalid time but 0xxx is valid
+  // e.g., "8730" → "0730" (handwritten 0 looks like 8)
+  text = text.replace(/\b8(\d{3})\b/g, (_match, rest) => {
+    const as8 = '8' + rest;
+    const as0 = '0' + rest;
+    // If 8xxx is a valid time hour (08xx is valid), keep it
+    // But if the first two digits as hour > 23, it's likely a misread 0
+    const hour8 = parseInt(as8.substring(0, 2));
+    if (hour8 > 23 && isValidTime4(as0)) {
+      return as0;
+    }
+    return as8;
+  });
+
+  return text;
+}
+
+/** Split merged day number + time digits: "2707301930" → "27 0730 1930" */
+function splitMergedDayDigits(text: string): string {
+  // Pattern: 9-10 digit sequence starting with a valid day (1-31) followed by 8 digits (two 4-digit times)
+  return text.replace(/\b(\d{9,10})\b/g, (_match, digits) => {
+    // Try 2-digit day prefix: e.g., "2707301930" → day=27, rest="07301930"
+    if (digits.length >= 10) {
+      const day2 = parseInt(digits.substring(0, 2));
+      const rest = digits.substring(2);
+      if (day2 >= 1 && day2 <= 31 && rest.length === 8) {
+        const t1 = rest.substring(0, 4);
+        const t2 = rest.substring(4);
+        if (isValidTime4(t1) && isValidTime4(t2)) {
+          return `${day2} ${t1} ${t2}`;
+        }
+      }
+    }
+    // Try 1-digit day prefix: e.g., "107301930" → day=1, rest="07301930"
+    if (digits.length >= 9) {
+      const day1 = parseInt(digits.substring(0, 1));
+      const rest = digits.substring(1);
+      if (day1 >= 1 && day1 <= 9 && rest.length === 8) {
+        const t1 = rest.substring(0, 4);
+        const t2 = rest.substring(4);
+        if (isValidTime4(t1) && isValidTime4(t2)) {
+          return `${day1} ${t1} ${t2}`;
+        }
+      }
+    }
+    return digits;
+  });
+}
+
 /**
  * Normalize OCR misreads of "+1" marker.
  * Common OCR errors: "+" → "t"/"T"/"f"/"F", "1" → "3"/"l"/"I"/"i"/"|"
@@ -199,8 +261,10 @@ export function correctOcrLine(raw: string): string {
   let text = raw;
   text = normalizeOff(text);
   text = normalizePlusOne(text);
+  text = fixHandwritingDigits(text);
   text = fixLettersInDigitContext(text);
   text = fixPunctuationInDigits(text);
   text = rejoinTimeFragments(text);
+  text = splitMergedDayDigits(text);
   return text;
 }

@@ -35,6 +35,58 @@ const MONTH_MAP: { [key: string]: number } = {
   'dec': 12, 'december': 12,
 };
 
+// Levenshtein distance for fuzzy string matching
+function levenshtein(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] : 1 + Math.min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
+// Fuzzy match a word against month names, handling OCR errors
+// Common English words that should never fuzzy-match to month names
+const STOPWORDS = new Set([
+  'out', 'in', 'date', 'the', 'for', 'and', 'not', 'off', 'day', 'sun',
+  'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'tot', 'amt', 'qty', 'ot',
+  'no', 'yes', 'set', 'get', 'put', 'run', 'add', 'end', 'pay', 'due',
+]);
+
+function fuzzyMatchMonth(word: string): number | null {
+  const w = word.toLowerCase();
+  if (w.length < 3 || STOPWORDS.has(w)) return null;
+
+  // Direct match first
+  if (MONTH_MAP[w]) return MONTH_MAP[w];
+
+  // Try prefix match (at least 3 chars)
+  for (const [name, num] of Object.entries(MONTH_MAP)) {
+    if (name.length >= 3 && w.startsWith(name.slice(0, 3))) return num;
+    if (w.length >= 3 && name.startsWith(w.slice(0, 3))) return num;
+  }
+
+  // Levenshtein distance matching
+  let bestMatch: number | null = null;
+  let bestDist = Infinity;
+  for (const [name, num] of Object.entries(MONTH_MAP)) {
+    if (name.length < 3) continue;
+    const dist = levenshtein(w, name);
+    // Tight thresholds to avoid false positives on short words
+    const minLen = Math.min(name.length, w.length);
+    const threshold = minLen <= 3 ? 1 : Math.max(2, Math.floor(minLen / 3));
+    if (dist < bestDist && dist <= threshold) {
+      bestDist = dist;
+      bestMatch = num;
+    }
+  }
+  return bestMatch;
+}
+
 function isLeapYear(year: number): boolean {
   return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
@@ -70,9 +122,15 @@ function extractYearMonth(text: string): { year: number; month: number } {
   let month = now.getMonth() + 1; // Default to current month
   let monthFound = false;
 
-  // Try to find a 4-digit year (20XX)
+  // Try "Tahun YYYY" or "TahunYYYY" pattern (Malay)
+  const tahunMatch = text.match(/[Tt]ahun\s*(20\d{2})/);
+  if (tahunMatch) {
+    year = parseInt(tahunMatch[1]);
+  }
+
+  // Try to find a 4-digit year (20XX) — only if Tahun didn't already match
   const yearMatch = text.match(/\b(20\d{2})\b/);
-  if (yearMatch) {
+  if (!tahunMatch && yearMatch) {
     year = parseInt(yearMatch[1]);
   }
 
@@ -113,6 +171,19 @@ function extractYearMonth(text: string): { year: number; month: number } {
     }
   }
 
+  // Fuzzy match: try each word against month names
+  if (!monthFound) {
+    const words = text.split(/[\s,.\-/]+/);
+    for (const word of words) {
+      const matched = fuzzyMatchMonth(word);
+      if (matched) {
+        month = matched;
+        monthFound = true;
+        break;
+      }
+    }
+  }
+
   // Fallback: try "YYYY/MM" or "YYYY-MM" or "YYYY MM" near a year
   if (!monthFound && yearMatch) {
     const afterYear = text.substring(text.indexOf(yearMatch[1]) + 4);
@@ -145,7 +216,7 @@ function toRawTime(time: string): string {
 
 function parseLineFlags(line: string): { isOff: boolean; plusOne: boolean } {
   return {
-    isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b)/i.test(line),
+    isOff: /(?:\bOFF\b|\b0FF\b|\bO\s*F\s*F\b|\bSUN\w*\b|\bcuday\b)/i.test(line),
     plusOne: /\+\s*[1lI|](?:\b|(?=OT|$))/i.test(line),
   };
 }
@@ -278,6 +349,33 @@ function parseDayEntry(
       entry.extraOtHours = 1;
     }
     return entry;
+  }
+
+  // Try colon-format: "3 7:00-19:00" or "3 7:00 19:00"
+  const colonFormatMatch = line.match(/^\s*(\d{1,2})\s+(\d{1,2}):(\d{2})\s*[-–\s]\s*(\d{1,2}):(\d{2})/);
+  if (colonFormatMatch) {
+    const day = parseInt(colonFormatMatch[1]);
+    const inH = parseInt(colonFormatMatch[2]);
+    const inM = parseInt(colonFormatMatch[3]);
+    const outH = parseInt(colonFormatMatch[4]);
+    const outM = parseInt(colonFormatMatch[5]);
+
+    if (isValidDate(year, month, day) && inH <= 23 && inM <= 59 && outH <= 23 && outM <= 59) {
+      const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+      const clockIn = `${inH.toString().padStart(2, '0')}:${inM.toString().padStart(2, '0')}`;
+      const clockOut = `${outH.toString().padStart(2, '0')}:${outM.toString().padStart(2, '0')}`;
+      const entry: DayEntry = {
+        date: dateStr,
+        dayType: 'normal' as DayType,
+        clockIn,
+        clockOut,
+        breakMinutes: 60,
+      };
+      if (plusOne) {
+        entry.extraOtHours = 1;
+      }
+      return entry;
+    }
   }
 
   // Try old format: full date with colon-separated times
