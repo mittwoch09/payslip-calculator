@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calcHourlyRate, calcDailyRate, calcWorkedHours, calcDayPay, calcPayslip } from './calculator';
+import { calcHourlyRate, calcDailyRate, calcWorkedHours, calcDayPay, calcPayslip, isPublicHoliday } from './calculator';
 import type { DayEntry } from '../types/timecard';
 import type { PayslipInput } from '../types/payslip';
 
@@ -30,8 +30,26 @@ describe('calcWorkedHours', () => {
     expect(calcWorkedHours('07:00', '18:00', 60)).toBe(10);
   });
 
-  it('returns 0 for negative', () => {
-    expect(calcWorkedHours('17:00', '08:00', 0)).toBe(0);
+  it('handles overnight shift', () => {
+    expect(calcWorkedHours('17:00', '08:00', 0)).toBe(15);
+  });
+});
+
+describe('isPublicHoliday', () => {
+  it('returns true for 2025 New Year', () => {
+    expect(isPublicHoliday('2025-01-01')).toBe(true);
+  });
+
+  it('returns true for 2026 Chinese New Year', () => {
+    expect(isPublicHoliday('2026-02-17')).toBe(true);
+  });
+
+  it('returns false for 2027 (no data)', () => {
+    expect(isPublicHoliday('2027-01-01')).toBe(false);
+  });
+
+  it('returns false for non-holiday dates in 2025', () => {
+    expect(isPublicHoliday('2025-06-15')).toBe(false);
   });
 });
 

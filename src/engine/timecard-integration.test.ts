@@ -261,9 +261,10 @@ Day 4  2025-11-04  07:00 - 19:00
 Day 5  2025-11-05  07.00 - 19.00
 Day 6  06/11/2025  0700 1900
 Day 7  07-11-2025  07:00 - 20:00  +1
+Day 8  2025-11-08  OFF  +1
     `.trim();
 
-    const entries = parseTimecardText(ocrText);
+    const entries = parseTimecardText(ocrText).entries;
 
     // Should parse at least the first few entries
     expect(entries.length).toBeGreaterThanOrEqual(5);
@@ -273,6 +274,13 @@ Day 7  07-11-2025  07:00 - 20:00  +1
     expect(firstEntry).toBeDefined();
     expect(firstEntry?.clockIn).toBe('07:00');
     expect(firstEntry?.clockOut).toBe('19:00');
+
+    const plusOneEntry = entries.find(e => e.date.includes('11-03'));
+    expect(plusOneEntry).toBeDefined();
+    expect(plusOneEntry?.extraOtHours).toBe(1);
+
+    const offEntry = entries.find(e => e.date.includes('11-08'));
+    expect(offEntry).toBeUndefined();
 
     // Check that various date and time formats are recognized
     expect(entries.some(e => e.clockIn === '07:00')).toBe(true);
@@ -286,7 +294,7 @@ Day 7  07-11-2025  07:00 - 20:00  +1
 01-11-2025  07:00 - 19:00
     `.trim();
 
-    const entries = parseTimecardText(ocrText);
+    const entries = parseTimecardText(ocrText).entries;
 
     // Should parse all three date formats
     expect(entries.length).toBe(3);
@@ -303,7 +311,7 @@ Day 7  07-11-2025  07:00 - 20:00  +1
 2025-11-02  07.00 - 19.00
     `.trim();
 
-    const entries = parseTimecardText(ocrText);
+    const entries = parseTimecardText(ocrText).entries;
 
     // Parser supports colon and dot separators (07:00, 07.00)
     expect(entries.length).toBe(2);
@@ -319,7 +327,7 @@ Day 7  07-11-2025  07:00 - 20:00  +1
 2025-11-01  07:00
     `.trim();
 
-    const entries = parseTimecardText(ocrText);
+    const entries = parseTimecardText(ocrText).entries;
 
     expect(entries.length).toBe(1);
     expect(entries[0].clockIn).toBe('07:00');
@@ -335,7 +343,7 @@ Random text without date or time
 2025-11-03  08:00 - 18:00
     `.trim();
 
-    const entries = parseTimecardText(ocrText);
+    const entries = parseTimecardText(ocrText).entries;
 
     // Should parse only valid entries
     expect(entries.length).toBeGreaterThanOrEqual(2);

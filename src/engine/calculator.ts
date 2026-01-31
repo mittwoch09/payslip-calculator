@@ -11,7 +11,7 @@ import {
   OT_MULTIPLIER,
   REST_DAY_MULTIPLIER,
   PH_OT_MULTIPLIER,
-  SG_PUBLIC_HOLIDAYS_2026,
+  getSgPublicHolidays,
 } from './constants';
 
 export function calcHourlyRate(monthlySalary: number): number {
@@ -25,16 +25,22 @@ export function calcDailyRate(monthlySalary: number): number {
 export function calcWorkedHours(clockIn: string, clockOut: string, breakMinutes: number): number {
   const [inH, inM] = clockIn.split(':').map(Number);
   const [outH, outM] = clockOut.split(':').map(Number);
-  const totalMinutes = (outH * 60 + outM) - (inH * 60 + inM) - breakMinutes;
+  let totalMinutes = (outH * 60 + outM) - (inH * 60 + inM);
+  if (totalMinutes < 0) totalMinutes += 24 * 60; // overnight shift
+  totalMinutes -= breakMinutes;
   return Math.max(0, totalMinutes / 60);
 }
 
 export function isPublicHoliday(date: string): boolean {
-  return SG_PUBLIC_HOLIDAYS_2026.includes(date);
+  const year = parseInt(date.substring(0, 4), 10);
+  return getSgPublicHolidays(year).has(date);
 }
 
 export function calcDayPay(entry: DayEntry, hourlyRate: number, dailyRate: number): DayPayResult {
-  const workedHours = calcWorkedHours(entry.clockIn, entry.clockOut, entry.breakMinutes);
+  const baseWorkedHours = calcWorkedHours(entry.clockIn, entry.clockOut, entry.breakMinutes);
+  const extraOtHours = entry.extraOtHours ?? 0;
+  const workedHours = baseWorkedHours + extraOtHours;
+  const extraOtLabel = extraOtHours > 0 ? ` (+${extraOtHours})` : '';
   let basicPay = 0;
   let otPay = 0;
   let regularHours = 0;
@@ -46,47 +52,47 @@ export function calcDayPay(entry: DayEntry, hourlyRate: number, dailyRate: numbe
 
   switch (dayType) {
     case 'normal': {
-      regularHours = Math.min(workedHours, NORMAL_HOURS_PER_DAY);
-      otHours = Math.max(0, workedHours - NORMAL_HOURS_PER_DAY);
+      regularHours = Math.min(baseWorkedHours, NORMAL_HOURS_PER_DAY);
+      otHours = Math.max(0, baseWorkedHours - NORMAL_HOURS_PER_DAY) + extraOtHours;
       // Basic pay is already part of monthly salary, so we only compute OT
       // For payslip breakdown, we show the daily portion of basic
       basicPay = regularHours * hourlyRate;
       otPay = otHours * hourlyRate * OT_MULTIPLIER;
-      description = otHours > 0 ? `Normal day + ${otHours.toFixed(1)}h OT` : 'Normal day';
+      description = otHours > 0 ? `Normal day + ${otHours.toFixed(1)}h OT${extraOtLabel}` : 'Normal day';
       break;
     }
     case 'rest': {
       // MOM rest day pay: up to half normal hours = 1 day's salary,
       // more than half = 2 days' salary, OT beyond normal hours at 1.5x hourly rate
       const halfDay = NORMAL_HOURS_PER_DAY / 2;
-      if (workedHours <= halfDay) {
-        regularHours = workedHours;
-        otHours = 0;
+      if (baseWorkedHours <= halfDay) {
+        regularHours = baseWorkedHours;
+        otHours = extraOtHours;
         basicPay = dailyRate; // 1 day's salary
-        otPay = 0;
-      } else if (workedHours <= NORMAL_HOURS_PER_DAY) {
-        regularHours = workedHours;
-        otHours = 0;
+        otPay = otHours * hourlyRate * OT_MULTIPLIER;
+      } else if (baseWorkedHours <= NORMAL_HOURS_PER_DAY) {
+        regularHours = baseWorkedHours;
+        otHours = extraOtHours;
         basicPay = dailyRate * REST_DAY_MULTIPLIER; // 2 days' salary
-        otPay = 0;
+        otPay = otHours * hourlyRate * OT_MULTIPLIER;
       } else {
         regularHours = NORMAL_HOURS_PER_DAY;
-        otHours = workedHours - NORMAL_HOURS_PER_DAY;
+        otHours = (baseWorkedHours - NORMAL_HOURS_PER_DAY) + extraOtHours;
         basicPay = dailyRate * REST_DAY_MULTIPLIER; // 2 days' salary
         otPay = otHours * hourlyRate * OT_MULTIPLIER; // OT at 1.5x
       }
-      description = otHours > 0 ? `Rest day + ${otHours.toFixed(1)}h OT` : 'Rest day work';
+      description = otHours > 0 ? `Rest day + ${otHours.toFixed(1)}h OT${extraOtLabel}` : 'Rest day work';
       break;
     }
     case 'publicHoliday': {
       // PH work: 1 day gross (daily rate) + 1 day basic (daily rate) for working
       // Plus OT at 1.5x for hours beyond normal
-      regularHours = Math.min(workedHours, NORMAL_HOURS_PER_DAY);
-      otHours = Math.max(0, workedHours - NORMAL_HOURS_PER_DAY);
+      regularHours = Math.min(baseWorkedHours, NORMAL_HOURS_PER_DAY);
+      otHours = Math.max(0, baseWorkedHours - NORMAL_HOURS_PER_DAY) + extraOtHours;
       // 1 day gross pay (already in monthly salary) + 1 extra day basic pay for working
       basicPay = dailyRate; // extra day's pay for working on PH
       otPay = otHours * hourlyRate * PH_OT_MULTIPLIER;
-      description = otHours > 0 ? `Public holiday + ${otHours.toFixed(1)}h OT` : 'Public holiday work';
+      description = otHours > 0 ? `Public holiday + ${otHours.toFixed(1)}h OT${extraOtLabel}` : 'Public holiday work';
       break;
     }
   }

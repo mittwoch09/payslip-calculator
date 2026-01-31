@@ -6,6 +6,7 @@ export interface DayEntry {
   clockIn: string;
   clockOut: string;
   breakMinutes: number;
+  extraOtHours?: number;
 }
 
 export interface TimeCard {
