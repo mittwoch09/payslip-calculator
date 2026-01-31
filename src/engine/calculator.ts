@@ -175,7 +175,6 @@ export function calcPayslip(input: PayslipInput): PayslipResult {
   const maxAccommodation = input.monthlySalary * MAX_ACCOMMODATION_RATIO;
   if (accommodation > maxAccommodation) {
     accommodation = maxAccommodation;
-    warnings.push(`Accommodation deduction capped at 25% of salary (SGD ${maxAccommodation.toFixed(2)})`);
   }
   if (accommodation > 0) deductionBreakdown.push({ label: 'Accommodation', amount: accommodation });
   if (input.deductions.meals > 0) deductionBreakdown.push({ label: 'Meals', amount: input.deductions.meals });

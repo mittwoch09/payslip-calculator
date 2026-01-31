@@ -34,9 +34,9 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
     <div className="space-y-3">
       {/* Warnings */}
       {result.warnings.length > 0 && (
-        <div className="no-print bg-yellow-900/50 border-2 border-yellow-500 rounded-xl p-4 space-y-2">
+        <div className="no-print bg-yellow-900/30 border border-yellow-600 rounded-lg px-3 py-2 space-y-0.5">
           {result.warnings.map((w, i) => (
-            <p key={i} className="text-yellow-200 font-medium">⚠ {w}</p>
+            <p key={i} className="text-yellow-300 text-xs">⚠ {w}</p>
           ))}
         </div>
       )}

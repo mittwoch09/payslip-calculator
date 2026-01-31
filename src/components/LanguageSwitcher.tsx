@@ -11,20 +11,14 @@ const languages = [
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
   return (
-    <div className="flex gap-1">
+    <select
+      value={i18n.language}
+      onChange={e => i18n.changeLanguage(e.target.value)}
+      className="bg-slate-700 text-white text-sm font-bold rounded-lg px-2 py-1 border border-slate-600 outline-none"
+    >
       {languages.map(({ code, label }) => (
-        <button
-          key={code}
-          onClick={() => i18n.changeLanguage(code)}
-          className={`min-w-8 min-h-8 px-2 text-xs rounded-lg font-bold transition-colors ${
-            i18n.language === code
-              ? 'bg-blue-600 text-white'
-              : 'bg-slate-700 text-slate-300 active:bg-slate-600'
-          }`}
-        >
-          {label}
-        </button>
+        <option key={code} value={code}>{label}</option>
       ))}
-    </div>
+    </select>
   );
 }

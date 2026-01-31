@@ -7,11 +7,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       <header className="sticky top-0 z-50 bg-slate-800 border-b border-slate-700 px-4 py-2">
-        <div className="flex items-center justify-between max-w-lg mx-auto gap-4">
-          <div>
-            <h1 className="text-lg font-bold text-blue-400">{t('app.title')}</h1>
-            <p className="text-xs text-slate-400">Calculate your Malaysian payslip</p>
-          </div>
+        <div className="flex items-center justify-between max-w-lg mx-auto">
+          <h1 className="text-base font-bold text-blue-400">{t('app.title')}</h1>
           <LanguageSwitcher />
         </div>
       </header>
