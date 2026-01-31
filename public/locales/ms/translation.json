@@ -47,7 +47,10 @@
     "month": "Bulan",
     "calculate": "Kira Slip Gaji",
     "saveDefault": "Simpan sebagai Lalai",
-    "clearDefault": "Padam Simpanan"
+    "clearDefault": "Padam Simpanan",
+    "hourlyRate": "Kadar Sejam (SGD)",
+    "otRate": "Kadar OT (SGD)",
+    "rateHint": "Biarkan kosong untuk kira automatik dari gaji bulanan"
   },
   "payslip": {
     "title": "Anggaran Slip Gaji",

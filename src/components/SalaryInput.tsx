@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { validateSalary, type ValidationError } from '../utils/validation';
+import { calcHourlyRate } from '../engine/calculator';
+import { OT_MULTIPLIER } from '../engine/constants';
 
 interface SalaryData {
   employeeName: string;
   employerName: string;
   monthlySalary: number;
+  hourlyRateOverride?: number;
+  otRateOverride?: number;
   deductions: { accommodation: number; meals: number; advances: number; other: number };
   allowances: { transport: number; food: number; other: number };
 }
@@ -27,6 +31,9 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
   const [errors, setErrors] = useState<ValidationError[]>([]);
 
   const update = (partial: Partial<SalaryData>) => onChange({ ...data, ...partial });
+
+  const autoHourlyRate = data.monthlySalary > 0 ? calcHourlyRate(data.monthlySalary).toFixed(2) : '0.00';
+  const autoOtRate = data.monthlySalary > 0 ? (calcHourlyRate(data.monthlySalary) * OT_MULTIPLIER).toFixed(2) : '0.00';
 
   const handleCalculate = () => {
     const validationErrors = validateSalary(data.monthlySalary);
@@ -76,6 +83,35 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
           />
           {getError('monthlySalary') && <div className="text-red-400 text-sm mt-1">{t(getError('monthlySalary')!.message)}</div>}
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block font-medium text-slate-300 mb-2 text-sm">{t('salary.hourlyRate')}</label>
+            <input
+              type="number"
+              value={data.hourlyRateOverride || ''}
+              onChange={e => update({ hourlyRateOverride: Number(e.target.value) || undefined })}
+              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+              placeholder={autoHourlyRate}
+              min={0}
+              step="0.01"
+            />
+          </div>
+          <div>
+            <label className="block font-medium text-slate-300 mb-2 text-sm">{t('salary.otRate')}</label>
+            <input
+              type="number"
+              value={data.otRateOverride || ''}
+              onChange={e => update({ otRateOverride: Number(e.target.value) || undefined })}
+              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+              placeholder={autoOtRate}
+              min={0}
+              step="0.01"
+            />
+          </div>
+        </div>
+        <p className="text-slate-500 text-xs">
+          Optional: leave empty to auto-calculate from monthly salary
+        </p>
       </div>
 
       {/* Deductions accordion */}

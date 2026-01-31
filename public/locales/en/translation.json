@@ -47,7 +47,10 @@
     "month": "Month",
     "calculate": "Calculate Payslip",
     "saveDefault": "Save as Default",
-    "clearDefault": "Clear Saved"
+    "clearDefault": "Clear Saved",
+    "hourlyRate": "Hourly Rate (SGD)",
+    "otRate": "OT Rate (SGD)",
+    "rateHint": "Leave empty to auto-calculate from monthly salary"
   },
   "payslip": {
     "title": "Payslip Estimate",

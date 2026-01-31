@@ -18,6 +18,8 @@ export interface PayslipInput {
     food: number;
     other: number;
   };
+  hourlyRateOverride?: number;  // manual hourly basic rate
+  otRateOverride?: number;      // manual overtime rate
 }
 
 export interface DayPayResult {

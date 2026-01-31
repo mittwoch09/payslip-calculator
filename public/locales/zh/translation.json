@@ -47,7 +47,10 @@
     "month": "月份",
     "calculate": "计算工资单",
     "saveDefault": "保存为默认",
-    "clearDefault": "清除保存"
+    "clearDefault": "清除保存",
+    "hourlyRate": "时薪 (SGD)",
+    "otRate": "加班费率 (SGD)",
+    "rateHint": "留空则根据月薪自动计算"
   },
   "payslip": {
     "title": "工资单估算",
