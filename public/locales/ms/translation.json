@@ -8,13 +8,17 @@
     "scan": "Imbas Kad Masa",
     "manual": "Masukkan Secara Manual",
     "scanDesc": "Ambil gambar kad masa anda",
-    "manualDesc": "Taipkan waktu kerja anda"
+    "manualDesc": "Taipkan waktu kerja anda",
+    "history": "Lihat Sejarah",
+    "historyDesc": "Lihat slip gaji lepas"
   },
   "form": {
     "date": "Tarikh",
     "clockIn": "Waktu Masuk",
     "clockOut": "Waktu Keluar",
     "break": "Rehat (minit)",
+    "extraOt": "OT Tambahan (jam)",
+    "extraOtShort": "OT Tambahan",
     "dayType": "Jenis Hari",
     "normal": "Hari Biasa",
     "restDay": "Hari Rehat",
@@ -39,7 +43,11 @@
     "transport": "Pengangkutan",
     "food": "Makanan",
     "otherAllowances": "Elaun Lain",
-    "calculate": "Kira Slip Gaji"
+    "year": "Tahun",
+    "month": "Bulan",
+    "calculate": "Kira Slip Gaji",
+    "saveDefault": "Simpan sebagai Lalai",
+    "clearDefault": "Padam Simpanan"
   },
   "payslip": {
     "title": "Anggaran Slip Gaji",
@@ -49,15 +57,20 @@
     "basicPay": "Gaji Pokok",
     "otPay": "Bayaran Lebih Masa",
     "otHours": "Jam OT",
-    "otRate": "Kadar OT",
     "restDayPay": "Bayaran Hari Rehat",
     "publicHolidayPay": "Bayaran Cuti Umum",
     "totalAllowances": "Jumlah Elaun",
     "grossPay": "Gaji Kasar",
     "totalDeductions": "Jumlah Potongan",
     "netPay": "Gaji Bersih",
+    "editSalary": "Ubah Gaji",
+    "editTimecard": "Ubah Masa",
     "startOver": "Mula Semula",
-    "breakdown": "Butiran Terperinci"
+    "hourlyRate": "Kadar Asas Sejam",
+    "otRate": "Kadar Lebih Masa",
+    "breakdown": "Butiran Terperinci",
+    "saveImage": "Simpan sebagai Imej",
+    "print": "Cetak Slip Gaji"
   },
   "ocr": {
     "processing": "Membaca kad masa anda...",
@@ -67,6 +80,21 @@
     "upload": "Muat Naik Gambar",
     "capture": "Ambil Gambar",
     "noCamera": "Kamera tidak tersedia. Sila muat naik gambar."
+  },
+  "ocrPreview": {
+    "date": "Date",
+    "timeIn": "Time In",
+    "timeOut": "Time Out",
+    "off": "OFF",
+    "plusOne": "OT",
+    "offLabel": "OFF",
+    "plusOneLabel": "OT",
+    "empty": "No preview rows detected."
+  },
+  "ocrEdit": {
+    "dayTypeNormal": "Hari Biasa",
+    "dayTypeRest": "Hari Rehat",
+    "dayTypePH": "Cuti Umum"
   },
   "warnings": {
     "otExceeded": "Amaran: OT melebihi had 72 jam/bulan",
@@ -81,5 +109,20 @@
     "ta": "தமிழ்",
     "bn": "বাংলা",
     "ms": "Bahasa Melayu"
+  },
+  "validation": {
+    "salaryRequired": "Gaji bulanan diperlukan",
+    "dateRequired": "Tarikh diperlukan",
+    "clockInRequired": "Waktu masuk diperlukan",
+    "clockOutRequired": "Waktu keluar diperlukan",
+    "breakNegative": "Masa rehat tidak boleh negatif",
+    "breakExceedsWork": "Masa rehat melebihi masa kerja",
+    "atLeastOneDay": "Sila tambah sekurang-kurangnya satu hari"
+  },
+  "history": {
+    "title": "Sejarah Slip Gaji",
+    "empty": "Tiada sejarah lagi",
+    "delete": "Padam",
+    "netPay": "Gaji Bersih"
   }
 }

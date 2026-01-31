@@ -37,13 +37,13 @@ function formatOcrPlaceholder(raw: string): string {
 }
 
 /** Compute worked hours from HH:MM strings. Returns null if invalid. */
-function workedHours(clockIn: string, clockOut: string, plusOne: boolean): number | null {
+function workedHours(clockIn: string, clockOut: string): number | null {
   if (!clockIn || !clockOut) return null;
   const [ih, im] = clockIn.split(':').map(Number);
   const [oh, om] = clockOut.split(':').map(Number);
   if (isNaN(ih) || isNaN(im) || isNaN(oh) || isNaN(om)) return null;
   let mins = (oh * 60 + om) - (ih * 60 + im);
-  if (plusOne || mins < 0) mins += 24 * 60;
+  if (mins < 0) mins += 24 * 60;
   return mins / 60;
 }
 
@@ -62,7 +62,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
           row.clockOut !== formatOcrPlaceholder(row.ocrRawOut)
         );
         const badge = DAY_TYPE_BADGE[row.dayType];
-        const hours = workedHours(row.clockIn, row.clockOut, row.plusOne);
+        const hours = workedHours(row.clockIn, row.clockOut);
         const otHours = hours !== null ? Math.max(0, hours - 1 - 8) : null; // minus 1h break, 8h regular
 
         return (
@@ -91,8 +91,8 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                   +{otHours.toFixed(1)}OT
                 </span>
               )}
-              {row.ocrPlusOne && (
-                <span className="text-emerald-400 text-[10px] font-bold">+1</span>
+              {row.extraOtHours !== undefined && row.extraOtHours > 0 && (
+                <span className="text-emerald-400 text-[10px] font-bold">+{row.extraOtHours}</span>
               )}
               <div className="flex-1" />
               <button
@@ -125,14 +125,14 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                   onChange={e => onUpdateTime(i, 'clockOut', e.target.value)}
                   className="flex-1 bg-slate-700 text-white rounded-lg px-3 min-h-[48px] text-base font-medium"
                 />
-                {row.ocrPlusOne && (
-                  <span className="text-emerald-400 text-sm font-bold shrink-0">+1</span>
+                {row.extraOtHours !== undefined && row.extraOtHours > 0 && (
+                  <span className="text-emerald-400 text-sm font-bold shrink-0">+{row.extraOtHours}</span>
                 )}
               </div>
             )}
 
-            {/* Extra OT edit when ocrPlusOne is true */}
-            {!row.isOff && row.ocrPlusOne && (
+            {/* Extra OT edit for all working days */}
+            {!row.isOff && (
               <div className="flex items-center gap-2 pt-0.5">
                 <span className="text-emerald-400 text-xs shrink-0">Extra OT</span>
                 <input

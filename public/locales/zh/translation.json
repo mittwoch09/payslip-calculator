@@ -8,13 +8,17 @@
     "scan": "扫描考勤卡",
     "manual": "手动输入",
     "scanDesc": "拍摄您的考勤卡照片",
-    "manualDesc": "手动输入您的工时"
+    "manualDesc": "手动输入您的工时",
+    "history": "查看历史",
+    "historyDesc": "查看过去的工资单"
   },
   "form": {
     "date": "日期",
     "clockIn": "上班时间",
     "clockOut": "下班时间",
     "break": "休息时间（分钟）",
+    "extraOt": "额外加班（小时）",
+    "extraOtShort": "额外加班",
     "dayType": "日类型",
     "normal": "普通工作日",
     "restDay": "休息日",
@@ -39,7 +43,11 @@
     "transport": "交通",
     "food": "伙食",
     "otherAllowances": "其他津贴",
-    "calculate": "计算工资单"
+    "year": "年份",
+    "month": "月份",
+    "calculate": "计算工资单",
+    "saveDefault": "保存为默认",
+    "clearDefault": "清除保存"
   },
   "payslip": {
     "title": "工资单估算",
@@ -49,15 +57,20 @@
     "basicPay": "基本工资",
     "otPay": "加班费",
     "otHours": "加班小时",
-    "otRate": "加班费率",
     "restDayPay": "休息日工资",
     "publicHolidayPay": "公共假期工资",
     "totalAllowances": "津贴总额",
     "grossPay": "总工资",
     "totalDeductions": "扣除总额",
     "netPay": "实发工资",
+    "editSalary": "修改工资",
+    "editTimecard": "修改考勤",
     "startOver": "重新开始",
-    "breakdown": "明细"
+    "hourlyRate": "基本时薪",
+    "otRate": "加班费率",
+    "breakdown": "明细",
+    "saveImage": "保存为图片",
+    "print": "打印工资单"
   },
   "ocr": {
     "processing": "正在读取您的考勤卡...",
@@ -67,6 +80,21 @@
     "upload": "上传图片",
     "capture": "拍照",
     "noCamera": "摄像头不可用。请上传图片。"
+  },
+  "ocrPreview": {
+    "date": "Date",
+    "timeIn": "Time In",
+    "timeOut": "Time Out",
+    "off": "OFF",
+    "plusOne": "OT",
+    "offLabel": "OFF",
+    "plusOneLabel": "OT",
+    "empty": "No preview rows detected."
+  },
+  "ocrEdit": {
+    "dayTypeNormal": "普通工作日",
+    "dayTypeRest": "休息日",
+    "dayTypePH": "公共假期"
   },
   "warnings": {
     "otExceeded": "警告：加班超过每月72小时限制",
@@ -81,5 +109,20 @@
     "ta": "தமிழ்",
     "bn": "বাংলা",
     "ms": "Bahasa Melayu"
+  },
+  "validation": {
+    "salaryRequired": "请输入月工资",
+    "dateRequired": "请输入日期",
+    "clockInRequired": "请输入上班时间",
+    "clockOutRequired": "请输入下班时间",
+    "breakNegative": "休息时间不能为负",
+    "breakExceedsWork": "休息时间超过工作时间",
+    "atLeastOneDay": "请至少添加一天"
+  },
+  "history": {
+    "title": "工资单历史",
+    "empty": "暂无历史记录",
+    "delete": "删除",
+    "netPay": "实发工资"
   }
 }

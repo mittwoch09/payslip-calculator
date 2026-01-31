@@ -4,6 +4,8 @@ import TimecardForm from '../components/TimecardForm';
 import SalaryInput from '../components/SalaryInput';
 import PayslipDisplay from '../components/PayslipDisplay';
 import { calcPayslip } from '../engine/calculator';
+import { useSalaryProfile } from '../hooks/useSalaryProfile';
+import { usePayslipHistory } from '../hooks/usePayslipHistory';
 import type { DayEntry } from '../types/timecard';
 import type { PayslipResult } from '../types/payslip';
 
@@ -16,14 +18,19 @@ type Step = 'timecard' | 'salary' | 'result';
 
 export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
   const { t } = useTranslation();
+  const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
+  const { addEntry: addToHistory } = usePayslipHistory();
   const [step, setStep] = useState<Step>(initialEntries?.length ? 'salary' : 'timecard');
   const [entries, setEntries] = useState<DayEntry[]>(initialEntries ?? []);
-  const [salaryData, setSalaryData] = useState({
-    employeeName: '',
-    employerName: '',
-    monthlySalary: 0,
-    deductions: { accommodation: 0, meals: 0, advances: 0, other: 0 },
-    allowances: { transport: 0, food: 0, other: 0 },
+  const [salaryData, setSalaryData] = useState(() => {
+    const saved = loadProfile();
+    return saved ?? {
+      employeeName: '',
+      employerName: '',
+      monthlySalary: 0,
+      deductions: { accommodation: 0, meals: 0, advances: 0, other: 0 },
+      allowances: { transport: 0, food: 0, other: 0 },
+    };
   });
   const [result, setResult] = useState<PayslipResult | null>(null);
 
@@ -37,6 +44,18 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
     });
     setResult(payslipResult);
     setStep('result');
+
+    // Save to history
+    addToHistory({
+      periodStart: dates[0] ?? '',
+      periodEnd: dates[dates.length - 1] ?? '',
+      employeeName: salaryData.employeeName,
+      employerName: salaryData.employerName,
+      monthlySalary: salaryData.monthlySalary,
+      netPay: payslipResult.netPay,
+      grossPay: payslipResult.grossPay,
+      result: payslipResult,
+    });
   };
 
   if (step === 'result' && result) {
@@ -49,10 +68,25 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
           employerName={salaryData.employerName}
           periodStart={dates[0] ?? ''}
           periodEnd={dates[dates.length - 1] ?? ''}
+          monthlySalary={salaryData.monthlySalary}
         />
+        <div className="flex gap-3 mt-4">
+          <button
+            onClick={() => setStep('salary')}
+            className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-base"
+          >
+            {t('payslip.editSalary')}
+          </button>
+          <button
+            onClick={() => setStep('timecard')}
+            className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-base"
+          >
+            {t('payslip.editTimecard')}
+          </button>
+        </div>
         <button
           onClick={() => { setStep('timecard'); setEntries([]); setResult(null); }}
-          className="w-full mt-4 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
+          className="w-full mt-2 bg-slate-800 active:bg-slate-700 text-slate-400 rounded-xl min-h-12 font-bold text-sm"
         >
           {t('payslip.startOver')}
         </button>
@@ -69,6 +103,17 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
           onChange={setSalaryData}
           onCalculate={handleCalculate}
           onBack={() => setStep('timecard')}
+          onSaveDefault={() => saveProfile(salaryData)}
+          onClearDefault={() => {
+            clearProfile();
+            setSalaryData({
+              employeeName: '',
+              employerName: '',
+              monthlySalary: 0,
+              deductions: { accommodation: 0, meals: 0, advances: 0, other: 0 },
+              allowances: { transport: 0, food: 0, other: 0 },
+            });
+          }}
         />
       </div>
     );

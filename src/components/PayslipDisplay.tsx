@@ -1,5 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import type { PayslipResult } from '../types/payslip';
+import { calcHourlyRate } from '../engine/calculator';
+import { OT_MULTIPLIER } from '../engine/constants';
+import { downloadPayslipImage } from '../utils/export';
+import '../styles/print.css';
 
 interface PayslipDisplayProps {
   result: PayslipResult;
@@ -7,6 +11,9 @@ interface PayslipDisplayProps {
   employerName: string;
   periodStart: string;
   periodEnd: string;
+  monthlySalary: number;
+  hourlyRate?: number;
+  otRate?: number;
 }
 
 function Row({ label, amount, bold, large }: { label: string; amount: number; bold?: boolean; large?: boolean }) {
@@ -18,14 +25,16 @@ function Row({ label, amount, bold, large }: { label: string; amount: number; bo
   );
 }
 
-export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd }: PayslipDisplayProps) {
+export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate: propsHourlyRate, otRate: propsOtRate }: PayslipDisplayProps) {
   const { t } = useTranslation();
+  const hourlyRate = propsHourlyRate ?? calcHourlyRate(monthlySalary);
+  const otRate = propsOtRate ?? (hourlyRate * OT_MULTIPLIER);
 
   return (
     <div className="space-y-4">
       {/* Warnings */}
       {result.warnings.length > 0 && (
-        <div className="bg-yellow-900/50 border-2 border-yellow-500 rounded-xl p-4 space-y-2">
+        <div className="no-print bg-yellow-900/50 border-2 border-yellow-500 rounded-xl p-4 space-y-2">
           {result.warnings.map((w, i) => (
             <p key={i} className="text-yellow-200 font-medium">⚠ {w}</p>
           ))}
@@ -39,6 +48,10 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
           <p>{t('payslip.employee')}: <span className="text-white font-bold">{employeeName || '-'}</span></p>
           <p>{t('payslip.employer')}: <span className="text-white font-bold">{employerName || '-'}</span></p>
           <p>{t('payslip.period')}: <span className="text-white font-bold">{periodStart} to {periodEnd}</span></p>
+        </div>
+        <div className="mt-3 pt-3 border-t border-slate-700 grid grid-cols-2 gap-2 text-sm">
+          <p className="text-slate-400">{t('payslip.hourlyRate')}: <span className="text-white font-bold">${hourlyRate.toFixed(2)}/h</span></p>
+          <p className="text-slate-400">{t('payslip.otRate')}: <span className="text-white font-bold">${otRate.toFixed(2)}/h</span></p>
         </div>
       </div>
 
@@ -80,6 +93,22 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
         <Row label={t('payslip.netPay')} amount={result.netPay} bold large />
       </div>
 
+      {/* Export Buttons */}
+      <div className="no-print flex justify-center gap-3">
+        <button
+          onClick={() => downloadPayslipImage({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate, otRate })}
+          className="px-6 py-3 bg-emerald-700 active:bg-emerald-600 text-white font-bold rounded-lg transition-colors"
+        >
+          {t('payslip.saveImage')}
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="px-6 py-3 bg-slate-700 active:bg-slate-600 text-white font-bold rounded-lg transition-colors"
+        >
+          {t('payslip.print')}
+        </button>
+      </div>
+
       {/* Day breakdown */}
       <div className="bg-slate-800 rounded-xl p-4">
         <h3 className="font-bold text-slate-300 mb-3 text-base">{t('payslip.breakdown')}</h3>
@@ -87,7 +116,7 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
           {result.dayBreakdown.map((day, i) => (
             <div key={i} className="flex justify-between text-base gap-4">
               <div className="flex-1 min-w-0">
-                <div className="text-slate-200 font-bold">{day.date}</div>
+                <div className="text-slate-200 font-bold">{day.date} {(() => { const d = new Date(day.date + 'T00:00:00').getDay(); const label = ['Su','Mo','Tu','We','Th','Fr','Sa'][d]; const cls = day.dayType === 'publicHoliday' ? 'text-red-400' : d === 0 ? 'text-orange-400' : d === 6 ? 'text-blue-400' : 'text-slate-400'; return <span className={`font-normal ${cls}`}>{label}</span>; })()}</div>
                 <div className="text-slate-400 text-sm truncate">{day.description}</div>
               </div>
               <span className="font-bold text-white shrink-0">${day.totalDayPay.toFixed(2)}</span>
@@ -96,7 +125,7 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
         </div>
       </div>
 
-      <p className="text-slate-500 text-sm text-center leading-relaxed">{t('app.disclaimer')}</p>
+      <p className="no-print text-slate-500 text-sm text-center leading-relaxed">{t('app.disclaimer')}</p>
     </div>
   );
 }

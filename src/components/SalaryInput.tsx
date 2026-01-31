@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { validateSalary, type ValidationError } from '../utils/validation';
 
 interface SalaryData {
   employeeName: string;
@@ -14,14 +15,30 @@ interface SalaryInputProps {
   onChange: (data: SalaryData) => void;
   onCalculate: () => void;
   onBack: () => void;
+  submitLabel?: string;
+  onSaveDefault?: () => void;
+  onClearDefault?: () => void;
 }
 
-export default function SalaryInput({ data, onChange, onCalculate, onBack }: SalaryInputProps) {
+export default function SalaryInput({ data, onChange, onCalculate, onBack, submitLabel, onSaveDefault, onClearDefault }: SalaryInputProps) {
   const { t } = useTranslation();
   const [showDeductions, setShowDeductions] = useState(false);
   const [showAllowances, setShowAllowances] = useState(false);
+  const [errors, setErrors] = useState<ValidationError[]>([]);
 
   const update = (partial: Partial<SalaryData>) => onChange({ ...data, ...partial });
+
+  const handleCalculate = () => {
+    const validationErrors = validateSalary(data.monthlySalary);
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors([]);
+    onCalculate();
+  };
+
+  const getError = (field: string) => errors.find(e => e.field === field);
 
   return (
     <div className="space-y-4">
@@ -49,11 +66,15 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
           <input
             type="number"
             value={data.monthlySalary || ''}
-            onChange={e => update({ monthlySalary: Number(e.target.value) })}
-            className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-14 text-2xl font-bold"
+            onChange={e => {
+              update({ monthlySalary: Number(e.target.value) });
+              setErrors([]);
+            }}
+            className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-14 text-2xl font-bold ${getError('monthlySalary') ? 'border-2 border-red-500' : ''}`}
             placeholder="1000"
             min={0}
           />
+          {getError('monthlySalary') && <div className="text-red-400 text-sm mt-1">{t(getError('monthlySalary')!.message)}</div>}
         </div>
       </div>
 
@@ -119,6 +140,27 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
         )}
       </div>
 
+      {(onSaveDefault || onClearDefault) && (
+        <div className="flex gap-3 items-center justify-end mb-2">
+          {onSaveDefault && (
+            <button
+              onClick={onSaveDefault}
+              className="text-blue-400 active:text-blue-300 font-medium text-sm underline"
+            >
+              {t('salary.saveDefault')}
+            </button>
+          )}
+          {onClearDefault && (
+            <button
+              onClick={onClearDefault}
+              className="text-slate-400 active:text-slate-300 font-medium text-sm"
+            >
+              {t('salary.clearDefault')}
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="flex gap-3">
         <button
           onClick={onBack}
@@ -127,11 +169,11 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack }: Sal
           {t('form.back')}
         </button>
         <button
-          onClick={onCalculate}
+          onClick={handleCalculate}
           disabled={!data.monthlySalary}
           className="flex-[2] bg-blue-600 active:bg-blue-700 disabled:bg-slate-600 disabled:text-slate-400 text-white rounded-xl min-h-14 font-bold text-xl"
         >
-          {t('salary.calculate')}
+          {submitLabel ?? t('salary.calculate')}
         </button>
       </div>
     </div>

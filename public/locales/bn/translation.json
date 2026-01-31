@@ -8,13 +8,17 @@
     "scan": "টাইমকার্ড স্ক্যান করুন",
     "manual": "ম্যানুয়ালি লিখুন",
     "scanDesc": "আপনার টাইমকার্ডের ছবি তুলুন",
-    "manualDesc": "আপনার সময় ম্যানুয়ালি লিখুন"
+    "manualDesc": "আপনার সময় ম্যানুয়ালি লিখুন",
+    "history": "ইতিহাস দেখুন",
+    "historyDesc": "আগের বেতন দেখুন"
   },
   "form": {
     "date": "তারিখ",
     "clockIn": "প্রবেশ সময়",
     "clockOut": "প্রস্থান সময়",
     "break": "বিরতি (মিনিট)",
+    "extraOt": "অতিরিক্ত OT (ঘণ্টা)",
+    "extraOtShort": "অতিরিক্ত OT",
     "dayType": "দিনের ধরন",
     "normal": "সাধারণ দিন",
     "restDay": "বিশ্রামের দিন",
@@ -39,7 +43,11 @@
     "transport": "যাতায়াত",
     "food": "খাদ্য",
     "otherAllowances": "অন্যান্য ভাতা",
-    "calculate": "বেতন হিসাব করুন"
+    "year": "বছর",
+    "month": "মাস",
+    "calculate": "বেতন হিসাব করুন",
+    "saveDefault": "ডিফল্ট হিসেবে সংরক্ষণ",
+    "clearDefault": "সংরক্ষিত মুছুন"
   },
   "payslip": {
     "title": "বেতন অনুমান",
@@ -49,15 +57,20 @@
     "basicPay": "মূল বেতন",
     "otPay": "ওভারটাইম বেতন",
     "otHours": "OT ঘণ্টা",
-    "otRate": "OT হার",
     "restDayPay": "বিশ্রামের দিনের বেতন",
     "publicHolidayPay": "সরকারি ছুটির বেতন",
     "totalAllowances": "মোট ভাতা",
     "grossPay": "মোট বেতন",
     "totalDeductions": "মোট কর্তন",
     "netPay": "নিট বেতন",
+    "editSalary": "বেতন সম্পাদনা",
+    "editTimecard": "সময় সম্পাদনা",
     "startOver": "আবার শুরু করুন",
-    "breakdown": "বিস্তারিত বিবরণ"
+    "hourlyRate": "ঘণ্টা ভিত্তিক মূল হার",
+    "otRate": "ওভারটাইম হার",
+    "breakdown": "বিস্তারিত বিবরণ",
+    "saveImage": "ছবি হিসেবে সংরক্ষণ",
+    "print": "বেতন প্রিন্ট করুন"
   },
   "ocr": {
     "processing": "আপনার টাইমকার্ড পড়া হচ্ছে...",
@@ -67,6 +80,21 @@
     "upload": "ছবি আপলোড করুন",
     "capture": "ছবি তুলুন",
     "noCamera": "ক্যামেরা উপলব্ধ নয়। ছবি আপলোড করুন।"
+  },
+  "ocrPreview": {
+    "date": "Date",
+    "timeIn": "Time In",
+    "timeOut": "Time Out",
+    "off": "OFF",
+    "plusOne": "OT",
+    "offLabel": "OFF",
+    "plusOneLabel": "OT",
+    "empty": "No preview rows detected."
+  },
+  "ocrEdit": {
+    "dayTypeNormal": "সাধারণ দিন",
+    "dayTypeRest": "বিশ্রামের দিন",
+    "dayTypePH": "সরকারি ছুটি"
   },
   "warnings": {
     "otExceeded": "সতর্কতা: OT মাসে ৭২ ঘণ্টার সীমা অতিক্রম করেছে",
@@ -81,5 +109,20 @@
     "ta": "தமிழ்",
     "bn": "বাংলা",
     "ms": "Bahasa Melayu"
+  },
+  "validation": {
+    "salaryRequired": "মাসিক বেতন প্রয়োজন",
+    "dateRequired": "তারিখ প্রয়োজন",
+    "clockInRequired": "প্রবেশ সময় প্রয়োজন",
+    "clockOutRequired": "প্রস্থান সময় প্রয়োজন",
+    "breakNegative": "বিরতি সময় নেতিবাচক হতে পারে না",
+    "breakExceedsWork": "বিরতি সময় কাজের সময় অতিক্রম করেছে",
+    "atLeastOneDay": "অন্তত একটি দিন যোগ করুন"
+  },
+  "history": {
+    "title": "বেতন ইতিহাস",
+    "empty": "কোনো ইতিহাস নেই",
+    "delete": "মুছুন",
+    "netPay": "নিট বেতন"
   }
 }

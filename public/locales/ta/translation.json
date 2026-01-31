@@ -8,13 +8,17 @@
     "scan": "டைம்கார்டை ஸ்கேன் செய்",
     "manual": "கைமுறையாக உள்ளிடு",
     "scanDesc": "உங்கள் டைம்கார்டை புகைப்படம் எடுக்கவும்",
-    "manualDesc": "உங்கள் நேரத்தை கைமுறையாக உள்ளிடவும்"
+    "manualDesc": "உங்கள் நேரத்தை கைமுறையாக உள்ளிடவும்",
+    "history": "வரலாறு காண்க",
+    "historyDesc": "கடந்த சம்பளங்களை காண்க"
   },
   "form": {
     "date": "தேதி",
     "clockIn": "வருகை நேரம்",
     "clockOut": "புறப்படும் நேரம்",
     "break": "இடைவேளை (நிமிடங்கள்)",
+    "extraOt": "கூடுதல் OT (மணி நேரம்)",
+    "extraOtShort": "கூடுதல் OT",
     "dayType": "நாள் வகை",
     "normal": "சாதாரண நாள்",
     "restDay": "ஓய்வு நாள்",
@@ -39,7 +43,11 @@
     "transport": "போக்குவரத்து",
     "food": "உணவு",
     "otherAllowances": "பிற கொடுப்பனவுகள்",
-    "calculate": "சம்பளத்தை கணக்கிடு"
+    "year": "ஆண்டு",
+    "month": "மாதம்",
+    "calculate": "சம்பளத்தை கணக்கிடு",
+    "saveDefault": "இயல்புநிலையாக சேமி",
+    "clearDefault": "சேமித்ததை நீக்கு"
   },
   "payslip": {
     "title": "சம்பள மதிப்பீடு",
@@ -49,15 +57,20 @@
     "basicPay": "அடிப்படை சம்பளம்",
     "otPay": "மேலதிக நேர ஊதியம்",
     "otHours": "OT மணி நேரம்",
-    "otRate": "OT விகிதம்",
     "restDayPay": "ஓய்வு நாள் ஊதியம்",
     "publicHolidayPay": "பொது விடுமுறை ஊதியம்",
     "totalAllowances": "மொத்த கொடுப்பனவுகள்",
     "grossPay": "மொத்த சம்பளம்",
     "totalDeductions": "மொத்த பிடித்தங்கள்",
     "netPay": "நிகர சம்பளம்",
+    "editSalary": "சம்பளம் திருத்து",
+    "editTimecard": "நேரம் திருத்து",
     "startOver": "மீண்டும் தொடங்கு",
-    "breakdown": "விரிவான பிரிவு"
+    "hourlyRate": "மணிநேர அடிப்படை ஊதியம்",
+    "otRate": "மேலதிக நேர விகிதம்",
+    "breakdown": "விரிவான பிரிவு",
+    "saveImage": "படமாக சேமி",
+    "print": "சம்பளம் அச்சிடு"
   },
   "ocr": {
     "processing": "உங்கள் டைம்கார்டைப் படிக்கிறது...",
@@ -67,6 +80,21 @@
     "upload": "படத்தை பதிவேற்று",
     "capture": "புகைப்படம் எடு",
     "noCamera": "கேமரா கிடைக்கவில்லை. படத்தை பதிவேற்றவும்."
+  },
+  "ocrPreview": {
+    "date": "Date",
+    "timeIn": "Time In",
+    "timeOut": "Time Out",
+    "off": "OFF",
+    "plusOne": "OT",
+    "offLabel": "OFF",
+    "plusOneLabel": "OT",
+    "empty": "No preview rows detected."
+  },
+  "ocrEdit": {
+    "dayTypeNormal": "சாதாரண நாள்",
+    "dayTypeRest": "ஓய்வு நாள்",
+    "dayTypePH": "பொது விடுமுறை"
   },
   "warnings": {
     "otExceeded": "எச்சரிக்கை: OT மாதத்திற்கு 72 மணி நேர வரம்பை மீறுகிறது",
@@ -81,5 +109,20 @@
     "ta": "தமிழ்",
     "bn": "বাংলা",
     "ms": "Bahasa Melayu"
+  },
+  "validation": {
+    "salaryRequired": "மாத சம்பளம் தேவை",
+    "dateRequired": "தேதி தேவை",
+    "clockInRequired": "வருகை நேரம் தேவை",
+    "clockOutRequired": "புறப்படும் நேரம் தேவை",
+    "breakNegative": "இடைவேளை எதிர்மறையாக இருக்கக்கூடாது",
+    "breakExceedsWork": "இடைவேளை வேலை நேரத்தை மீறுகிறது",
+    "atLeastOneDay": "குறைந்தது ஒரு நாள் சேர்க்கவும்"
+  },
+  "history": {
+    "title": "சம்பள வரலாறு",
+    "empty": "வரலாறு இல்லை",
+    "delete": "நீக்கு",
+    "netPay": "நிகர சம்பளம்"
   }
 }

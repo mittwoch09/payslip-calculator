@@ -8,13 +8,17 @@
     "scan": "Scan Timecard",
     "manual": "Enter Manually",
     "scanDesc": "Take a photo of your timecard",
-    "manualDesc": "Type your hours manually"
+    "manualDesc": "Type your hours manually",
+    "history": "View History",
+    "historyDesc": "See past payslips"
   },
   "form": {
     "date": "Date",
     "clockIn": "Clock In",
     "clockOut": "Clock Out",
     "break": "Break (mins)",
+    "extraOt": "Extra OT (hours)",
+    "extraOtShort": "Extra OT",
     "dayType": "Day Type",
     "normal": "Normal Day",
     "restDay": "Rest Day",
@@ -39,7 +43,11 @@
     "transport": "Transport",
     "food": "Food",
     "otherAllowances": "Other Allowances",
-    "calculate": "Calculate Payslip"
+    "year": "Year",
+    "month": "Month",
+    "calculate": "Calculate Payslip",
+    "saveDefault": "Save as Default",
+    "clearDefault": "Clear Saved"
   },
   "payslip": {
     "title": "Payslip Estimate",
@@ -49,15 +57,20 @@
     "basicPay": "Basic Pay",
     "otPay": "Overtime Pay",
     "otHours": "OT Hours",
-    "otRate": "OT Rate",
     "restDayPay": "Rest Day Pay",
     "publicHolidayPay": "Public Holiday Pay",
     "totalAllowances": "Total Allowances",
     "grossPay": "Gross Pay",
     "totalDeductions": "Total Deductions",
     "netPay": "Net Pay",
+    "editSalary": "Edit Salary",
+    "editTimecard": "Edit Timecard",
     "startOver": "Start Over",
-    "breakdown": "Detailed Breakdown"
+    "hourlyRate": "Hourly Basic Rate",
+    "otRate": "Overtime Rate",
+    "breakdown": "Detailed Breakdown",
+    "saveImage": "Save as Image",
+    "print": "Print Payslip"
   },
   "ocr": {
     "processing": "Reading your timecard...",
@@ -67,6 +80,21 @@
     "upload": "Upload Image",
     "capture": "Take Photo",
     "noCamera": "Camera not available. Please upload an image instead."
+  },
+  "ocrPreview": {
+    "date": "Date",
+    "timeIn": "Time In",
+    "timeOut": "Time Out",
+    "off": "OFF",
+    "plusOne": "OT",
+    "offLabel": "OFF",
+    "plusOneLabel": "OT",
+    "empty": "No preview rows detected."
+  },
+  "ocrEdit": {
+    "dayTypeNormal": "Normal Day",
+    "dayTypeRest": "Rest Day",
+    "dayTypePH": "Public Holiday"
   },
   "warnings": {
     "otExceeded": "Warning: OT exceeds 72 hours/month limit",
@@ -81,5 +109,20 @@
     "ta": "தமிழ்",
     "bn": "বাংলা",
     "ms": "Bahasa Melayu"
+  },
+  "validation": {
+    "salaryRequired": "Monthly salary is required",
+    "dateRequired": "Date is required",
+    "clockInRequired": "Clock in time is required",
+    "clockOutRequired": "Clock out time is required",
+    "breakNegative": "Break time cannot be negative",
+    "breakExceedsWork": "Break time exceeds work hours",
+    "atLeastOneDay": "Please add at least one day"
+  },
+  "history": {
+    "title": "Payslip History",
+    "empty": "No history yet",
+    "delete": "Delete",
+    "netPay": "Net Pay"
   }
 }
