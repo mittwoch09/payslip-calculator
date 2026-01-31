@@ -11,12 +11,12 @@ const languages = [
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1">
       {languages.map(({ code, label }) => (
         <button
           key={code}
           onClick={() => i18n.changeLanguage(code)}
-          className={`min-w-12 min-h-12 px-3 rounded-lg font-bold transition-colors ${
+          className={`min-w-8 min-h-8 px-2 text-xs rounded-lg font-bold transition-colors ${
             i18n.language === code
               ? 'bg-blue-600 text-white'
               : 'bg-slate-700 text-slate-300 active:bg-slate-600'

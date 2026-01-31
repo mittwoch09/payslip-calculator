@@ -18,8 +18,8 @@ interface PayslipDisplayProps {
 
 function Row({ label, amount, bold, large }: { label: string; amount: number; bold?: boolean; large?: boolean }) {
   return (
-    <div className={`flex justify-between items-center py-2 gap-4 ${bold ? 'font-bold text-lg' : ''} ${large ? 'text-3xl min-h-16' : 'text-base'}`}>
-      <span className="text-slate-200">{label}</span>
+    <div className={`flex justify-between items-center py-1.5 gap-4 ${bold ? 'font-bold text-lg' : ''} ${large ? 'text-3xl min-h-16' : 'text-base'}`}>
+      <span className="text-slate-200 truncate">{label}</span>
       <span className={`${large ? 'text-emerald-400 font-black' : 'font-bold'} shrink-0`}>${amount.toFixed(2)}</span>
     </div>
   );
@@ -31,7 +31,7 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
   const otRate = propsOtRate ?? (hourlyRate * OT_MULTIPLIER);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Warnings */}
       {result.warnings.length > 0 && (
         <div className="no-print bg-yellow-900/50 border-2 border-yellow-500 rounded-xl p-4 space-y-2">
@@ -42,7 +42,7 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
       )}
 
       {/* Header */}
-      <div className="bg-slate-800 rounded-xl p-4">
+      <div className="bg-slate-800 rounded-xl p-3">
         <h2 className="text-2xl font-black text-blue-400 mb-3">{t('payslip.title')}</h2>
         <div className="text-base text-slate-300 space-y-1">
           <p>{t('payslip.employee')}: <span className="text-white font-bold">{employeeName || '-'}</span></p>
@@ -89,21 +89,21 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
       )}
 
       {/* Net Pay */}
-      <div className="bg-emerald-900/40 border-2 border-emerald-600 rounded-xl p-6">
+      <div className="bg-emerald-900/40 border-2 border-emerald-600 rounded-xl p-4">
         <Row label={t('payslip.netPay')} amount={result.netPay} bold large />
       </div>
 
       {/* Export Buttons */}
-      <div className="no-print flex justify-center gap-3">
+      <div className="no-print flex flex-col gap-3">
         <button
           onClick={() => downloadPayslipImage({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate, otRate })}
-          className="px-6 py-3 bg-emerald-700 active:bg-emerald-600 text-white font-bold rounded-lg transition-colors"
+          className="w-full px-6 py-3 bg-emerald-700 active:bg-emerald-600 text-white font-bold rounded-lg transition-colors"
         >
           {t('payslip.saveImage')}
         </button>
         <button
           onClick={() => window.print()}
-          className="px-6 py-3 bg-slate-700 active:bg-slate-600 text-white font-bold rounded-lg transition-colors"
+          className="w-full px-6 py-3 bg-slate-700 active:bg-slate-600 text-white font-bold rounded-lg transition-colors"
         >
           {t('payslip.print')}
         </button>
@@ -116,7 +116,9 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
           {result.dayBreakdown.map((day, i) => (
             <div key={i} className="flex justify-between text-base gap-4">
               <div className="flex-1 min-w-0">
-                <div className="text-slate-200 font-bold">{day.date} {(() => { const d = new Date(day.date + 'T00:00:00').getDay(); const label = ['Su','Mo','Tu','We','Th','Fr','Sa'][d]; const cls = day.dayType === 'publicHoliday' ? 'text-red-400' : d === 0 ? 'text-orange-400' : d === 6 ? 'text-blue-400' : 'text-slate-400'; return <span className={`font-normal ${cls}`}>{label}</span>; })()}</div>
+                <div className="text-slate-200 font-bold truncate">
+                  {day.date} {(() => { const d = new Date(day.date + 'T00:00:00').getDay(); const label = ['Su','Mo','Tu','We','Th','Fr','Sa'][d]; const cls = day.dayType === 'publicHoliday' ? 'text-red-400' : d === 0 ? 'text-orange-400' : d === 6 ? 'text-blue-400' : 'text-slate-400'; return <span className={`font-normal ${cls}`}>({label})</span>; })()}
+                </div>
                 <div className="text-slate-400 text-sm truncate">{day.description}</div>
               </div>
               <span className="font-bold text-white shrink-0">${day.totalDayPay.toFixed(2)}</span>

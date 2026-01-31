@@ -48,8 +48,8 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
   const getError = (field: string) => errors.find(e => e.field === field);
 
   return (
-    <div className="space-y-4">
-      <div className="bg-slate-800 rounded-xl p-4 space-y-4">
+    <div className="space-y-3">
+      <div className="bg-slate-800 rounded-xl p-4 space-y-3">
         <div>
           <label className="block font-medium text-slate-300 mb-2">{t('salary.employeeName')}</label>
           <input
@@ -69,7 +69,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
           />
         </div>
         <div>
-          <label className="block font-bold text-white mb-2 text-lg">{t('salary.monthly')}</label>
+          <label className="block font-bold text-white mb-2 text-base">{t('salary.monthly')}</label>
           <input
             type="number"
             value={data.monthlySalary || ''}
@@ -77,7 +77,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
               update({ monthlySalary: Number(e.target.value) });
               setErrors([]);
             }}
-            className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-14 text-2xl font-bold ${getError('monthlySalary') ? 'border-2 border-red-500' : ''}`}
+            className={`w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-xl font-bold ${getError('monthlySalary') ? 'border-2 border-red-500' : ''}`}
             placeholder="1000"
             min={0}
           />
@@ -90,7 +90,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
               type="number"
               value={data.hourlyRateOverride || ''}
               onChange={e => update({ hourlyRateOverride: Number(e.target.value) || undefined })}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
               placeholder={autoHourlyRate}
               min={0}
               step="0.01"
@@ -102,7 +102,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
               type="number"
               value={data.otRateOverride || ''}
               onChange={e => update({ otRateOverride: Number(e.target.value) || undefined })}
-              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+              className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
               placeholder={autoOtRate}
               min={0}
               step="0.01"
@@ -118,13 +118,13 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
       <div className="bg-slate-800 rounded-xl overflow-hidden">
         <button
           onClick={() => setShowDeductions(!showDeductions)}
-          className="w-full px-4 min-h-14 flex items-center justify-between text-left"
+          className="w-full px-4 min-h-12 flex items-center justify-between text-left"
         >
-          <span className="font-bold text-lg">{t('salary.deductions')}</span>
+          <span className="font-bold text-base">{t('salary.deductions')}</span>
           <span className="text-slate-400 text-2xl">{showDeductions ? '▲' : '▼'}</span>
         </button>
         {showDeductions && (
-          <div className="px-4 pb-4 space-y-4">
+          <div className="px-4 pb-4 space-y-3">
             {(['accommodation', 'meals', 'advances', 'otherDeductions'] as const).map(field => {
               const key = field === 'otherDeductions' ? 'other' : field;
               return (
@@ -134,7 +134,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
                     type="number"
                     value={data.deductions[key as keyof typeof data.deductions] || ''}
                     onChange={e => update({ deductions: { ...data.deductions, [key]: Number(e.target.value) } })}
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
                     min={0}
                     placeholder="0"
                   />
@@ -149,13 +149,13 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
       <div className="bg-slate-800 rounded-xl overflow-hidden">
         <button
           onClick={() => setShowAllowances(!showAllowances)}
-          className="w-full px-4 min-h-14 flex items-center justify-between text-left"
+          className="w-full px-4 min-h-12 flex items-center justify-between text-left"
         >
-          <span className="font-bold text-lg">{t('salary.allowances')}</span>
+          <span className="font-bold text-base">{t('salary.allowances')}</span>
           <span className="text-slate-400 text-2xl">{showAllowances ? '▲' : '▼'}</span>
         </button>
         {showAllowances && (
-          <div className="px-4 pb-4 space-y-4">
+          <div className="px-4 pb-4 space-y-3">
             {(['transport', 'food', 'otherAllowances'] as const).map(field => {
               const key = field === 'otherAllowances' ? 'other' : field;
               return (
@@ -165,7 +165,7 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
                     type="number"
                     value={data.allowances[key as keyof typeof data.allowances] || ''}
                     onChange={e => update({ allowances: { ...data.allowances, [key]: Number(e.target.value) } })}
-                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-lg"
+                    className="w-full bg-slate-700 text-white rounded-lg px-4 min-h-12 text-base"
                     min={0}
                     placeholder="0"
                   />
@@ -200,14 +200,14 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
       <div className="flex gap-3">
         <button
           onClick={onBack}
-          className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-14 font-bold text-lg"
+          className="flex-1 bg-slate-700 active:bg-slate-600 text-white rounded-xl min-h-12 font-bold text-lg"
         >
           {t('form.back')}
         </button>
         <button
           onClick={handleCalculate}
           disabled={!data.monthlySalary}
-          className="flex-[2] bg-blue-600 active:bg-blue-700 disabled:bg-slate-600 disabled:text-slate-400 text-white rounded-xl min-h-14 font-bold text-xl"
+          className="flex-[2] bg-blue-600 active:bg-blue-700 disabled:bg-slate-600 disabled:text-slate-400 text-white rounded-xl min-h-12 font-bold text-xl"
         >
           {submitLabel ?? t('salary.calculate')}
         </button>
