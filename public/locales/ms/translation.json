@@ -82,7 +82,14 @@
     "retake": "Ambil Gambar Semula",
     "upload": "Muat Naik Gambar",
     "capture": "Ambil Gambar",
-    "noCamera": "Kamera tidak tersedia. Sila muat naik gambar."
+    "noCamera": "Kamera tidak tersedia",
+    "noCameraHint": "Gunakan butang di bawah untuk ambil gambar atau muat naik",
+    "takePhoto": "Ambil Gambar",
+    "failed": "Gagal membaca kad masa",
+    "failedHint": "Sila cuba lagi dengan gambar yang lebih jelas",
+    "retry": "Cuba Lagi",
+    "scanTip": "Muat naik gambar imbasan yang jelas untuk hasil terbaik",
+    "scanTipDesc": "Pastikan teks kad masa jelas, terang dan tidak kabur. Gambar imbasan lebih baik daripada foto."
   },
   "ocrPreview": {
     "date": "Date",

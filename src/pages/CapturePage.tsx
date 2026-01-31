@@ -24,7 +24,7 @@ const now = new Date();
 
 export default function CapturePage({ onBack }: CapturePageProps) {
   const { t } = useTranslation();
-  const { processing, progress, processImage } = useOcr();
+  const { processing, progress, error: ocrError, processImage } = useOcr();
   const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
   const { addEntry: addToHistory } = usePayslipHistory();
   const [step, setStep] = useState<Step>('salary');
@@ -43,19 +43,28 @@ export default function CapturePage({ onBack }: CapturePageProps) {
     };
   });
   const [result, setResult] = useState<PayslipResult | null>(null);
+  const [ocrFailed, setOcrFailed] = useState(false);
 
   const handleImage = async (source: string | File) => {
+    setOcrFailed(false);
     setStep('processing');
-    const ocrResult = await processImage(source);
-    if (ocrResult) {
-      const parsed = ocrResult.lines.length > 0
-        ? parseTimecardLines(ocrResult.lines, payYear, payMonth)
-        : parseTimecardText(ocrResult.text, payYear, payMonth);
-      setEntries(parsed.entries);
-      setPreviewRows(parsed.rows);
-      setStep('preview');
-    } else {
+    try {
+      const ocrResult = await processImage(source);
+      if (ocrResult) {
+        const parsed = ocrResult.lines.length > 0
+          ? parseTimecardLines(ocrResult.lines, payYear, payMonth)
+          : parseTimecardText(ocrResult.text, payYear, payMonth);
+        setEntries(parsed.entries);
+        setPreviewRows(parsed.rows);
+        setStep('preview');
+      } else {
+        setStep('camera');
+        setOcrFailed(true);
+      }
+    } catch (e) {
+      console.error('OCR handleImage failed:', e);
       setStep('camera');
+      setOcrFailed(true);
     }
   };
 
@@ -158,9 +167,15 @@ export default function CapturePage({ onBack }: CapturePageProps) {
     return (
       <div>
         <div className="flex items-center gap-4 mb-4">
-          <button onClick={() => setStep('salary')} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
+          <button onClick={() => { setStep('salary'); setOcrFailed(false); }} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
           <h2 className="text-2xl font-black text-black">{t('home.scan')}</h2>
         </div>
+        {ocrFailed && (
+          <div className="bg-red-100 border-2 border-black p-4 mb-4">
+            <p className="text-black font-bold">{t('ocr.failed')}</p>
+            <p className="text-gray-700 text-sm mt-1">{t('ocr.failedHint')}</p>
+          </div>
+        )}
         <CameraCapture
           onCapture={handleImage}
           onFileUpload={handleImage}

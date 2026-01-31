@@ -21,6 +21,49 @@ interface OcrEngine {
 let ocrInstance: OcrEngine | null = null;
 let ocrInitPromise: Promise<OcrEngine> | null = null;
 
+async function resizeImage(imageUrl: string, maxDimension: number = 1600): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const { width, height } = img;
+
+      // Calculate new dimensions maintaining aspect ratio
+      let newWidth = width;
+      let newHeight = height;
+
+      if (width > maxDimension || height > maxDimension) {
+        if (width > height) {
+          newWidth = maxDimension;
+          newHeight = (height / width) * maxDimension;
+        } else {
+          newHeight = maxDimension;
+          newWidth = (width / height) * maxDimension;
+        }
+      }
+
+      // Create canvas and resize
+      const canvas = document.createElement('canvas');
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        reject(new Error('Failed to get canvas context'));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+      // Convert to JPEG with 0.9 quality
+      const resizedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      resolve(resizedDataUrl);
+    };
+
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = imageUrl;
+  });
+}
+
 async function getOcr() {
   if (ocrInstance) return ocrInstance;
   if (ocrInitPromise) return ocrInitPromise;
@@ -39,7 +82,10 @@ async function getOcr() {
     });
     ocrInstance = ocr;
     return ocr;
-  })();
+  })().catch(e => {
+    ocrInitPromise = null;
+    throw e;
+  });
 
   return ocrInitPromise;
 }
@@ -122,7 +168,11 @@ export function useOcr() {
         input = imageSource;
       }
 
-      const detectedLines = await ocr.detect(input);
+      // Resize image before OCR to prevent mobile crashes
+      const resizedInput = await resizeImage(input);
+      setProgress(50);
+
+      const detectedLines = await ocr.detect(resizedInput);
       setProgress(100);
 
       if (imageSource instanceof File && input.startsWith('blob:')) {

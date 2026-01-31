@@ -82,7 +82,14 @@
     "retake": "重新拍照",
     "upload": "上传图片",
     "capture": "拍照",
-    "noCamera": "摄像头不可用。请上传图片。"
+    "noCamera": "摄像头不可用",
+    "noCameraHint": "请使用下方按钮拍照或上传图片",
+    "takePhoto": "拍照",
+    "failed": "无法读取考勤卡",
+    "failedHint": "请用更清晰的图片重试",
+    "retry": "重试",
+    "scanTip": "上传清晰的扫描图片效果最佳",
+    "scanTipDesc": "确保考勤卡文字清晰、光线充足、不模糊。扫描图片比拍照效果更好。"
   },
   "ocrPreview": {
     "date": "Date",

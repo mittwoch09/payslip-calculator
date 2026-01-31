@@ -82,7 +82,14 @@
     "retake": "Retake Photo",
     "upload": "Upload Image",
     "capture": "Take Photo",
-    "noCamera": "Camera not available. Please upload an image instead."
+    "noCamera": "Camera not available",
+    "noCameraHint": "Use the buttons below to take a photo or upload an image",
+    "takePhoto": "Take Photo",
+    "failed": "Failed to read timecard",
+    "failedHint": "Please try again with a clearer image",
+    "retry": "Try Again",
+    "scanTip": "For best results, upload a clear scanned image",
+    "scanTipDesc": "Make sure the timecard text is sharp, well-lit, and not blurry. Scanned images work better than photos."
   },
   "ocrPreview": {
     "date": "Date",

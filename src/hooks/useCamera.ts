@@ -2,14 +2,18 @@ import { useRef, useState, useCallback } from 'react';
 
 export function useCamera() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const startCamera = useCallback(async () => {
+    // Don't restart if already running
+    if (streamRef.current) return;
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: { facingMode: 'environment', width: { ideal: 3840 }, height: { ideal: 2160 } },
       });
+      streamRef.current = mediaStream;
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
@@ -21,9 +25,10 @@ export function useCamera() {
   }, []);
 
   const stopCamera = useCallback(() => {
-    stream?.getTracks().forEach(track => track.stop());
+    streamRef.current?.getTracks().forEach(track => track.stop());
+    streamRef.current = null;
     setStream(null);
-  }, [stream]);
+  }, []);
 
   const capturePhoto = useCallback((): string | null => {
     const video = videoRef.current;
@@ -32,7 +37,7 @@ export function useCamera() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     canvas.getContext('2d')?.drawImage(video, 0, 0);
-    return canvas.toDataURL('image/jpeg', 0.8);
+    return canvas.toDataURL('image/jpeg', 0.95);
   }, []);
 
   return { videoRef, stream, error, startCamera, stopCamera, capturePhoto };
