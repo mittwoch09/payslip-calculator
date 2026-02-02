@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOcr } from '../hooks/useOcr';
 import { useSalaryProfile } from '../hooks/useSalaryProfile';
@@ -46,6 +46,12 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   const [ocrFailed, setOcrFailed] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [totalImages, setTotalImages] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [step]);
 
   const handleBatch = async (sources: (string | File)[]) => {
     setOcrFailed(false);
@@ -107,7 +113,6 @@ export default function CapturePage({ onBack }: CapturePageProps) {
     setEntries(data);
     setResult(payslipResult);
     setStep('result');
-    window.scrollTo(0, 0);
 
     // Save to history
     addToHistory({
@@ -255,10 +260,8 @@ export default function CapturePage({ onBack }: CapturePageProps) {
             setPreviewRows(rows);
             setEntries(remapped);
             setStep('preview');
-            window.scrollTo(0, 0);
           } else {
             setStep('camera');
-            window.scrollTo(0, 0);
           }
         }}
         onBack={onBack}
