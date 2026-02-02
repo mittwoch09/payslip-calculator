@@ -64,6 +64,135 @@ async function resizeImage(imageUrl: string, maxDimension: number = 1600): Promi
   });
 }
 
+/** Preprocess image for better OCR: grayscale, contrast, sharpen, adaptive threshold */
+async function preprocessForOcr(imageUrl: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const { width, height } = img;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { reject(new Error('No canvas context')); return; }
+
+      ctx.drawImage(img, 0, 0);
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
+
+      // Step 1: Convert to grayscale
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        data[i] = data[i + 1] = data[i + 2] = gray;
+      }
+
+      // Step 2: Contrast enhancement (CLAHE-like simple version)
+      // Find histogram bounds and stretch
+      let min = 255, max = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const v = data[i];
+        if (v < min) min = v;
+        if (v > max) max = v;
+      }
+      // Use 5th/95th percentile for robustness
+      const hist = new Uint32Array(256);
+      const totalPixels = width * height;
+      for (let i = 0; i < data.length; i += 4) hist[data[i]]++;
+      let cumulative = 0;
+      let p5 = 0, p95 = 255;
+      for (let i = 0; i < 256; i++) {
+        cumulative += hist[i];
+        if (cumulative >= totalPixels * 0.05 && p5 === 0) p5 = i;
+        if (cumulative >= totalPixels * 0.95) { p95 = i; break; }
+      }
+      const range = Math.max(p95 - p5, 1);
+      for (let i = 0; i < data.length; i += 4) {
+        const stretched = Math.round(((data[i] - p5) / range) * 255);
+        const clamped = Math.max(0, Math.min(255, stretched));
+        data[i] = data[i + 1] = data[i + 2] = clamped;
+      }
+
+      // Step 3: Unsharp mask (sharpen)
+      // Create blurred copy, then sharpen = original + amount * (original - blurred)
+      const blurred = new Float32Array(width * height);
+      const src = new Float32Array(width * height);
+      for (let i = 0; i < width * height; i++) src[i] = data[i * 4];
+
+      // Simple 3x3 box blur
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          let sum = 0, count = 0;
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const ny = y + dy, nx = x + dx;
+              if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+                sum += src[ny * width + nx];
+                count++;
+              }
+            }
+          }
+          blurred[y * width + x] = sum / count;
+        }
+      }
+
+      const sharpenAmount = 1.5;
+      for (let i = 0; i < width * height; i++) {
+        const sharpened = Math.round(src[i] + sharpenAmount * (src[i] - blurred[i]));
+        const clamped = Math.max(0, Math.min(255, sharpened));
+        data[i * 4] = data[i * 4 + 1] = data[i * 4 + 2] = clamped;
+      }
+
+      // Step 4: Adaptive thresholding (Sauvola-like)
+      // Use a window to compute local mean, then binarize
+      const windowSize = Math.max(15, Math.round(Math.min(width, height) / 40) | 1);
+      const half = Math.floor(windowSize / 2);
+      const k = 0.2; // sensitivity (lower = more text preserved)
+
+      // Build integral image for fast mean computation
+      const integral = new Float64Array((width + 1) * (height + 1));
+      const integralSq = new Float64Array((width + 1) * (height + 1));
+      const iw = width + 1;
+
+      for (let y = 1; y <= height; y++) {
+        for (let x = 1; x <= width; x++) {
+          const v = data[((y - 1) * width + (x - 1)) * 4];
+          integral[y * iw + x] = v + integral[(y - 1) * iw + x] + integral[y * iw + (x - 1)] - integral[(y - 1) * iw + (x - 1)];
+          integralSq[y * iw + x] = v * v + integralSq[(y - 1) * iw + x] + integralSq[y * iw + (x - 1)] - integralSq[(y - 1) * iw + (x - 1)];
+        }
+      }
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const y1 = Math.max(0, y - half);
+          const y2 = Math.min(height - 1, y + half);
+          const x1 = Math.max(0, x - half);
+          const x2 = Math.min(width - 1, x + half);
+          const area = (y2 - y1 + 1) * (x2 - x1 + 1);
+
+          const sum = integral[(y2 + 1) * iw + (x2 + 1)] - integral[y1 * iw + (x2 + 1)] - integral[(y2 + 1) * iw + x1] + integral[y1 * iw + x1];
+          const sumSq = integralSq[(y2 + 1) * iw + (x2 + 1)] - integralSq[y1 * iw + (x2 + 1)] - integralSq[(y2 + 1) * iw + x1] + integralSq[y1 * iw + x1];
+
+          const mean = sum / area;
+          const variance = sumSq / area - mean * mean;
+          const stddev = Math.sqrt(Math.max(0, variance));
+
+          const threshold = mean * (1 + k * (stddev / 128 - 1));
+          const pixel = data[(y * width + x) * 4];
+          const val = pixel < threshold ? 0 : 255;
+          data[(y * width + x) * 4] = val;
+          data[(y * width + x) * 4 + 1] = val;
+          data[(y * width + x) * 4 + 2] = val;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    img.onerror = () => reject(new Error('Failed to load image for preprocessing'));
+    img.src = imageUrl;
+  });
+}
+
 async function getOcr() {
   if (ocrInstance) return ocrInstance;
   if (ocrInitPromise) return ocrInitPromise;
@@ -170,9 +299,13 @@ export function useOcr() {
 
       // Resize image before OCR to prevent mobile crashes
       const resizedInput = await resizeImage(input);
-      setProgress(50);
+      setProgress(40);
 
-      const detectedLines = await ocr.detect(resizedInput);
+      // Preprocess: grayscale, contrast, sharpen, adaptive threshold
+      const preprocessed = await preprocessForOcr(resizedInput);
+      setProgress(55);
+
+      const detectedLines = await ocr.detect(preprocessed);
       setProgress(100);
 
       if (imageSource instanceof File && input.startsWith('blob:')) {
