@@ -517,7 +517,7 @@ function parsePreviewRow(
 }
 
 /** Fill in missing days so the preview always shows every day of the month */
-function fillMissingDays(
+export function fillMissingDays(
   rows: TimecardPreviewRow[],
   year: number,
   month: number
@@ -593,6 +593,21 @@ function parseLines(
   }
 
   return { entries, rows };
+}
+
+export function parseTimecardRaw(
+  input: string | OcrLineWithBox[],
+  year: number,
+  month: number
+): { entries: DayEntry[]; rows: TimecardPreviewRow[] } {
+  if (typeof input === 'string') {
+    const lines = input.split('\n').filter(line => line.trim().length > 0);
+    return parseLines(lines, year, month);
+  }
+  // Structured lines path (same as parseTimecardLines minus fillMissingDays)
+  const hasBoxes = input.some(l => l.box && l.box.length >= 4);
+  const textLines = hasBoxes ? groupLinesByRow(input) : input.map(l => l.text);
+  return parseLines(textLines, year, month);
 }
 
 export function parseTimecardText(text: string, overrideYear?: number, overrideMonth?: number): TimecardParseResult {

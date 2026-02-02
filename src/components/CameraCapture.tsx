@@ -1,34 +1,76 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCamera } from '../hooks/useCamera';
 
 interface CameraCaptureProps {
-  onCapture: (imageData: string) => void;
-  onFileUpload: (file: File) => void;
+  onSubmit: (sources: (string | File)[]) => void;
 }
 
-export default function CameraCapture({ onCapture, onFileUpload }: CameraCaptureProps) {
+interface QueueItem {
+  id: string;
+  source: string | File;
+  thumbUrl: string;
+}
+
+export default function CameraCapture({ onSubmit }: CameraCaptureProps) {
   const { t } = useTranslation();
   const { videoRef, stream, error, startCamera, stopCamera, capturePhoto } = useCamera();
+  const [queue, setQueue] = useState<QueueItem[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     startCamera();
-    return () => stopCamera();
+    return () => {
+      stopCamera();
+      // Cleanup all blob URLs
+      queue.forEach(item => {
+        if (item.thumbUrl.startsWith('blob:')) {
+          URL.revokeObjectURL(item.thumbUrl);
+        }
+      });
+    };
   }, [startCamera, stopCamera]);
 
   const handleCapture = () => {
     const photo = capturePhoto();
     if (photo) {
-      stopCamera();
-      onCapture(photo);
+      // Do NOT stop camera - allow multiple captures
+      const newItem: QueueItem = {
+        id: Date.now().toString(),
+        source: photo,
+        thumbUrl: photo // data URL is self-contained
+      };
+      setQueue(prev => [...prev, newItem]);
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onFileUpload(file);
+    const files = Array.from(e.target.files || []);
+    const newItems: QueueItem[] = files.map(file => ({
+      id: Date.now().toString() + Math.random(), // Ensure uniqueness
+      source: file,
+      thumbUrl: URL.createObjectURL(file)
+    }));
+    setQueue(prev => [...prev, ...newItems]);
+
+    // Reset input so same file can be re-selected
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
+  };
+
+  const handleRemove = (id: string) => {
+    setQueue(prev => {
+      const item = prev.find(q => q.id === id);
+      if (item && item.thumbUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(item.thumbUrl);
+      }
+      return prev.filter(q => q.id !== id);
+    });
+  };
+
+  const handleProcess = () => {
+    onSubmit(queue.map(q => q.source));
   };
 
   return (
@@ -40,7 +82,7 @@ export default function CameraCapture({ onCapture, onFileUpload }: CameraCapture
             <p className="text-gray-600 text-xs">{t('ocr.scanTipDesc')}</p>
           </div>
 
-          {/* Primary: open native camera directly */}
+          {/* Primary: open native camera directly (single capture) */}
           <label className="block w-full bg-black text-white border-2 border-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] gap-2">
             📷 {t('ocr.takePhoto')}
             <input
@@ -52,12 +94,14 @@ export default function CameraCapture({ onCapture, onFileUpload }: CameraCapture
             />
           </label>
 
-          {/* Secondary: pick from gallery or files */}
+          {/* Secondary: pick from gallery or files (multiple) */}
           <label className="block w-full bg-white text-black border-2 border-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]">
             {t('ocr.upload')}
             <input
+              ref={fileInputRef}
               type="file"
               accept="image/*,.pdf,application/pdf"
+              multiple
               onChange={handleFileChange}
               className="hidden"
             />
@@ -84,13 +128,47 @@ export default function CameraCapture({ onCapture, onFileUpload }: CameraCapture
           <label className="block w-full bg-white border-2 border-black text-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]">
             {t('ocr.upload')}
             <input
+              ref={fileInputRef}
               type="file"
               accept="image/*,.pdf,application/pdf"
+              multiple
               onChange={handleFileChange}
               className="hidden"
             />
           </label>
         </>
+      )}
+
+      {/* Thumbnail strip */}
+      {queue.length > 0 && (
+        <div className="flex overflow-x-auto gap-2 py-2">
+          {queue.map(item => (
+            <div key={item.id} className="relative flex-shrink-0">
+              <img
+                src={item.thumbUrl}
+                alt=""
+                className="w-16 h-16 object-cover border-2 border-black"
+              />
+              <button
+                onClick={() => handleRemove(item.id)}
+                className="absolute top-0 right-0 bg-black text-white w-5 h-5 text-xs flex items-center justify-center"
+                aria-label={t('ocr.removeImage')}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Process button */}
+      {queue.length > 0 && (
+        <button
+          onClick={handleProcess}
+          className="w-full bg-black text-white border-2 border-black min-h-14 font-bold text-lg shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
+        >
+          {t('ocr.processImages', { count: queue.length })}
+        </button>
       )}
     </div>
   );

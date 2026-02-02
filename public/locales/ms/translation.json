@@ -89,7 +89,11 @@
     "failedHint": "Sila cuba lagi dengan gambar yang lebih jelas",
     "retry": "Cuba Lagi",
     "scanTip": "Muat naik gambar imbasan yang jelas untuk hasil terbaik",
-    "scanTipDesc": "Pastikan teks kad masa jelas, terang dan tidak kabur. Gambar imbasan lebih baik daripada foto."
+    "scanTipDesc": "Pastikan teks kad masa jelas, terang dan tidak kabur. Gambar imbasan lebih baik daripada foto.",
+    "processImages": "Proses {{count}} imej",
+    "removeImage": "Buang imej",
+    "processingImage": "Memproses imej {{current}} daripada {{total}}...",
+    "queuedImages": "{{count}} imej dalam barisan"
   },
   "ocrPreview": {
     "date": "Date",

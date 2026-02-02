@@ -89,7 +89,11 @@
     "failedHint": "请用更清晰的图片重试",
     "retry": "重试",
     "scanTip": "上传清晰的扫描图片效果最佳",
-    "scanTipDesc": "确保考勤卡文字清晰、光线充足、不模糊。扫描图片比拍照效果更好。"
+    "scanTipDesc": "确保考勤卡文字清晰、光线充足、不模糊。扫描图片比拍照效果更好。",
+    "processImages": "处理 {{count}} 张图片",
+    "removeImage": "移除图片",
+    "processingImage": "正在处理第 {{current}} 张图片,共 {{total}} 张...",
+    "queuedImages": "已添加 {{count}} 张图片"
   },
   "ocrPreview": {
     "date": "Date",

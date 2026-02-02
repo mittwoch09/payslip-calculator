@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useOcr } from '../hooks/useOcr';
 import { useSalaryProfile } from '../hooks/useSalaryProfile';
 import { usePayslipHistory } from '../hooks/usePayslipHistory';
-import { parseTimecardText, parseTimecardLines, remapYearMonth } from '../ocr/timecard-parser';
+import { parseTimecardRaw, fillMissingDays, remapYearMonth } from '../ocr/timecard-parser';
 import type { TimecardPreviewRow } from '../ocr/timecard-parser';
 import CameraCapture from '../components/CameraCapture';
 import OcrPreview from '../components/OcrPreview';
@@ -24,7 +24,7 @@ const now = new Date();
 
 export default function CapturePage({ onBack }: CapturePageProps) {
   const { t } = useTranslation();
-  const { processing, progress, error: ocrError, processImage } = useOcr();
+  const { processing, progress, processImage } = useOcr();
   const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
   const { addEntry: addToHistory } = usePayslipHistory();
   const [step, setStep] = useState<Step>('salary');
@@ -44,25 +44,52 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   });
   const [result, setResult] = useState<PayslipResult | null>(null);
   const [ocrFailed, setOcrFailed] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
+  const [totalImages, setTotalImages] = useState(0);
 
-  const handleImage = async (source: string | File) => {
+  const handleBatch = async (sources: (string | File)[]) => {
     setOcrFailed(false);
     setStep('processing');
+    setTotalImages(sources.length);
     try {
-      const ocrResult = await processImage(source);
-      if (ocrResult) {
-        const parsed = ocrResult.lines.length > 0
-          ? parseTimecardLines(ocrResult.lines, payYear, payMonth)
-          : parseTimecardText(ocrResult.text, payYear, payMonth);
-        setEntries(parsed.entries);
-        setPreviewRows(parsed.rows);
-        setStep('preview');
-      } else {
+      const allEntries: DayEntry[] = [];
+      const allRows: TimecardPreviewRow[] = [];
+
+      for (let i = 0; i < sources.length; i++) {
+        setCurrentImage(i + 1);
+        const ocrResult = await processImage(sources[i]);
+        if (ocrResult) {
+          const parsed = ocrResult.lines.length > 0
+            ? parseTimecardRaw(ocrResult.lines, payYear, payMonth)
+            : parseTimecardRaw(ocrResult.text, payYear, payMonth);
+          allEntries.push(...parsed.entries);
+          allRows.push(...parsed.rows);
+        }
+      }
+
+      if (allRows.length === 0) {
         setStep('camera');
         setOcrFailed(true);
+        return;
       }
+
+      // Deduplicate by date (later image wins for same date)
+      const rowMap = new Map<string, TimecardPreviewRow>();
+      for (const row of allRows) {
+        rowMap.set(row.date, row);
+      }
+
+      const entryMap = new Map<string, DayEntry>();
+      for (const entry of allEntries) {
+        entryMap.set(entry.date, entry);
+      }
+
+      // Fill missing days ONCE on the merged result
+      setPreviewRows(fillMissingDays(Array.from(rowMap.values()), payYear, payMonth));
+      setEntries(Array.from(entryMap.values()));
+      setStep('preview');
     } catch (e) {
-      console.error('OCR handleImage failed:', e);
+      console.error('OCR batch processing failed:', e);
       setStep('camera');
       setOcrFailed(true);
     }
@@ -153,7 +180,11 @@ export default function CapturePage({ onBack }: CapturePageProps) {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-6">
         <div className="w-20 h-20 border-[6px] border-black border-t-transparent rounded-full animate-spin" />
-        <p className="text-black text-xl font-bold">{t('ocr.processing')}</p>
+        <p className="text-black text-xl font-bold">
+          {totalImages > 1
+            ? t('ocr.processingImage', { current: currentImage, total: totalImages })
+            : t('ocr.processing')}
+        </p>
         {progress > 0 && (
           <div className="w-64 bg-gray-200 border-2 border-black h-3">
             <div className="bg-lime-400 h-3 transition-all" style={{ width: `${progress}%` }} />
@@ -177,8 +208,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
           </div>
         )}
         <CameraCapture
-          onCapture={handleImage}
-          onFileUpload={handleImage}
+          onSubmit={handleBatch}
         />
       </div>
     );
