@@ -255,8 +255,10 @@ export default function CapturePage({ onBack }: CapturePageProps) {
             setPreviewRows(rows);
             setEntries(remapped);
             setStep('preview');
+            window.scrollTo(0, 0);
           } else {
             setStep('camera');
+            window.scrollTo(0, 0);
           }
         }}
         onBack={onBack}
