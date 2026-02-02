@@ -23,7 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
-# OCR model files (regenerate from node_modules/@gutenye/ocr-models)
-public/models/*.onnx
+# OCR model files - only ignore unused ones (en_det, en_rec, en_dict are required and tracked)
+public/models/ch_*.onnx
+public/models/ppocr5_*.onnx
+public/models/ppocr_keys_v1.txt
 # ONNX Runtime WASM (from node_modules/onnxruntime-web)
 public/*.wasm
+
+# OMC state
+.omc/
