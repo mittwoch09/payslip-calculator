@@ -125,9 +125,6 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                   onChange={e => onUpdateTime(i, 'clockOut', e.target.value)}
                   className="flex-1 bg-white border-2 border-black text-black px-3 min-h-[48px] text-base font-medium"
                 />
-                {row.extraOtHours !== undefined && row.extraOtHours > 0 && (
-                  <span className="text-green-700 text-sm font-bold shrink-0">+{row.extraOtHours}</span>
-                )}
               </div>
             )}
 
