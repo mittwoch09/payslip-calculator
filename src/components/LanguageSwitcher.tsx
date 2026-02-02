@@ -5,7 +5,7 @@ const languages = [
   { code: 'zh', label: '中文' },
   { code: 'ta', label: 'தமிழ்' },
   { code: 'bn', label: 'বাংলা' },
-  { code: 'ms', label: 'BM' },
+  { code: 'my', label: 'မြန်မာ' },
 ];
 
 export default function LanguageSwitcher() {
