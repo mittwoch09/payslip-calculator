@@ -48,9 +48,12 @@ export default function CapturePage({ onBack }: CapturePageProps) {
   const [totalImages, setTotalImages] = useState(0);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+    // Double rAF ensures scroll happens after mobile browser has painted the new content
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      });
+    });
   }, [step]);
 
   const handleBatch = async (sources: (string | File)[]) => {
