@@ -85,6 +85,7 @@
     "noCamera": "Camera not available",
     "noCameraHint": "Use the buttons below to take a photo or upload an image",
     "takePhoto": "Take Photo",
+    "liveCamera": "Live Camera",
     "failed": "Failed to read timecard",
     "failedHint": "Please try again with a clearer image",
     "retry": "Try Again",

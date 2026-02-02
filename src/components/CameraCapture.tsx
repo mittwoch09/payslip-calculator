@@ -18,8 +18,9 @@ export default function CameraCapture({ onSubmit }: CameraCaptureProps) {
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [cameraActive, setCameraActive] = useState(false);
+
   useEffect(() => {
-    startCamera();
     return () => {
       stopCamera();
       // Cleanup all blob URLs
@@ -29,7 +30,7 @@ export default function CameraCapture({ onSubmit }: CameraCaptureProps) {
         }
       });
     };
-  }, [startCamera, stopCamera]);
+  }, [stopCamera]);
 
   const handleCapture = () => {
     const photo = capturePhoto();
@@ -75,39 +76,7 @@ export default function CameraCapture({ onSubmit }: CameraCaptureProps) {
 
   return (
     <div className="space-y-4">
-      {error ? (
-        <div className="space-y-4">
-          <div className="bg-violet-100 border-2 border-black p-4 space-y-1">
-            <p className="text-black font-bold text-sm">{t('ocr.scanTip')}</p>
-            <p className="text-gray-600 text-xs">{t('ocr.scanTipDesc')}</p>
-          </div>
-
-          {/* Primary: open native camera directly (single capture) */}
-          <label className="block w-full bg-black text-white border-2 border-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] gap-2">
-            📷 {t('ocr.takePhoto')}
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              onChange={handleFileChange}
-              className="hidden"
-            />
-          </label>
-
-          {/* Secondary: pick from gallery or files (multiple) */}
-          <label className="block w-full bg-white text-black border-2 border-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]">
-            {t('ocr.upload')}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*,.pdf,application/pdf"
-              multiple
-              onChange={handleFileChange}
-              className="hidden"
-            />
-          </label>
-        </div>
-      ) : (
+      {cameraActive && !error ? (
         <>
           <div className="relative overflow-hidden border-2 border-black bg-black">
             <video
@@ -137,6 +106,49 @@ export default function CameraCapture({ onSubmit }: CameraCaptureProps) {
             />
           </label>
         </>
+      ) : (
+        <div className="space-y-4">
+          <div className="bg-violet-100 border-2 border-black p-4 space-y-1">
+            <p className="text-black font-bold text-sm">{t('ocr.scanTip')}</p>
+            <p className="text-gray-600 text-xs">{t('ocr.scanTipDesc')}</p>
+          </div>
+
+          {/* Primary: open native camera directly (single capture) */}
+          <label className="block w-full bg-black text-white border-2 border-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] gap-2">
+            {t('ocr.takePhoto')}
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
+
+          {/* Live camera viewfinder */}
+          <button
+            onClick={async () => {
+              await startCamera();
+              setCameraActive(true);
+            }}
+            className="w-full bg-white text-black border-2 border-black min-h-14 font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"
+          >
+            {t('ocr.liveCamera')}
+          </button>
+
+          {/* Pick from gallery or files (multiple) */}
+          <label className="block w-full bg-white text-black border-2 border-black min-h-14 flex items-center justify-center cursor-pointer font-bold text-lg shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]">
+            {t('ocr.upload')}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,.pdf,application/pdf"
+              multiple
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
+        </div>
       )}
 
       {/* Thumbnail strip */}

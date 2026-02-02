@@ -85,6 +85,7 @@
     "noCamera": "摄像头不可用",
     "noCameraHint": "请使用下方按钮拍照或上传图片",
     "takePhoto": "拍照",
+    "liveCamera": "实时相机",
     "failed": "无法读取考勤卡",
     "failedHint": "请用更清晰的图片重试",
     "retry": "重试",
