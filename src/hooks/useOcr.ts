@@ -299,13 +299,9 @@ export function useOcr() {
 
       // Resize image before OCR to prevent mobile crashes
       const resizedInput = await resizeImage(input);
-      setProgress(40);
+      setProgress(50);
 
-      // Preprocess: grayscale, contrast, sharpen, adaptive threshold
-      const preprocessed = await preprocessForOcr(resizedInput);
-      setProgress(55);
-
-      const detectedLines = await ocr.detect(preprocessed);
+      const detectedLines = await ocr.detect(resizedInput);
       setProgress(100);
 
       if (imageSource instanceof File && input.startsWith('blob:')) {
