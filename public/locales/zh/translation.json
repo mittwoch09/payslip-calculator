@@ -153,6 +153,8 @@
     "savingsMessage": "使用{{provider}}比银行转账节省新币{{amount}}",
     "noProviders": "此汇款路线暂无服务提供商",
     "compareProviders": "比较服务商",
+    "rateDisclaimer": "显示的汇率为估算值。点击查看服务商网站上的实际汇率。",
+    "clickForActualRate": "点击查看实际汇率",
     "countries": {
       "china": "中国",
       "india": "印度",

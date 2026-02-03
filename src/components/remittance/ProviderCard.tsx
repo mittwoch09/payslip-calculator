@@ -61,6 +61,10 @@ export default function ProviderCard({
       >
         {t('remittance.sendNow')} →
       </button>
+
+      <p className="mt-2 text-xs text-gray-500 text-center">
+        {t('remittance.clickForActualRate')} →
+      </p>
     </div>
   );
 }

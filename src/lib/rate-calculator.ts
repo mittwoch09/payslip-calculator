@@ -37,6 +37,7 @@ export function calculateQuotes(
       receiveAmount,
       deliveryTime: provider.deliveryTime,
       affiliateUrl: provider.affiliateUrl,
+      affiliateUrlTemplate: provider.affiliateUrlTemplate,
     };
   });
 

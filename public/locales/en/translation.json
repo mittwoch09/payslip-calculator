@@ -153,6 +153,8 @@
     "savingsMessage": "Using {{provider}} saves you S${{amount}} vs bank transfer",
     "noProviders": "No providers available for this corridor",
     "compareProviders": "Compare Providers",
+    "rateDisclaimer": "Rates shown are estimates. Click to see actual rates on provider's site.",
+    "clickForActualRate": "Click for actual rate",
     "countries": {
       "china": "China",
       "india": "India",

@@ -6,7 +6,7 @@ import ProviderList from '../components/remittance/ProviderList';
 import { corridors } from '../data/corridors';
 import { providers } from '../data/providers';
 import { calculateQuotes } from '../lib/rate-calculator';
-import { buildAffiliateUrl, trackClick } from '../lib/affiliate-tracker';
+import { buildDeepLink, buildAffiliateUrl, trackClick } from '../lib/affiliate-tracker';
 import { getExchangeRate } from '../lib/exchange-rate';
 import type { ProviderQuote } from '../types/remittance';
 
@@ -53,13 +53,15 @@ export default function RemittancePage({ initialAmount, onBack }: RemittancePage
       amount,
     });
 
-    // Build and open affiliate URL
-    const affiliateUrl = buildAffiliateUrl(quote.affiliateUrl, {
+    // Use deep link with amount pre-filled
+    const deepLink = buildDeepLink(
+      quote.affiliateUrlTemplate,
+      quote.affiliateUrl,
       amount,
-      corridor: selectedCorridor,
-    });
+      selectedCorridor
+    );
 
-    window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
+    window.open(deepLink, '_blank', 'noopener,noreferrer');
   };
 
   // Get target currency from corridor
@@ -99,6 +101,9 @@ export default function RemittancePage({ initialAmount, onBack }: RemittancePage
           <h3 className="text-lg font-bold text-black">
             {t('remittance.compareProviders')}
           </h3>
+          <p className="text-sm text-gray-500 mb-2">
+            {t('remittance.rateDisclaimer')}
+          </p>
           {isLoadingRates ? (
             <div className="text-center py-8 text-gray-500">
               Loading exchange rates...

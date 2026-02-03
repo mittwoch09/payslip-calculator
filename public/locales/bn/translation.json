@@ -153,6 +153,8 @@
     "savingsMessage": "{{provider}} ব্যবহার করে ব্যাংক ট্রান্সফারের তুলনায় S${{amount}} সাশ্রয় হচ্ছে",
     "noProviders": "এই রুটের জন্য কোনো সেবা প্রদানকারী নেই",
     "compareProviders": "প্রদানকারী তুলনা করুন",
+    "rateDisclaimer": "প্রদর্শিত হার অনুমান। প্রকৃত হার দেখতে ক্লিক করুন।",
+    "clickForActualRate": "প্রকৃত হার দেখতে ক্লিক করুন",
     "countries": {
       "china": "চীন",
       "india": "ভারত",

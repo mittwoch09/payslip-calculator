@@ -1,4 +1,5 @@
 import type { ClickEvent } from '../types/remittance';
+import { countryCodeMap } from '../data/providers';
 
 const STORAGE_KEY = 'affiliate_clicks';
 
@@ -24,6 +25,33 @@ export function buildAffiliateUrl(
   }
 
   return url.toString();
+}
+
+/**
+ * Build a deep link with pre-filled amount for a provider
+ * @param template - The URL template with placeholders
+ * @param fallbackUrl - The fallback URL if template is not available
+ * @param amount - The amount to send
+ * @param corridor - The corridor ID (e.g., 'SGD-BDT')
+ * @returns The deep link URL with pre-filled amount
+ */
+export function buildDeepLink(
+  template: string | undefined,
+  fallbackUrl: string,
+  amount: number,
+  corridor: string
+): string {
+  if (!template) {
+    return fallbackUrl;
+  }
+
+  const targetCurrency = corridor.split('-')[1]; // e.g., 'BDT' from 'SGD-BDT'
+  const targetCountryCode = countryCodeMap[targetCurrency] || targetCurrency.toLowerCase();
+
+  return template
+    .replace('{amount}', amount.toString())
+    .replace('{targetCurrency}', targetCurrency)
+    .replace('{targetCountryCode}', targetCountryCode);
 }
 
 export function trackClick(event: ClickEvent): void {

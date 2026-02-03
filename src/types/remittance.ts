@@ -16,6 +16,7 @@ export interface Provider {
   name: string;
   logo: string;
   affiliateUrl: string;
+  affiliateUrlTemplate?: string;
   rateMargin: number;
   fees: Record<string, ProviderFee>;
   deliveryTime: string;
@@ -31,6 +32,7 @@ export interface ProviderQuote {
   receiveAmount: number;
   deliveryTime: string;
   affiliateUrl: string;
+  affiliateUrlTemplate?: string;
 }
 
 export interface ClickEvent {
