@@ -59,8 +59,7 @@ export default function ProviderCard({
         onClick={onSendNow}
         className="mt-4 w-full bg-black text-white font-bold py-3 px-4 hover:bg-gray-800 transition-colors"
       >
-        <span className="block">{t('remittance.sendNow')} →</span>
-        <span className="block text-xs font-normal opacity-80 mt-1">{t('remittance.clickForActualRate')}</span>
+        {t('remittance.sendNow')} →
       </button>
     </div>
   );
