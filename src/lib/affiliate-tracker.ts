@@ -46,11 +46,13 @@ export function buildDeepLink(
   }
 
   const targetCurrency = corridor.split('-')[1]; // e.g., 'BDT' from 'SGD-BDT'
+  const targetCurrencyLower = targetCurrency.toLowerCase(); // e.g., 'bdt'
   const targetCountryCode = countryCodeMap[targetCurrency] || targetCurrency.toLowerCase();
 
   return template
     .replace('{amount}', amount.toString())
     .replace('{targetCurrency}', targetCurrency)
+    .replace('{targetCurrencyLower}', targetCurrencyLower)
     .replace('{targetCountryCode}', targetCountryCode);
 }
 
