@@ -5,6 +5,7 @@ import { calcHourlyRate } from '../engine/calculator';
 import { OT_MULTIPLIER } from '../engine/constants';
 import { downloadPayslipImage } from '../utils/export';
 import ScrollButtons from './ScrollButtons';
+import RemittanceCTA from './remittance/RemittanceCTA';
 import '../styles/print.css';
 
 interface PayslipDisplayProps {
@@ -16,6 +17,7 @@ interface PayslipDisplayProps {
   monthlySalary: number;
   hourlyRate?: number;
   otRate?: number;
+  onNavigateRemittance?: (amount: number) => void;
 }
 
 function Row({ label, amount, bold, large }: { label: string; amount: number; bold?: boolean; large?: boolean }) {
@@ -27,7 +29,7 @@ function Row({ label, amount, bold, large }: { label: string; amount: number; bo
   );
 }
 
-export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate: propsHourlyRate, otRate: propsOtRate }: PayslipDisplayProps) {
+export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate: propsHourlyRate, otRate: propsOtRate, onNavigateRemittance }: PayslipDisplayProps) {
   const { t } = useTranslation();
   const bottomRef = useRef<HTMLDivElement>(null);
   const hourlyRate = propsHourlyRate ?? calcHourlyRate(monthlySalary);
@@ -101,6 +103,16 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
       <div className="bg-lime-200 border-3 border-black p-4 shadow-[4px_4px_0_black]">
         <Row label={t('payslip.netPay')} amount={result.netPay} bold large />
       </div>
+
+      {/* Remittance CTA */}
+      {onNavigateRemittance && (
+        <div className="no-print">
+          <RemittanceCTA
+            netPay={result.netPay}
+            onCompareRates={() => onNavigateRemittance(result.netPay)}
+          />
+        </div>
+      )}
 
       {/* Export Buttons */}
       <div className="no-print flex flex-col gap-3">

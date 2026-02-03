@@ -16,13 +16,14 @@ import type { PayslipResult } from '../types/payslip';
 interface CapturePageProps {
   onBack: () => void;
   onComplete: (entries: DayEntry[]) => void;
+  onNavigateRemittance?: (amount: number) => void;
 }
 
 type Step = 'salary' | 'camera' | 'processing' | 'preview' | 'result';
 
 const now = new Date();
 
-export default function CapturePage({ onBack }: CapturePageProps) {
+export default function CapturePage({ onBack, onNavigateRemittance }: CapturePageProps) {
   const { t } = useTranslation();
   const { processing, progress, processImage } = useOcr();
   const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
@@ -143,6 +144,7 @@ export default function CapturePage({ onBack }: CapturePageProps) {
           monthlySalary={salaryData.monthlySalary}
           hourlyRate={salaryData.hourlyRateOverride}
           otRate={salaryData.otRateOverride}
+          onNavigateRemittance={onNavigateRemittance}
         />
         <div className="flex gap-3 mt-4">
           <button

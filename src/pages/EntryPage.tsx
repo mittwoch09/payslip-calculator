@@ -12,11 +12,12 @@ import type { PayslipResult } from '../types/payslip';
 interface EntryPageProps {
   onBack: () => void;
   initialEntries?: DayEntry[];
+  onNavigateRemittance?: (amount: number) => void;
 }
 
 type Step = 'timecard' | 'salary' | 'result';
 
-export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
+export default function EntryPage({ onBack, initialEntries, onNavigateRemittance }: EntryPageProps) {
   const { t } = useTranslation();
   const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
   const { addEntry: addToHistory } = usePayslipHistory();
@@ -72,6 +73,7 @@ export default function EntryPage({ onBack, initialEntries }: EntryPageProps) {
           monthlySalary={salaryData.monthlySalary}
           hourlyRate={salaryData.hourlyRateOverride}
           otRate={salaryData.otRateOverride}
+          onNavigateRemittance={onNavigateRemittance}
         />
         <div className="flex gap-3 mt-4">
           <button

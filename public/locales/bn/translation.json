@@ -139,5 +139,33 @@
     "empty": "কোনো ইতিহাস নেই",
     "delete": "মুছুন",
     "netPay": "নিট বেতন"
+  },
+  "remittance": {
+    "title": "দেশে টাকা পাঠান",
+    "sendTo": "এখানে পাঠান",
+    "amount": "পাঠানোর পরিমাণ",
+    "bestRate": "সেরা হার",
+    "fee": "ফি",
+    "rate": "হার",
+    "recipientGets": "প্রাপক পাবেন",
+    "sendNow": "এখনই পাঠান",
+    "updatedJustNow": "হার এখনই আপডেট করা হয়েছে",
+    "savingsMessage": "{{provider}} ব্যবহার করে ব্যাংক ট্রান্সফারের তুলনায় S${{amount}} সাশ্রয় হচ্ছে",
+    "noProviders": "এই রুটের জন্য কোনো সেবা প্রদানকারী নেই",
+    "compareProviders": "প্রদানকারী তুলনা করুন",
+    "countries": {
+      "china": "চীন",
+      "india": "ভারত",
+      "bangladesh": "বাংলাদেশ",
+      "myanmar": "মিয়ানমার",
+      "philippines": "ফিলিপাইন",
+      "indonesia": "ইন্দোনেশিয়া",
+      "thailand": "থাইল্যান্ড"
+    },
+    "cta": {
+      "title": "দেশে টাকা পাঠাবেন?",
+      "subtitle": "হার তুলনা করুন এবং ফি সাশ্রয় করুন",
+      "button": "হার তুলনা করুন"
+    }
   }
 }

@@ -139,5 +139,33 @@
     "empty": "No history yet",
     "delete": "Delete",
     "netPay": "Net Pay"
+  },
+  "remittance": {
+    "title": "Send Money Home",
+    "sendTo": "Send to",
+    "amount": "Amount to send",
+    "bestRate": "Best Rate",
+    "fee": "Fee",
+    "rate": "Rate",
+    "recipientGets": "Recipient gets",
+    "sendNow": "Send Now",
+    "updatedJustNow": "Rates updated just now",
+    "savingsMessage": "Using {{provider}} saves you S${{amount}} vs bank transfer",
+    "noProviders": "No providers available for this corridor",
+    "compareProviders": "Compare Providers",
+    "countries": {
+      "china": "China",
+      "india": "India",
+      "bangladesh": "Bangladesh",
+      "myanmar": "Myanmar",
+      "philippines": "Philippines",
+      "indonesia": "Indonesia",
+      "thailand": "Thailand"
+    },
+    "cta": {
+      "title": "Send money home?",
+      "subtitle": "Compare rates and save on fees",
+      "button": "Compare Rates"
+    }
   }
 }

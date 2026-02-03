@@ -1,0 +1,55 @@
+import type { Provider } from '../types/remittance';
+
+export const providers: Provider[] = [
+  {
+    id: 'wise',
+    name: 'Wise',
+    logo: '/logos/wise_logo.svg',
+    affiliateUrl: 'https://wise.com/invite/dic/payslip',
+    rateMargin: 0.005,
+    fees: {
+      'SGD-BDT': { fixed: 2.50, percent: 0 },
+      'SGD-INR': { fixed: 2.50, percent: 0 },
+      'SGD-CNY': { fixed: 2.50, percent: 0 },
+      'SGD-MMK': { fixed: 3.00, percent: 0 },
+      'SGD-PHP': { fixed: 2.50, percent: 0 },
+      'SGD-IDR': { fixed: 2.50, percent: 0 },
+      'SGD-THB': { fixed: 2.50, percent: 0 },
+    },
+    deliveryTime: '1-2 days',
+  },
+  {
+    id: 'remitly',
+    name: 'Remitly',
+    logo: '/logos/remitly_logo.svg',
+    affiliateUrl: 'https://www.remitly.com/us/en?ref=payslip',
+    rateMargin: 0.012,
+    fees: {
+      'SGD-BDT': { fixed: 3.99, percent: 0 },
+      'SGD-INR': { fixed: 3.99, percent: 0 },
+      'SGD-CNY': { fixed: 4.99, percent: 0 },
+      'SGD-MMK': { fixed: 4.99, percent: 0 },
+      'SGD-PHP': { fixed: 3.99, percent: 0 },
+      'SGD-IDR': { fixed: 3.99, percent: 0 },
+      'SGD-THB': { fixed: 3.99, percent: 0 },
+    },
+    deliveryTime: 'Minutes to 1 day',
+  },
+  {
+    id: 'worldremit',
+    name: 'WorldRemit',
+    logo: '/logos/worldremit_logo.svg',
+    affiliateUrl: 'https://www.worldremit.com/?ref=payslip',
+    rateMargin: 0.015,
+    fees: {
+      'SGD-BDT': { fixed: 4.50, percent: 0 },
+      'SGD-INR': { fixed: 4.50, percent: 0 },
+      'SGD-CNY': { fixed: 5.50, percent: 0 },
+      'SGD-MMK': { fixed: 5.50, percent: 0 },
+      'SGD-PHP': { fixed: 4.50, percent: 0 },
+      'SGD-IDR': { fixed: 4.50, percent: 0 },
+      'SGD-THB': { fixed: 4.50, percent: 0 },
+    },
+    deliveryTime: '1-3 days',
+  },
+];

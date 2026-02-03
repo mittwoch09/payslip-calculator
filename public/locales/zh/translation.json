@@ -139,5 +139,33 @@
     "empty": "暂无历史记录",
     "delete": "删除",
     "netPay": "实发工资"
+  },
+  "remittance": {
+    "title": "汇款回家",
+    "sendTo": "汇款至",
+    "amount": "汇款金额",
+    "bestRate": "最优汇率",
+    "fee": "手续费",
+    "rate": "汇率",
+    "recipientGets": "收款人将收到",
+    "sendNow": "立即汇款",
+    "updatedJustNow": "汇率刚刚更新",
+    "savingsMessage": "使用{{provider}}比银行转账节省新币{{amount}}",
+    "noProviders": "此汇款路线暂无服务提供商",
+    "compareProviders": "比较服务商",
+    "countries": {
+      "china": "中国",
+      "india": "印度",
+      "bangladesh": "孟加拉国",
+      "myanmar": "缅甸",
+      "philippines": "菲律宾",
+      "indonesia": "印度尼西亚",
+      "thailand": "泰国"
+    },
+    "cta": {
+      "title": "需要汇款回家吗？",
+      "subtitle": "比较汇率，节省手续费",
+      "button": "比较汇率"
+    }
   }
 }
