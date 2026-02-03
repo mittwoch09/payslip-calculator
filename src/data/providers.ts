@@ -2,25 +2,6 @@ import type { Provider } from '../types/remittance';
 
 export const providers: Provider[] = [
   {
-    id: 'wise',
-    name: 'Wise',
-    logo: '/logos/wise_logo.svg',
-    affiliateUrl: 'https://wise.com/send-money/send-money-to-bangladesh',
-    // Wise public send money page: https://wise.com/send-money/send-money-to-{targetCountryCode}
-    affiliateUrlTemplate: 'https://wise.com/send-money/send-money-to-{targetCountryCode}',
-    rateMargin: 0.005,
-    fees: {
-      'SGD-BDT': { fixed: 2.50, percent: 0 },
-      'SGD-INR': { fixed: 2.50, percent: 0 },
-      'SGD-CNY': { fixed: 2.50, percent: 0 },
-      'SGD-MMK': { fixed: 3.00, percent: 0 },
-      'SGD-PHP': { fixed: 2.50, percent: 0 },
-      'SGD-IDR': { fixed: 2.50, percent: 0 },
-      'SGD-THB': { fixed: 2.50, percent: 0 },
-    },
-    deliveryTime: '1-2 days',
-  },
-  {
     id: 'remitly',
     name: 'Remitly',
     logo: '/logos/remitly_logo.svg',
@@ -56,6 +37,25 @@ export const providers: Provider[] = [
       'SGD-THB': { fixed: 0, percent: 0.0065 },
     },
     deliveryTime: 'Instant to 1 day',
+  },
+  {
+    id: 'wise',
+    name: 'Wise',
+    logo: '/logos/wise_logo.svg',
+    affiliateUrl: 'https://wise.com/send-money/send-money-to-bangladesh',
+    // Wise public send money page: https://wise.com/send-money/send-money-to-{targetCountryCode}
+    affiliateUrlTemplate: 'https://wise.com/send-money/send-money-to-{targetCountryCode}',
+    rateMargin: 0.005,
+    fees: {
+      'SGD-BDT': { fixed: 2.50, percent: 0 },
+      'SGD-INR': { fixed: 2.50, percent: 0 },
+      'SGD-CNY': { fixed: 2.50, percent: 0 },
+      'SGD-MMK': { fixed: 3.00, percent: 0 },
+      'SGD-PHP': { fixed: 2.50, percent: 0 },
+      'SGD-IDR': { fixed: 2.50, percent: 0 },
+      'SGD-THB': { fixed: 2.50, percent: 0 },
+    },
+    deliveryTime: '1-2 days',
   },
 ];
 
