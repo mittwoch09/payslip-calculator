@@ -41,8 +41,8 @@ export function calculateQuotes(
     };
   });
 
-  // Return quotes in the same order as providers array
-  return quotes;
+  // Sort quotes by receiveAmount descending (best rate first)
+  return quotes.sort((a, b) => b.receiveAmount - a.receiveAmount);
 }
 
 /**

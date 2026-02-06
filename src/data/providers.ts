@@ -1,5 +1,10 @@
 import type { Provider } from '../types/remittance';
 
+// IMPORTANT: All fees, margins, and delivery times below are ESTIMATES only.
+// They are manually researched approximations, NOT live data from provider APIs.
+// Last manually verified: February 2025
+// Source: Provider websites (public pricing pages)
+// These values may be outdated. Users are directed to provider websites for actual rates.
 export const providers: Provider[] = [
   {
     id: 'remitly',
@@ -8,6 +13,7 @@ export const providers: Provider[] = [
     affiliateUrl: 'https://www.remitly.com/sg/en',
     // Remitly Singapore homepage (no corridor-specific public pages available)
     affiliateUrlTemplate: 'https://www.remitly.com/sg/en',
+    affiliateId: undefined, // TODO: Replace with actual Remitly affiliate tracking ID from partner dashboard
     rateMargin: 0.012,
     fees: {
       'SGD-BDT': { fixed: 3.99, percent: 0 },
@@ -21,30 +27,13 @@ export const providers: Provider[] = [
     deliveryTime: 'Minutes to 1 day',
   },
   {
-    id: 'instarem',
-    name: 'InstaReM',
-    logo: '/logos/Instarem_logo.jpeg',
-    affiliateUrl: 'https://www.instarem.com/en-sg/',
-    affiliateUrlTemplate: 'https://www.instarem.com/en-sg/',
-    rateMargin: 0.007,
-    fees: {
-      'SGD-BDT': { fixed: 0, percent: 0.006 },
-      'SGD-INR': { fixed: 0, percent: 0.005 },
-      'SGD-CNY': { fixed: 0, percent: 0.0065 },
-      'SGD-MMK': { fixed: 0, percent: 0.007 },
-      'SGD-PHP': { fixed: 0, percent: 0.006 },
-      'SGD-IDR': { fixed: 0, percent: 0.006 },
-      'SGD-THB': { fixed: 0, percent: 0.0065 },
-    },
-    deliveryTime: 'Instant to 1 day',
-  },
-  {
     id: 'wise',
     name: 'Wise',
     logo: '/logos/wise_logo.svg',
     affiliateUrl: 'https://wise.com/send-money/send-money-to-bangladesh',
     // Wise public send money page: https://wise.com/send-money/send-money-to-{targetCountryCode}
     affiliateUrlTemplate: 'https://wise.com/send-money/send-money-to-{targetCountryCode}',
+    affiliateId: undefined, // TODO: Replace with actual Wise affiliate tracking ID from partner dashboard
     rateMargin: 0.005,
     fees: {
       'SGD-BDT': { fixed: 2.50, percent: 0 },

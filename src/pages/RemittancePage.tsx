@@ -82,6 +82,11 @@ export default function RemittancePage({ initialAmount, onBack }: RemittancePage
         </h2>
       </div>
 
+      {/* Affiliate Disclosure */}
+      <div className="bg-blue-50 border-2 border-blue-200 p-3 text-sm text-blue-800">
+        {t('remittance.affiliateDisclosure')}
+      </div>
+
       {/* Corridor Selector */}
       <CorridorSelector
         value={selectedCorridor}
@@ -101,9 +106,9 @@ export default function RemittancePage({ initialAmount, onBack }: RemittancePage
           <h3 className="text-lg font-bold text-black">
             {t('remittance.compareProviders')}
           </h3>
-          <p className="text-sm text-gray-500 mb-2">
+          <div className="bg-amber-50 border-2 border-amber-300 p-3 text-sm text-amber-800">
             {t('remittance.rateDisclaimer')}
-          </p>
+          </div>
           {isLoadingRates ? (
             <div className="text-center py-8 text-gray-500">
               Loading exchange rates...

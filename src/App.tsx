@@ -5,8 +5,11 @@ import EntryPage from './pages/EntryPage';
 import CapturePage from './pages/CapturePage';
 import HistoryPage from './pages/HistoryPage';
 import RemittancePage from './pages/RemittancePage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import AffiliateDisclosurePage from './pages/AffiliateDisclosurePage';
 
-type Page = 'home' | 'capture' | 'entry' | 'history' | 'remittance';
+type Page = 'home' | 'capture' | 'entry' | 'history' | 'remittance' | 'privacy' | 'terms' | 'disclosure';
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
@@ -19,7 +22,7 @@ export default function App() {
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-amber-50 flex items-center justify-center text-black">Loading...</div>}>
-      <Layout>
+      <Layout onNavigate={(page) => setPage(page as Page)}>
         {page === 'home' && <HomePage onNavigate={setPage} />}
         {page === 'entry' && (
           <EntryPage
@@ -35,6 +38,9 @@ export default function App() {
             onBack={() => setPage('entry')}
           />
         )}
+        {page === 'privacy' && <PrivacyPolicyPage onBack={() => setPage('home')} />}
+        {page === 'terms' && <TermsOfServicePage onBack={() => setPage('home')} />}
+        {page === 'disclosure' && <AffiliateDisclosurePage onBack={() => setPage('home')} />}
       </Layout>
     </Suspense>
   );

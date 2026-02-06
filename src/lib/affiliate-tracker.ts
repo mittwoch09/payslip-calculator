@@ -7,6 +7,7 @@ interface BuildAffiliateUrlParams {
   amount: number;
   corridor: string;
   userId?: string;
+  affiliateId?: string; // Real affiliate tracking ID from provider
 }
 
 export function buildAffiliateUrl(
@@ -14,6 +15,11 @@ export function buildAffiliateUrl(
   params: BuildAffiliateUrlParams
 ): string {
   const url = new URL(baseUrl);
+
+  // If real affiliate tracking ID is available, use it
+  if (params.affiliateId) {
+    url.searchParams.set('ref', params.affiliateId);
+  }
 
   url.searchParams.set('utm_source', 'payslip-calculator');
   url.searchParams.set('utm_medium', 'affiliate');

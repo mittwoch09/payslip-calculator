@@ -17,6 +17,7 @@ export interface Provider {
   logo: string;
   affiliateUrl: string;
   affiliateUrlTemplate?: string;
+  affiliateId?: string; // Affiliate tracking ID from provider's partner program
   rateMargin: number;
   fees: Record<string, ProviderFee>;
   deliveryTime: string;

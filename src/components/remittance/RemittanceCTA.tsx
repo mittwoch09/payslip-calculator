@@ -22,6 +22,7 @@ export default function RemittanceCTA({ netPay, onCompareRates }: RemittanceCTAP
       >
         {t('remittance.cta.button')} →
       </button>
+      <p className="text-xs text-gray-500 mt-1">{t('footer.affiliateNotice')}</p>
     </div>
   );
 }

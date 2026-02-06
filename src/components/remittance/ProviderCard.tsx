@@ -39,11 +39,11 @@ export default function ProviderCard({
 
       <div className="space-y-2">
         <div>
-          <span className="font-semibold">{t('remittance.fee')}:</span> S${quote.fee.toFixed(2)}
+          <span className="font-semibold">{t('remittance.fee')}:</span> {t('remittance.estimatedLabel')} S${quote.fee.toFixed(2)}
         </div>
 
         <div>
-          <span className="font-semibold">{t('remittance.rate')}:</span> {quote.exchangeRate.toFixed(2)}
+          <span className="font-semibold">{t('remittance.rate')}:</span> {t('remittance.estimatedLabel')} {quote.exchangeRate.toFixed(2)}
         </div>
 
         <div>
@@ -59,7 +59,7 @@ export default function ProviderCard({
         onClick={onSendNow}
         className="mt-4 w-full bg-black text-white font-bold py-3 px-4 hover:bg-gray-800 transition-colors"
       >
-        {t('remittance.sendNow')} →
+        {t('remittance.checkRate')} →
       </button>
     </div>
   );
