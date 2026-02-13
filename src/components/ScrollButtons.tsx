@@ -6,7 +6,7 @@ interface ScrollButtonsProps {
 
 export default function ScrollButtons({ bottomRef }: ScrollButtonsProps) {
   const [visible, setVisible] = useState(true);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     const show = () => {

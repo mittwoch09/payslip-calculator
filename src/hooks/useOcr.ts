@@ -65,7 +65,7 @@ async function resizeImage(imageUrl: string, maxDimension: number = 1600): Promi
 }
 
 /** Preprocess image for better OCR: grayscale, contrast, sharpen, adaptive threshold */
-async function preprocessForOcr(imageUrl: string): Promise<string> {
+export async function preprocessForOcr(imageUrl: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {

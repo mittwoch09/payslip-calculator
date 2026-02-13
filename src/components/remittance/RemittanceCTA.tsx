@@ -5,7 +5,7 @@ interface RemittanceCTAProps {
   onCompareRates: () => void;
 }
 
-export default function RemittanceCTA({ netPay, onCompareRates }: RemittanceCTAProps) {
+export default function RemittanceCTA({ onCompareRates }: RemittanceCTAProps) {
   const { t } = useTranslation();
 
   return (

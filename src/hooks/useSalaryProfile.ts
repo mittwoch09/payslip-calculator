@@ -5,6 +5,8 @@ export interface SalaryProfile {
   employerName: string;
   monthlySalary: number;
   workDaysPerWeek?: 5 | 5.5 | 6;
+  hourlyRateOverride?: number;
+  otRateOverride?: number;
   deductions: { accommodation: number; meals: number; advances: number; other: number };
   allowances: { transport: number; food: number; other: number };
 }
