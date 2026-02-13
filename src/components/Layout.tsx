@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
 
 interface LayoutProps {
   children: ReactNode;
-  onNavigate: (page: string) => void;
 }
 
-export default function Layout({ children, onNavigate }: LayoutProps) {
+export default function Layout({ children }: LayoutProps) {
   const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-amber-50 text-black">
@@ -23,26 +23,26 @@ export default function Layout({ children, onNavigate }: LayoutProps) {
       <footer className="border-t border-gray-300 bg-amber-50 py-6 px-4">
         <div className="max-w-lg mx-auto space-y-3">
           <div className="flex flex-wrap gap-3 justify-center text-sm">
-            <button
-              onClick={() => onNavigate('privacy')}
+            <Link
+              to="/privacy"
               className="text-gray-600 hover:text-black transition-colors underline"
             >
               {t('footer.privacy')}
-            </button>
+            </Link>
             <span className="text-gray-400">|</span>
-            <button
-              onClick={() => onNavigate('terms')}
+            <Link
+              to="/terms"
               className="text-gray-600 hover:text-black transition-colors underline"
             >
               {t('footer.terms')}
-            </button>
+            </Link>
             <span className="text-gray-400">|</span>
-            <button
-              onClick={() => onNavigate('disclosure')}
+            <Link
+              to="/disclosure"
               className="text-gray-600 hover:text-black transition-colors underline"
             >
               {t('footer.disclosure')}
-            </button>
+            </Link>
           </div>
         </div>
       </footer>

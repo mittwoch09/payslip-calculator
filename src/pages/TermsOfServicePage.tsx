@@ -1,11 +1,9 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-interface TermsOfServicePageProps {
-  onBack: () => void;
-}
-
-export default function TermsOfServicePage({ onBack }: TermsOfServicePageProps) {
+export default function TermsOfServicePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const body = t('terms.body');
   const paragraphs = body.split('\n\n');
 
@@ -13,7 +11,7 @@ export default function TermsOfServicePage({ onBack }: TermsOfServicePageProps) 
     <div className="space-y-4">
       <div className="flex items-center gap-4">
         <button
-          onClick={onBack}
+          onClick={() => navigate(-1)}
           className="text-black font-bold min-h-12 px-2 hover:bg-gray-100 transition-colors"
         >
           {t('form.back')}

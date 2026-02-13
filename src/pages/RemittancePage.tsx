@@ -1,26 +1,36 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import CorridorSelector from '../components/remittance/CorridorSelector';
 import AmountInput from '../components/remittance/AmountInput';
 import ProviderList from '../components/remittance/ProviderList';
 import { corridors } from '../data/corridors';
 import { providers } from '../data/providers';
 import { calculateQuotes } from '../lib/rate-calculator';
-import { buildDeepLink, buildAffiliateUrl, trackClick } from '../lib/affiliate-tracker';
+import { buildDeepLink, trackClick } from '../lib/affiliate-tracker';
 import { getExchangeRate } from '../lib/exchange-rate';
 import type { ProviderQuote } from '../types/remittance';
 
-interface RemittancePageProps {
-  initialAmount: number;
-  onBack: () => void;
-}
-
-export default function RemittancePage({ initialAmount, onBack }: RemittancePageProps) {
+export default function RemittancePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCorridor, setSelectedCorridor] = useState<string>('SGD-BDT');
-  const [amount, setAmount] = useState<number>(initialAmount);
+  const [amount, setAmount] = useState<number>(() => {
+    const param = searchParams.get('amount');
+    return param ? Number(param) : 0;
+  });
   const [quotes, setQuotes] = useState<ProviderQuote[]>([]);
   const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
+
+  // Sync amount changes to URL search params
+  useEffect(() => {
+    if (amount > 0) {
+      setSearchParams({ amount: amount.toString() }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+  }, [amount, setSearchParams]);
 
   // Calculate quotes whenever corridor or amount changes
   useEffect(() => {
@@ -72,7 +82,7 @@ export default function RemittancePage({ initialAmount, onBack }: RemittancePage
       {/* Header */}
       <div className="flex items-center gap-4">
         <button
-          onClick={onBack}
+          onClick={() => navigate(-1)}
           className="text-black font-bold min-h-12 px-2 hover:bg-gray-100 transition-colors"
         >
           {t('form.back')}

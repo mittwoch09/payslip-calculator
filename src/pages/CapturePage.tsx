@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useOcr } from '../hooks/useOcr';
 import { useSalaryProfile } from '../hooks/useSalaryProfile';
 import { usePayslipHistory } from '../hooks/usePayslipHistory';
@@ -13,22 +14,19 @@ import { calcPayslip } from '../engine/calculator';
 import type { DayEntry } from '../types/timecard';
 import type { PayslipResult } from '../types/payslip';
 
-interface CapturePageProps {
-  onBack: () => void;
-  onComplete: (entries: DayEntry[]) => void;
-  onNavigateRemittance?: (amount: number) => void;
-}
-
-type Step = 'salary' | 'camera' | 'processing' | 'preview' | 'result';
+type Step = 'salary' | 'camera' | 'preview' | 'result';
 
 const now = new Date();
 
-export default function CapturePage({ onBack, onNavigateRemittance }: CapturePageProps) {
+export default function CapturePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { step: urlStep } = useParams<{ step: string }>();
+  const urlDerivedStep: Step = (urlStep === 'camera' || urlStep === 'preview' || urlStep === 'result') ? urlStep : 'salary';
   const { processing, progress, processImage } = useOcr();
   const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
   const { addEntry: addToHistory } = usePayslipHistory();
-  const [step, setStep] = useState<Step>('salary');
+  const [isProcessing, setIsProcessing] = useState(false);
   const [entries, setEntries] = useState<DayEntry[]>([]);
   const [previewRows, setPreviewRows] = useState<TimecardPreviewRow[]>([]);
   const [payYear, setPayYear] = useState(now.getFullYear());
@@ -48,6 +46,9 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
   const [currentImage, setCurrentImage] = useState(0);
   const [totalImages, setTotalImages] = useState(0);
 
+  // Determine effective step: processing overlay takes priority
+  const step = isProcessing ? 'processing' as const : urlDerivedStep;
+
   useEffect(() => {
     // Double rAF ensures scroll happens after mobile browser has painted the new content
     requestAnimationFrame(() => {
@@ -55,11 +56,11 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       });
     });
-  }, [step]);
+  }, [urlDerivedStep]);
 
   const handleBatch = async (sources: (string | File)[]) => {
     setOcrFailed(false);
-    setStep('processing');
+    setIsProcessing(true);
     setTotalImages(sources.length);
     try {
       const allEntries: DayEntry[] = [];
@@ -78,7 +79,8 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
       }
 
       if (allRows.length === 0) {
-        setStep('camera');
+        setIsProcessing(false);
+        navigate('/capture/camera', { replace: true });
         setOcrFailed(true);
         return;
       }
@@ -97,10 +99,12 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
       // Fill missing days ONCE on the merged result
       setPreviewRows(fillMissingDays(Array.from(rowMap.values()), payYear, payMonth));
       setEntries(Array.from(entryMap.values()));
-      setStep('preview');
+      setIsProcessing(false);
+      navigate('/capture/preview', { replace: true });
     } catch (e) {
       console.error('OCR batch processing failed:', e);
-      setStep('camera');
+      setIsProcessing(false);
+      navigate('/capture/camera', { replace: true });
       setOcrFailed(true);
     }
   };
@@ -116,7 +120,7 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
     });
     setEntries(data);
     setResult(payslipResult);
-    setStep('result');
+    navigate('/capture/result', { replace: true });
 
     // Save to history
     addToHistory({
@@ -144,24 +148,23 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
           monthlySalary={salaryData.monthlySalary}
           hourlyRate={salaryData.hourlyRateOverride}
           otRate={salaryData.otRateOverride}
-          onNavigateRemittance={onNavigateRemittance}
         />
         <div className="flex gap-3 mt-4">
           <button
-            onClick={() => setStep('salary')}
+            onClick={() => navigate('/capture/salary', { replace: true })}
             className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editSalary')}
           </button>
           <button
-            onClick={() => setStep('preview')}
+            onClick={() => navigate('/capture/preview', { replace: true })}
             className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editTimecard')}
           </button>
         </div>
         <button
-          onClick={() => { setStep('salary'); setEntries([]); setPreviewRows([]); setResult(null); }}
+          onClick={() => { setEntries([]); setPreviewRows([]); setResult(null); navigate('/capture/salary', { replace: true }); }}
           className="w-full mt-2 bg-gray-100 border-2 border-black text-gray-600 font-bold text-sm min-h-12"
         >
           {t('payslip.startOver')}
@@ -179,7 +182,7 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
           previewRows={previewRows}
           onChange={setEntries}
           onConfirm={handleCalculate}
-          onRetake={() => { setStep('camera'); setEntries([]); setPreviewRows([]); }}
+          onRetake={() => { setEntries([]); setPreviewRows([]); navigate('/capture/camera', { replace: true }); }}
           year={payYear}
         />
       </div>
@@ -208,7 +211,7 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
     return (
       <div>
         <div className="flex items-center gap-4 mb-4">
-          <button onClick={() => { setStep('salary'); setOcrFailed(false); }} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
+          <button onClick={() => { setOcrFailed(false); navigate('/capture/salary', { replace: true }); }} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
           <h2 className="text-2xl font-black text-black">{t('home.scan')}</h2>
         </div>
         {ocrFailed && (
@@ -264,12 +267,12 @@ export default function CapturePage({ onBack, onNavigateRemittance }: CapturePag
             const { rows, entries: remapped } = remapYearMonth(previewRows, entries, payYear, payMonth);
             setPreviewRows(rows);
             setEntries(remapped);
-            setStep('preview');
+            navigate('/capture/preview', { replace: true });
           } else {
-            setStep('camera');
+            navigate('/capture/camera', { replace: true });
           }
         }}
-        onBack={onBack}
+        onBack={() => navigate('/')}
         submitLabel={t('form.next')}
         onSaveDefault={() => saveProfile(salaryData)}
         onClearDefault={() => {

@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import type { PayslipResult } from '../types/payslip';
 import { calcHourlyRate } from '../engine/calculator';
 import { OT_MULTIPLIER } from '../engine/constants';
@@ -17,7 +18,6 @@ interface PayslipDisplayProps {
   monthlySalary: number;
   hourlyRate?: number;
   otRate?: number;
-  onNavigateRemittance?: (amount: number) => void;
 }
 
 function Row({ label, amount, bold, large }: { label: string; amount: number; bold?: boolean; large?: boolean }) {
@@ -29,8 +29,9 @@ function Row({ label, amount, bold, large }: { label: string; amount: number; bo
   );
 }
 
-export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate: propsHourlyRate, otRate: propsOtRate, onNavigateRemittance }: PayslipDisplayProps) {
+export default function PayslipDisplay({ result, employeeName, employerName, periodStart, periodEnd, monthlySalary, hourlyRate: propsHourlyRate, otRate: propsOtRate }: PayslipDisplayProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const bottomRef = useRef<HTMLDivElement>(null);
   const hourlyRate = propsHourlyRate ?? calcHourlyRate(monthlySalary);
   const otRate = propsOtRate ?? (hourlyRate * OT_MULTIPLIER);
@@ -105,14 +106,12 @@ export default function PayslipDisplay({ result, employeeName, employerName, per
       </div>
 
       {/* Remittance CTA */}
-      {onNavigateRemittance && (
-        <div className="no-print">
-          <RemittanceCTA
-            netPay={result.netPay}
-            onCompareRates={() => onNavigateRemittance(result.netPay)}
-          />
-        </div>
-      )}
+      <div className="no-print">
+        <RemittanceCTA
+          netPay={result.netPay}
+          onCompareRates={() => navigate(`/remittance?amount=${result.netPay}`)}
+        />
+      </div>
 
       {/* Export Buttons */}
       <div className="no-print flex flex-col gap-3">

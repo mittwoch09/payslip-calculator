@@ -46,5 +46,9 @@ export function usePayslipHistory() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
   };
 
-  return { getEntries, addEntry, deleteEntry };
+  const getEntryById = (id: string): HistoryEntry | undefined => {
+    return getEntries().find(e => e.id === id);
+  };
+
+  return { getEntries, addEntry, deleteEntry, getEntryById };
 }

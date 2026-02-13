@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usePayslipHistory, type HistoryEntry } from '../hooks/usePayslipHistory';
 import PayslipDisplay from '../components/PayslipDisplay';
 
-interface HistoryPageProps {
-  onBack: () => void;
-}
-
-export default function HistoryPage({ onBack }: HistoryPageProps) {
+export default function HistoryPage() {
   const { t } = useTranslation();
-  const { getEntries, deleteEntry } = usePayslipHistory();
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { getEntries, deleteEntry, getEntryById } = usePayslipHistory();
   const [entries, setEntries] = useState<HistoryEntry[]>(getEntries());
-  const [selectedEntry, setSelectedEntry] = useState<HistoryEntry | null>(null);
 
-  const handleDelete = (id: string) => {
-    deleteEntry(id);
+  const selectedEntry = id ? getEntryById(id) : null;
+
+  const handleDelete = (entryId: string) => {
+    deleteEntry(entryId);
     setEntries(getEntries());
   };
 
@@ -32,7 +32,7 @@ export default function HistoryPage({ onBack }: HistoryPageProps) {
       <div>
         <div className="flex items-center gap-4 mb-4">
           <button
-            onClick={() => setSelectedEntry(null)}
+            onClick={() => navigate('/history')}
             className="text-black font-bold min-h-12 px-2 underline"
           >
             {t('form.back')}
@@ -54,7 +54,7 @@ export default function HistoryPage({ onBack }: HistoryPageProps) {
   return (
     <div>
       <div className="flex items-center gap-4 mb-4">
-        <button onClick={onBack} className="text-black font-bold min-h-12 px-2 underline">
+        <button onClick={() => navigate('/')} className="text-black font-bold min-h-12 px-2 underline">
           {t('form.back')}
         </button>
         <h2 className="text-2xl font-black text-black">{t('history.title')}</h2>
@@ -72,7 +72,7 @@ export default function HistoryPage({ onBack }: HistoryPageProps) {
               className="bg-white border-2 border-black p-4 shadow-[3px_3px_0_black]"
             >
               <div
-                onClick={() => setSelectedEntry(entry)}
+                onClick={() => navigate(`/history/${entry.id}`)}
                 className="cursor-pointer active:opacity-80"
               >
                 <div className="flex justify-between items-start mb-2">

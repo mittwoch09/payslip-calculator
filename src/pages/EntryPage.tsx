@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useParams } from 'react-router-dom';
 import TimecardForm from '../components/TimecardForm';
 import SalaryInput from '../components/SalaryInput';
 import PayslipDisplay from '../components/PayslipDisplay';
@@ -9,20 +10,16 @@ import { usePayslipHistory } from '../hooks/usePayslipHistory';
 import type { DayEntry } from '../types/timecard';
 import type { PayslipResult } from '../types/payslip';
 
-interface EntryPageProps {
-  onBack: () => void;
-  initialEntries?: DayEntry[];
-  onNavigateRemittance?: (amount: number) => void;
-}
-
 type Step = 'timecard' | 'salary' | 'result';
 
-export default function EntryPage({ onBack, initialEntries, onNavigateRemittance }: EntryPageProps) {
+export default function EntryPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { step: urlStep } = useParams<{ step: string }>();
+  const step: Step = (urlStep === 'salary' || urlStep === 'result') ? urlStep : 'timecard';
   const { loadProfile, saveProfile, clearProfile } = useSalaryProfile();
   const { addEntry: addToHistory } = usePayslipHistory();
-  const [step, setStep] = useState<Step>(initialEntries?.length ? 'salary' : 'timecard');
-  const [entries, setEntries] = useState<DayEntry[]>(initialEntries ?? []);
+  const [entries, setEntries] = useState<DayEntry[]>([]);
   const [salaryData, setSalaryData] = useState(() => {
     const saved = loadProfile();
     return saved ?? {
@@ -44,7 +41,7 @@ export default function EntryPage({ onBack, initialEntries, onNavigateRemittance
       timecard: { entries },
     });
     setResult(payslipResult);
-    setStep('result');
+    navigate('/entry/result', { replace: true });
     window.scrollTo(0, 0);
 
     // Save to history
@@ -73,24 +70,23 @@ export default function EntryPage({ onBack, initialEntries, onNavigateRemittance
           monthlySalary={salaryData.monthlySalary}
           hourlyRate={salaryData.hourlyRateOverride}
           otRate={salaryData.otRateOverride}
-          onNavigateRemittance={onNavigateRemittance}
         />
         <div className="flex gap-3 mt-4">
           <button
-            onClick={() => setStep('salary')}
+            onClick={() => navigate('/entry/salary', { replace: true })}
             className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editSalary')}
           </button>
           <button
-            onClick={() => setStep('timecard')}
+            onClick={() => navigate('/entry/timecard', { replace: true })}
             className="flex-1 bg-white border-2 border-black text-black font-bold shadow-[3px_3px_0_black] active:shadow-none active:translate-x-[3px] active:translate-y-[3px] min-h-14 text-base"
           >
             {t('payslip.editTimecard')}
           </button>
         </div>
         <button
-          onClick={() => { setStep('timecard'); setEntries([]); setResult(null); }}
+          onClick={() => { setEntries([]); setResult(null); navigate('/entry/timecard', { replace: true }); }}
           className="w-full mt-2 bg-gray-100 border-2 border-black text-gray-600 font-bold text-sm min-h-12"
         >
           {t('payslip.startOver')}
@@ -107,7 +103,7 @@ export default function EntryPage({ onBack, initialEntries, onNavigateRemittance
           data={salaryData}
           onChange={setSalaryData}
           onCalculate={handleCalculate}
-          onBack={() => setStep('timecard')}
+          onBack={() => navigate('/entry/timecard', { replace: true })}
           onSaveDefault={() => saveProfile(salaryData)}
           onClearDefault={() => {
             clearProfile();
@@ -127,13 +123,13 @@ export default function EntryPage({ onBack, initialEntries, onNavigateRemittance
   return (
     <div>
       <div className="flex items-center gap-4 mb-4">
-        <button onClick={onBack} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
+        <button onClick={() => navigate('/')} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
         <h2 className="text-2xl font-black text-black">{t('home.manual')}</h2>
       </div>
       <TimecardForm
         entries={entries}
         onChange={setEntries}
-        onNext={() => setStep('salary')}
+        onNext={() => navigate('/entry/salary', { replace: true })}
       />
     </div>
   );
