@@ -16,7 +16,7 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
      * HAND COMPUTATION:
      * Monthly Salary: SGD 800
      * Hourly Rate = (12 * 800) / 2288 = 9600 / 2288 = 4.1958...
-     * Daily Rate = 800 / 21.67 = 36.9177...
+     * Daily Rate = 800 / 26 = 30.7692...
      *
      * 5 days × 9h worked (8h normal + 1h OT):
      * - Regular hours: 5 × 8h = 40h (already paid in basic salary)
@@ -73,19 +73,19 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
      * HAND COMPUTATION:
      * Monthly Salary: SGD 1000
      * Hourly Rate = (12 * 1000) / 2288 = 12000 / 2288 = 5.2448...
-     * Daily Rate = 1000 / 21.67 = 46.1566...
+     * Daily Rate = 1000 / 26 = 38.4615...
      *
      * 5 normal days × 8h (no OT): 0 OT pay
      * 1 rest day × 10h worked:
-     *   - First 8h: 2 × daily rate = 2 × 46.1566 = 92.3132
+     *   - First 8h: 2 × daily rate = 2 × 38.4615 = 76.9230
      *   - Remaining 2h: OT at 1.5x = 2 × 5.2448 × 1.5 = 15.7344
-     *   - Total rest day pay = 92.3132 + 15.7344 = 108.0476
+     *   - Total rest day pay = 76.9230 + 15.7344 = 92.6574
      *
      * Expected:
      * - Basic Pay: 1000.00
      * - Regular OT Pay: 0.00
-     * - Rest Day Pay: 108.05 (rounded)
-     * - Gross Pay: 1108.05
+     * - Rest Day Pay: 92.66 (rounded)
+     * - Gross Pay: 1092.66
      */
     const monthlySalary = 1000;
     const hourlyRate = calcHourlyRate(monthlySalary); // 5.2448...
@@ -116,16 +116,16 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
     const result = calcPayslip(input);
 
     // Rest day: 2 × daily rate for first 8h + 2h OT at 1.5x
-    const expectedRestDayBasic = dailyRate * 2; // ~92.31
+    const expectedRestDayBasic = dailyRate * 2; // ~76.92
     const expectedRestDayOT = 2 * hourlyRate * 1.5; // ~15.73
-    const expectedRestDayTotal = expectedRestDayBasic + expectedRestDayOT; // ~108.05
+    const expectedRestDayTotal = expectedRestDayBasic + expectedRestDayOT; // ~92.66
 
     expect(result.basicPay).toBe(1000.00);
     expect(result.regularOtPay).toBe(0);
-    expect(result.restDayPay).toBeCloseTo(expectedRestDayTotal, 1); // ~108.05
+    expect(result.restDayPay).toBeCloseTo(expectedRestDayTotal, 1); // ~92.66
     expect(result.publicHolidayPay).toBe(0);
     expect(result.totalOtHours).toBe(2); // Only the 2h beyond normal hours on rest day
-    expect(result.grossPay).toBeCloseTo(1000 + expectedRestDayTotal, 1); // ~1108.05
+    expect(result.grossPay).toBeCloseTo(1000 + expectedRestDayTotal, 1); // ~1092.66
     expect(result.netPay).toBeCloseTo(1000 + expectedRestDayTotal, 1);
   });
 
@@ -134,18 +134,18 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
      * HAND COMPUTATION:
      * Monthly Salary: SGD 1200
      * Hourly Rate = (12 * 1200) / 2288 = 14400 / 2288 = 6.2937...
-     * Daily Rate = 1200 / 21.67 = 55.3879...
+     * Daily Rate = 1200 / 26 = 46.1538...
      *
      * 4 normal days × 8h: 0 OT pay
      * 1 PH day × 10h worked:
-     *   - Extra day basic pay: 55.3879
+     *   - Extra day basic pay: 46.1538
      *   - OT for 2h beyond normal: 2 × 6.2937 × 1.5 = 18.8811
-     *   - Total PH pay = 55.3879 + 18.8811 = 74.269
+     *   - Total PH pay = 46.1538 + 18.8811 = 65.0349
      *
      * Expected:
      * - Basic Pay: 1200.00
-     * - PH Pay: 74.27 (rounded)
-     * - Gross Pay: 1274.27
+     * - PH Pay: 65.03 (rounded)
+     * - Gross Pay: 1265.03
      */
     const monthlySalary = 1200;
     const hourlyRate = calcHourlyRate(monthlySalary); // 6.2937...
@@ -175,16 +175,16 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
     const result = calcPayslip(input);
 
     // PH pay: 1 extra day basic + 2h OT at 1.5x
-    const expectedPHBasic = dailyRate; // ~55.39
+    const expectedPHBasic = dailyRate; // ~46.15
     const expectedPHOT = 2 * hourlyRate * 1.5; // ~18.88
-    const expectedPHTotal = expectedPHBasic + expectedPHOT; // ~74.27
+    const expectedPHTotal = expectedPHBasic + expectedPHOT; // ~65.03
 
     expect(result.basicPay).toBe(1200.00);
     expect(result.regularOtPay).toBe(0);
     expect(result.restDayPay).toBe(0);
-    expect(result.publicHolidayPay).toBeCloseTo(expectedPHTotal, 1); // ~74.27
+    expect(result.publicHolidayPay).toBeCloseTo(expectedPHTotal, 1); // ~65.03
     expect(result.totalOtHours).toBe(2);
-    expect(result.grossPay).toBeCloseTo(1200 + expectedPHTotal, 1); // ~1274.27
+    expect(result.grossPay).toBeCloseTo(1200 + expectedPHTotal, 1); // ~1265.03
     expect(result.netPay).toBeCloseTo(1200 + expectedPHTotal, 1);
   });
 
@@ -321,28 +321,27 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
     expect(result.warnings.some(w => w.includes('80'))).toBe(true);
   });
 
-  it('Scenario 7: PH + rest day overlap - PH rules should apply (higher pay)', () => {
+  it('Scenario 7: PH on a day user marks as PH — uses PH rules', () => {
     /**
      * HAND COMPUTATION:
      * Monthly Salary: SGD 1000
      * Hourly Rate = (12 * 1000) / 2288 = 5.2448...
-     * Daily Rate = 1000 / 21.67 = 46.1566...
+     * Daily Rate = 1000 / 26 = 38.4615...
      *
-     * When a PH falls on a rest day, PH rules apply (typically higher pay).
+     * When a user explicitly marks a day as 'publicHoliday', the engine uses PH rules.
+     * In practice, when a PH falls on a rest day, MOM says the next working day
+     * becomes the observed PH. The user/UI is responsible for marking days correctly.
      *
      * Comparison for 10h worked:
-     * Rest Day Pay: 2 × 46.1566 + (2 × 5.2448 × 1.5) = 92.31 + 15.73 = 108.04
-     * PH Pay: 1 × 46.1566 + (2 × 5.2448 × 1.5) = 46.16 + 15.73 = 61.89
-     *
-     * Actually, for rest day > 8h we get 2 days' salary + OT = 108.04
-     * For PH we get 1 extra day + OT = 61.89
+     * Rest Day Pay: 2 × 38.4615 + (2 × 5.2448 × 1.5) = 76.92 + 15.73 = 92.66
+     * PH Pay: 1 × 38.4615 + (2 × 5.2448 × 1.5) = 38.46 + 15.73 = 54.20
      *
      * In this implementation, when marked as 'publicHoliday', it follows PH rules.
-     * The test verifies that PH designation is used when overlap occurs.
+     * The test verifies that PH designation is used when specified.
      *
      * Expected:
      * - Day marked as PH should use PH calculation
-     * - PH Pay: ~61.89
+     * - PH Pay: ~54.20
      */
     const monthlySalary = 1000;
     const hourlyRate = calcHourlyRate(monthlySalary);
@@ -372,7 +371,7 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
     const expectedPHOT = 2 * hourlyRate * 1.5;
     const expectedPHTotal = expectedPHBasic + expectedPHOT;
 
-    expect(result.publicHolidayPay).toBeCloseTo(expectedPHTotal, 1); // ~61.89
+    expect(result.publicHolidayPay).toBeCloseTo(expectedPHTotal, 1); // ~54.20
     expect(result.restDayPay).toBe(0); // Should not have rest day pay when marked as PH
 
     // Verify the day was correctly processed as PH
@@ -385,7 +384,7 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
      * HAND COMPUTATION:
      * Monthly Salary: SGD 1500
      * Hourly Rate = (12 * 1500) / 2288 = 7.8671...
-     * Daily Rate = 1500 / 21.67 = 69.2349...
+     * Daily Rate = 1500 / 26 = 57.6923...
      *
      * 5 normal days × 9h (1h OT each):
      * - OT Pay: 5 × 1 × 7.8671 × 1.5 = 59.0034
@@ -497,14 +496,14 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
     /**
      * HAND COMPUTATION:
      * Monthly Salary: SGD 1000
-     * Daily Rate = 1000 / 21.67 = 46.1566...
+     * Daily Rate = 1000 / 26 = 38.4615...
      *
      * Rest day with exactly 4h worked (half of normal 8h):
      * - Should get 1 day's salary (not 2 days)
      * - No OT since < 8h
      *
      * Expected:
-     * - Rest Day Pay: 46.16 (1 day's salary)
+     * - Rest Day Pay: 38.46 (1 day's salary)
      * - OT Hours: 0
      */
     const monthlySalary = 1000;
@@ -539,19 +538,19 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
      * HAND COMPUTATION:
      * Monthly Salary: SGD 1100
      * Hourly Rate = (12 * 1100) / 2288 = 5.7692...
-     * Daily Rate = 1100 / 21.67 = 50.7723...
+     * Daily Rate = 1100 / 26 = 42.3077...
      *
      * Week breakdown:
      * - 3 normal days × 9h (1h OT each): 3h OT = 3 × 5.7692 × 1.5 = 25.9614
-     * - 1 rest day × 10h: 2 × 50.7723 + (2 × 5.7692 × 1.5) = 101.5446 + 17.3076 = 118.8522
-     * - 1 PH × 8h (no OT): 50.7723
+     * - 1 rest day × 10h: 2 × 42.3077 + (2 × 5.7692 × 1.5) = 84.6154 + 17.3076 = 101.9230
+     * - 1 PH × 8h (no OT): 42.3077
      *
      * Expected:
      * - Regular OT Pay: 25.96
-     * - Rest Day Pay: 118.85
-     * - PH Pay: 50.77
+     * - Rest Day Pay: 101.92
+     * - PH Pay: 42.31
      * - Total OT Hours: 5h (3h from normal + 2h from rest)
-     * - Gross: 1100 + 25.96 + 118.85 + 50.77 = 1295.58
+     * - Gross: 1100 + 25.96 + 101.92 + 42.31 = 1270.19
      */
     const monthlySalary = 1100;
     const hourlyRate = calcHourlyRate(monthlySalary);
@@ -580,10 +579,10 @@ describe('Final Integration Tests - Hand-Computed Values', () => {
     const result = calcPayslip(input);
 
     const expectedRegularOT = 3 * hourlyRate * 1.5; // ~25.96
-    const expectedRestDayBasic = dailyRate * 2; // ~101.54
+    const expectedRestDayBasic = dailyRate * 2; // ~84.62
     const expectedRestDayOT = 2 * hourlyRate * 1.5; // ~17.31
-    const expectedRestDayTotal = expectedRestDayBasic + expectedRestDayOT; // ~118.85
-    const expectedPHPay = dailyRate; // ~50.77
+    const expectedRestDayTotal = expectedRestDayBasic + expectedRestDayOT; // ~101.92
+    const expectedPHPay = dailyRate; // ~42.31
     const expectedGross = monthlySalary + expectedRegularOT + expectedRestDayTotal + expectedPHPay;
 
     expect(result.basicPay).toBe(1100.00);

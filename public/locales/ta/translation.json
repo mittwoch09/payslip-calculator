@@ -48,6 +48,10 @@
     "calculate": "சம்பளத்தை கணக்கிடு",
     "saveDefault": "இயல்புநிலையாக சேமி",
     "clearDefault": "சேமித்ததை நீக்கு",
+    "workDaysPerWeek": "வாரத்திற்கு வேலை நாட்கள்",
+    "workDays5": "5 நாட்கள்",
+    "workDays5Half": "5.5 நாட்கள்",
+    "workDays6": "6 நாட்கள்",
     "hourlyRate": "மணிநேர ஊதியம் (SGD)",
     "otRate": "OT கட்டணம் (SGD)",
     "rateHint": "மாத சம்பளத்திலிருந்து தானாக கணக்கிட காலியாக விடவும்"

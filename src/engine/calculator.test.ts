@@ -15,9 +15,14 @@ describe('calcHourlyRate', () => {
 });
 
 describe('calcDailyRate', () => {
-  it('calculates correctly for $1000/month', () => {
+  it('calculates correctly for $1000/month (6-day workweek default)', () => {
+    // 1000 / 26 = 38.46
+    expect(calcDailyRate(1000)).toBeCloseTo(38.46, 1);
+  });
+
+  it('calculates correctly for 5-day workweek', () => {
     // 1000 / 21.67 = 46.15
-    expect(calcDailyRate(1000)).toBeCloseTo(46.15, 1);
+    expect(calcDailyRate(1000, 5)).toBeCloseTo(46.15, 1);
   });
 });
 
@@ -38,6 +43,10 @@ describe('calcWorkedHours', () => {
 describe('isPublicHoliday', () => {
   it('returns true for 2025 New Year', () => {
     expect(isPublicHoliday('2025-01-01')).toBe(true);
+  });
+
+  it('returns true for 2025 Polling Day', () => {
+    expect(isPublicHoliday('2025-05-03')).toBe(true);
   });
 
   it('returns true for 2026 Chinese New Year', () => {
@@ -172,5 +181,87 @@ describe('calcPayslip', () => {
     const result = calcPayslip(input);
     expect(result.totalAllowances).toBe(150);
     expect(result.grossPay).toBe(result.basicPay + result.regularOtPay + result.restDayPay + result.publicHolidayPay + result.totalAllowances);
+  });
+});
+
+describe('workDaysPerWeek and restDayInitiator', () => {
+  it('5-day week: normal day 9h = no OT', () => {
+    const entry: DayEntry = { date: '2026-03-02', dayType: 'normal', clockIn: '08:00', clockOut: '18:00', breakMinutes: 60 };
+    const hourlyRate = calcHourlyRate(1000);
+    const dailyRate = calcDailyRate(1000, 5);
+    const otRate = hourlyRate * 1.5;
+    const result = calcDayPay(entry, hourlyRate, dailyRate, otRate, 9);
+    expect(result.workedHours).toBe(9);
+    expect(result.otHours).toBe(0);
+    expect(result.otPay).toBe(0);
+  });
+
+  it('5-day week: normal day 10h = 1h OT', () => {
+    const entry: DayEntry = { date: '2026-03-02', dayType: 'normal', clockIn: '08:00', clockOut: '19:00', breakMinutes: 60 };
+    const hourlyRate = calcHourlyRate(1000);
+    const dailyRate = calcDailyRate(1000, 5);
+    const otRate = hourlyRate * 1.5;
+    const result = calcDayPay(entry, hourlyRate, dailyRate, otRate, 9);
+    expect(result.workedHours).toBe(10);
+    expect(result.otHours).toBe(1);
+    expect(result.otPay).toBeCloseTo(hourlyRate * 1.5, 1);
+  });
+
+  it('employee-requested rest day: half day = 0.5 day salary', () => {
+    const hourlyRate = calcHourlyRate(1000);
+    const dailyRate = calcDailyRate(1000);
+    const otRate = hourlyRate * 1.5;
+    const entry: DayEntry = { date: '2026-03-01', dayType: 'rest', clockIn: '08:00', clockOut: '12:00', breakMinutes: 0, restDayInitiator: 'employee' };
+    const result = calcDayPay(entry, hourlyRate, dailyRate, otRate);
+    expect(result.basicPay).toBeCloseTo(dailyRate * 0.5, 1);
+  });
+
+  it('employee-requested rest day: full day = 1 day salary', () => {
+    const hourlyRate = calcHourlyRate(1000);
+    const dailyRate = calcDailyRate(1000);
+    const otRate = hourlyRate * 1.5;
+    const entry: DayEntry = { date: '2026-03-01', dayType: 'rest', clockIn: '08:00', clockOut: '17:00', breakMinutes: 60, restDayInitiator: 'employee' };
+    const result = calcDayPay(entry, hourlyRate, dailyRate, otRate);
+    expect(result.basicPay).toBeCloseTo(dailyRate, 1);
+  });
+
+  it('employee-requested rest day with OT = 1 day salary + 1.5x OT', () => {
+    const hourlyRate = calcHourlyRate(1000);
+    const dailyRate = calcDailyRate(1000);
+    const otRate = hourlyRate * 1.5;
+    const entry: DayEntry = { date: '2026-03-01', dayType: 'rest', clockIn: '08:00', clockOut: '19:00', breakMinutes: 60, restDayInitiator: 'employee' };
+    const result = calcDayPay(entry, hourlyRate, dailyRate, otRate);
+    expect(result.basicPay).toBeCloseTo(dailyRate, 1);
+    expect(result.otPay).toBeCloseTo(2 * hourlyRate * 1.5, 1);
+  });
+
+  it('employer-requested rest day (default): full day = 2 days salary', () => {
+    const hourlyRate = calcHourlyRate(1000);
+    const dailyRate = calcDailyRate(1000);
+    const otRate = hourlyRate * 1.5;
+    const entry: DayEntry = { date: '2026-03-01', dayType: 'rest', clockIn: '08:00', clockOut: '17:00', breakMinutes: 60 };
+    const result = calcDayPay(entry, hourlyRate, dailyRate, otRate);
+    expect(result.basicPay).toBeCloseTo(dailyRate * 2, 1);
+  });
+
+  it('calcPayslip with 5-day work week', () => {
+    const input: PayslipInput = {
+      employeeName: 'Test',
+      employerName: 'Test',
+      monthlySalary: 1000,
+      paymentPeriodStart: '2026-03-02',
+      paymentPeriodEnd: '2026-03-06',
+      workDaysPerWeek: 5,
+      timecard: {
+        entries: [
+          { date: '2026-03-02', dayType: 'normal', clockIn: '08:00', clockOut: '18:00', breakMinutes: 60 }, // 9h = no OT with 5-day
+        ],
+      },
+      deductions: { accommodation: 0, meals: 0, advances: 0, other: 0 },
+      allowances: { transport: 0, food: 0, other: 0 },
+    };
+    const result = calcPayslip(input);
+    expect(result.totalOtHours).toBe(0);
+    expect(result.regularOtPay).toBe(0);
   });
 });

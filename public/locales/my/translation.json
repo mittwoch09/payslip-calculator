@@ -48,6 +48,10 @@
     "calculate": "လုပ်ခလစာ တွက်ချက်ပါ",
     "saveDefault": "ပုံမှန်အဖြစ် သိမ်းဆည်းပါ",
     "clearDefault": "သိမ်းဆည်းထားသည်ကို ရှင်းလင်းပါ",
+    "workDaysPerWeek": "တစ်ပတ် အလုပ်လုပ်ရက်",
+    "workDays5": "၅ ရက်",
+    "workDays5Half": "၅.၅ ရက်",
+    "workDays6": "၆ ရက်",
     "hourlyRate": "နာရီ နှုန်း (SGD)",
     "otRate": "OT နှုန်း (SGD)",
     "rateHint": "လစဉ်လုပ်ခမှ အလိုအလျောက် တွက်ချက်ရန် အလွတ်ထားပါ"

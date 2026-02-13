@@ -7,6 +7,7 @@ export interface DayEntry {
   clockOut: string;
   breakMinutes: number;
   extraOtHours?: number;
+  restDayInitiator?: 'employer' | 'employee'; // defaults to 'employer' if not set
 }
 
 export interface TimeCard {

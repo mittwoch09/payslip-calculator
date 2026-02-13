@@ -48,6 +48,10 @@
     "calculate": "Calculate Payslip",
     "saveDefault": "Save as Default",
     "clearDefault": "Clear Saved",
+    "workDaysPerWeek": "Working days per week",
+    "workDays5": "5 days",
+    "workDays5Half": "5.5 days",
+    "workDays6": "6 days",
     "hourlyRate": "Hourly Rate (SGD)",
     "otRate": "OT Rate (SGD)",
     "rateHint": "Leave empty to auto-calculate from monthly salary"

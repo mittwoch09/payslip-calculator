@@ -26,6 +26,7 @@ export default function EntryPage() {
       employeeName: '',
       employerName: '',
       monthlySalary: 0,
+      workDaysPerWeek: 6 as const,
       deductions: { accommodation: 0, meals: 0, advances: 0, other: 0 },
       allowances: { transport: 0, food: 0, other: 0 },
     };
@@ -111,6 +112,7 @@ export default function EntryPage() {
               employeeName: '',
               employerName: '',
               monthlySalary: 0,
+              workDaysPerWeek: 6,
               deductions: { accommodation: 0, meals: 0, advances: 0, other: 0 },
               allowances: { transport: 0, food: 0, other: 0 },
             });

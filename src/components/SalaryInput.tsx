@@ -8,6 +8,7 @@ interface SalaryData {
   employeeName: string;
   employerName: string;
   monthlySalary: number;
+  workDaysPerWeek?: 5 | 5.5 | 6;
   hourlyRateOverride?: number;
   otRateOverride?: number;
   deductions: { accommodation: number; meals: number; advances: number; other: number };
@@ -82,6 +83,28 @@ export default function SalaryInput({ data, onChange, onCalculate, onBack, submi
             min={0}
           />
           {getError('monthlySalary') && <div className="text-red-600 text-sm mt-1 font-bold">{t(getError('monthlySalary')!.message)}</div>}
+        </div>
+        <div>
+          <label className="block font-bold text-black mb-1 text-sm">{t('salary.workDaysPerWeek')}</label>
+          <div className="flex">
+            {([5, 5.5, 6] as const).map(days => {
+              const key = days === 5.5 ? 'workDays5Half' : `workDays${days}`;
+              return (
+                <button
+                  key={days}
+                  type="button"
+                  onClick={() => update({ workDaysPerWeek: days })}
+                  className={`flex-1 border-2 border-black min-h-10 font-bold text-sm ${
+                    (data.workDaysPerWeek ?? 6) === days
+                      ? 'bg-black text-white'
+                      : 'bg-white text-black'
+                  }`}
+                >
+                  {t(`salary.${key}`)}
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>

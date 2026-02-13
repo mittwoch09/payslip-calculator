@@ -48,6 +48,10 @@
     "calculate": "বেতন হিসাব করুন",
     "saveDefault": "ডিফল্ট হিসেবে সংরক্ষণ",
     "clearDefault": "সংরক্ষিত মুছুন",
+    "workDaysPerWeek": "সাপ্তাহিক কর্মদিবস",
+    "workDays5": "৫ দিন",
+    "workDays5Half": "৫.৫ দিন",
+    "workDays6": "৬ দিন",
     "hourlyRate": "ঘণ্টা হার (SGD)",
     "otRate": "OT হার (SGD)",
     "rateHint": "মাসিক বেতন থেকে স্বয়ংক্রিয়ভাবে গণনা করতে খালি রাখুন"

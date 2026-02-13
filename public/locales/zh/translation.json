@@ -48,6 +48,10 @@
     "calculate": "计算工资单",
     "saveDefault": "保存为默认",
     "clearDefault": "清除保存",
+    "workDaysPerWeek": "每周工作天数",
+    "workDays5": "5天",
+    "workDays5Half": "5.5天",
+    "workDays6": "6天",
     "hourlyRate": "时薪 (SGD)",
     "otRate": "加班费率 (SGD)",
     "rateHint": "留空则根据月薪自动计算"

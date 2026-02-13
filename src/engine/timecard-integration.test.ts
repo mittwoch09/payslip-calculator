@@ -147,7 +147,7 @@ describe('Timecard Integration - Mr. Mani Chelladurai, Nov 2025', () => {
       }
 
       // All rest days worked > 4h, so should get 2 days' salary
-      const dailyRate = monthlySalary / 21.67; // ~36.92
+      const dailyRate = monthlySalary / 26; // ~30.77
       expect(dayResult.basicPay).toBeCloseTo(dailyRate * 2, 1);
     }
 

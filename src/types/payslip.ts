@@ -20,6 +20,7 @@ export interface PayslipInput {
   };
   hourlyRateOverride?: number;  // manual hourly basic rate
   otRateOverride?: number;      // manual overtime rate
+  workDaysPerWeek?: 5 | 5.5 | 6; // defaults to 6 if not set
 }
 
 export interface DayPayResult {
