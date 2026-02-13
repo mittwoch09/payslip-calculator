@@ -31,7 +31,7 @@ export function usePayslipHistory() {
     const entries = getEntries();
     const newEntry: HistoryEntry = {
       ...entry,
-      id: Date.now().toString(),
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       savedAt: new Date().toISOString(),
     };
     entries.unshift(newEntry);
