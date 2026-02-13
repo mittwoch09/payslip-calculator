@@ -55,11 +55,15 @@ export default function ProviderCard({
         </div>
       </div>
 
+      <p className="mt-2 text-xs text-gray-500">
+        {t('remittance.estimatedDisclaimer', { provider: quote.providerName })}
+      </p>
+
       <button
         onClick={onSendNow}
-        className="mt-4 w-full bg-black text-white font-bold py-3 px-4 hover:bg-gray-800 transition-colors"
+        className="mt-3 w-full bg-black text-white font-bold py-3 px-4 hover:bg-gray-800 transition-colors"
       >
-        {t('remittance.checkRate')} →
+        {quote.partnerizeRef ? `${t('remittance.checkRate')} → (${t('remittance.affiliateLink')})` : `${t('remittance.checkRate')} →`}
       </button>
     </div>
   );

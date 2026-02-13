@@ -113,31 +113,31 @@ describe('calculateQuotes', () => {
 
 describe('getMockRate', () => {
   it('returns correct rate for SGD-BDT', () => {
-    expect(getMockRate('SGD-BDT')).toBe(90.5);
+    expect(getMockRate('SGD-BDT')).toBe(91.2);
   });
 
   it('returns correct rate for SGD-INR', () => {
-    expect(getMockRate('SGD-INR')).toBe(62.3);
+    expect(getMockRate('SGD-INR')).toBe(63.1);
   });
 
   it('returns correct rate for SGD-CNY', () => {
-    expect(getMockRate('SGD-CNY')).toBe(5.35);
+    expect(getMockRate('SGD-CNY')).toBe(5.42);
   });
 
   it('returns correct rate for SGD-MMK', () => {
-    expect(getMockRate('SGD-MMK')).toBe(1580);
+    expect(getMockRate('SGD-MMK')).toBe(1590);
   });
 
   it('returns correct rate for SGD-PHP', () => {
-    expect(getMockRate('SGD-PHP')).toBe(42.1);
+    expect(getMockRate('SGD-PHP')).toBe(42.5);
   });
 
   it('returns correct rate for SGD-IDR', () => {
-    expect(getMockRate('SGD-IDR')).toBe(11800);
+    expect(getMockRate('SGD-IDR')).toBe(11900);
   });
 
   it('returns correct rate for SGD-THB', () => {
-    expect(getMockRate('SGD-THB')).toBe(27.2);
+    expect(getMockRate('SGD-THB')).toBe(26.8);
   });
 
   it('returns 1 for unknown corridor', () => {

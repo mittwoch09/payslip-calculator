@@ -41,6 +41,28 @@ export function buildAffiliateUrl(
  * @param corridor - The corridor ID (e.g., 'SGD-BDT')
  * @returns The deep link URL with pre-filled amount
  */
+/**
+ * Build a Partnerize tracking URL for providers using the Partnerize network (e.g. Wise)
+ * @param camref - The Partnerize campaign reference (from affiliate dashboard)
+ * @param destination - The destination URL to redirect to after tracking
+ * @param adref - Optional ad reference for tracking (e.g. corridor ID)
+ * @returns The Partnerize tracking URL, or null if camref is empty
+ */
+export function buildPartnerizeUrl(
+  camref: string,
+  destination: string,
+  adref?: string
+): string | null {
+  if (!camref) return null;
+
+  let url = `https://prf.hn/click/camref:${camref}`;
+  if (adref) {
+    url += `/adref:${adref}`;
+  }
+  url += `/destination:${encodeURIComponent(destination)}`;
+  return url;
+}
+
 export function buildDeepLink(
   template: string | undefined,
   fallbackUrl: string,

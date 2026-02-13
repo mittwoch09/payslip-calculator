@@ -44,13 +44,13 @@ export async function fetchExchangeRates(): Promise<Record<string, number>> {
 
     // Extract rates we need
     const rates: Record<string, number> = {
-      'SGD-BDT': data.conversion_rates.BDT || 90.5,
-      'SGD-INR': data.conversion_rates.INR || 62.3,
-      'SGD-CNY': data.conversion_rates.CNY || 5.35,
-      'SGD-MMK': data.conversion_rates.MMK || 1580,
-      'SGD-PHP': data.conversion_rates.PHP || 42.1,
-      'SGD-IDR': data.conversion_rates.IDR || 11800,
-      'SGD-THB': data.conversion_rates.THB || 27.2,
+      'SGD-BDT': data.conversion_rates.BDT || 91.2,
+      'SGD-INR': data.conversion_rates.INR || 63.1,
+      'SGD-CNY': data.conversion_rates.CNY || 5.42,
+      'SGD-MMK': data.conversion_rates.MMK || 1590,
+      'SGD-PHP': data.conversion_rates.PHP || 42.5,
+      'SGD-IDR': data.conversion_rates.IDR || 11900,
+      'SGD-THB': data.conversion_rates.THB || 26.8,
     };
 
     // Cache the rates
@@ -89,16 +89,33 @@ function setCachedRates(rates: Record<string, number>): void {
   }
 }
 
+// Fallback rates — approximate mid-market as of February 2026
+// Updated periodically; users always see "estimated" labels
 function getFallbackRates(): Record<string, number> {
   return {
-    'SGD-BDT': 90.5,
-    'SGD-INR': 62.3,
-    'SGD-CNY': 5.35,
-    'SGD-MMK': 1580,
-    'SGD-PHP': 42.1,
-    'SGD-IDR': 11800,
-    'SGD-THB': 27.2,
+    'SGD-BDT': 91.2,
+    'SGD-INR': 63.1,
+    'SGD-CNY': 5.42,
+    'SGD-MMK': 1590,
+    'SGD-PHP': 42.5,
+    'SGD-IDR': 11900,
+    'SGD-THB': 26.8,
   };
+}
+
+/**
+ * Get the timestamp of the last cached exchange rate fetch.
+ * Returns null if no cached rates exist.
+ */
+export function getCacheTimestamp(): number | null {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (!cached) return null;
+    const parsed: CachedRates = JSON.parse(cached);
+    return parsed.timestamp;
+  } catch {
+    return null;
+  }
 }
 
 /**

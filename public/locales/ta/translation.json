@@ -158,10 +158,13 @@
     "compareProviders": "வழங்குநர்களை ஒப்பிடு",
     "rateDisclaimer": "These are estimated rates only, calculated from mid-market exchange rates with approximate provider margins. Always check the provider's website for actual rates and fees before sending money.",
     "clickForActualRate": "உண்மையான விகிதத்தைக் காண கிளிக் செய்யவும்",
-    "affiliateDisclosure": "This comparison may include affiliate links. We may earn a commission when you use a provider through our links, at no extra cost to you.",
+    "affiliateDisclosure": "We earn a commission when you complete a transfer through our links, at no extra cost to you. This does not affect the rates or order shown.",
     "checkRate": "Check Rate",
     "viewOnProvider": "View on {{provider}}",
     "estimatedLabel": "Est.",
+    "affiliateLink": "Affiliate link",
+    "estimatedDisclaimer": "Rates are estimates, not live quotes from {{provider}}",
+    "ratesRefreshed": "Rates refreshed {{time}} ago",
     "countries": {
       "china": "சீனா",
       "india": "இந்தியா",
@@ -194,6 +197,6 @@
   },
   "affiliateDisclosure": {
     "title": "Affiliate Disclosure",
-    "body": "Affiliate Disclosure\n\nLast updated: February 2025\n\nPayslip Calculator may contain affiliate links to third-party remittance services. This means that when you click on a link to a remittance provider from our application and subsequently make a transfer or sign up for their service, we may receive a commission at no additional cost to you.\n\nOur affiliate partners may include:\n- Wise (TransferWise)\n- Remitly\n\nThis commission helps us maintain and improve this free application.\n\nImportant: Our affiliate relationships do NOT influence:\n- The order in which providers are displayed\n- The estimated rates or fees shown\n- Our comparison methodology\n\nAll rates and fees displayed are independent estimates based on publicly available mid-market exchange rate data with approximate provider margins applied. They are not provided by, endorsed by, or guaranteed by any remittance provider.\n\nWe believe in full transparency. If you have questions about our affiliate relationships, please open an issue on our GitHub repository."
+    "body": "Affiliate Disclosure\n\nLast updated: February 2026\n\nPayslip Calculator contains affiliate links to third-party remittance services. When you click on a link to a remittance provider from our application and complete a cross-currency transfer as a new customer, we earn a commission at no additional cost to you.\n\nCommission is earned per new customer who completes a cross-currency transfer through our affiliate links.\n\nOur affiliate partners may include:\n- Wise (via Partnerize)\n- Remitly\n\nThis commission helps us maintain and improve this free application.\n\nImportant: Our affiliate relationships do NOT influence:\n- The order in which providers are displayed\n- The estimated rates or fees shown\n- Our comparison methodology\n\nRates and fees shown are estimates — always verify on the provider's website before sending money. All rates displayed are independent estimates based on publicly available mid-market exchange rate data with approximate provider margins applied. They are not provided by, endorsed by, or guaranteed by any remittance provider.\n\nWe believe in full transparency. If you have questions about our affiliate relationships, please open an issue on our GitHub repository."
   }
 }

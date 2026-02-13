@@ -2,7 +2,7 @@ import type { Provider } from '../types/remittance';
 
 // IMPORTANT: All fees, margins, and delivery times below are ESTIMATES only.
 // They are manually researched approximations, NOT live data from provider APIs.
-// Last manually verified: February 2025
+// Last manually verified: February 2026
 // Source: Provider websites (public pricing pages)
 // These values may be outdated. Users are directed to provider websites for actual rates.
 export const providers: Provider[] = [
@@ -34,17 +34,22 @@ export const providers: Provider[] = [
     // Wise public send money page: https://wise.com/send-money/send-money-to-{targetCountryCode}
     affiliateUrlTemplate: 'https://wise.com/send-money/send-money-to-{targetCountryCode}',
     affiliateId: undefined, // TODO: Replace with actual Wise affiliate tracking ID from partner dashboard
+    // Partnerize tracking: after Wise affiliate approval, set camref from Partnerize dashboard
+    // e.g. partnerizeRef: '1234567890abcdef'
+    partnerizeRef: '',
     rateMargin: 0.005,
     fees: {
-      'SGD-BDT': { fixed: 2.50, percent: 0 },
-      'SGD-INR': { fixed: 2.50, percent: 0 },
-      'SGD-CNY': { fixed: 2.50, percent: 0 },
-      'SGD-MMK': { fixed: 3.00, percent: 0 },
-      'SGD-PHP': { fixed: 2.50, percent: 0 },
-      'SGD-IDR': { fixed: 2.50, percent: 0 },
-      'SGD-THB': { fixed: 2.50, percent: 0 },
+      // Wise uses variable pricing; these are typical fees for ~S$500 transfers from Singapore
+      // Last verified: February 2026 on wise.com/pricing
+      'SGD-BDT': { fixed: 1.51, percent: 0.0062 },
+      'SGD-INR': { fixed: 1.51, percent: 0.0062 },
+      'SGD-CNY': { fixed: 1.51, percent: 0.0062 },
+      'SGD-MMK': { fixed: 1.51, percent: 0.0121 },
+      'SGD-PHP': { fixed: 1.51, percent: 0.0062 },
+      'SGD-IDR': { fixed: 1.51, percent: 0.0062 },
+      'SGD-THB': { fixed: 1.51, percent: 0.0062 },
     },
-    deliveryTime: '1-2 days',
+    deliveryTime: 'Usually within 24 hours',
   },
 ];
 

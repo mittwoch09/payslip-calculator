@@ -7,9 +7,18 @@ import ProviderList from '../components/remittance/ProviderList';
 import { corridors } from '../data/corridors';
 import { providers } from '../data/providers';
 import { calculateQuotes } from '../lib/rate-calculator';
-import { buildDeepLink, trackClick } from '../lib/affiliate-tracker';
-import { getExchangeRate } from '../lib/exchange-rate';
+import { buildDeepLink, buildPartnerizeUrl, trackClick } from '../lib/affiliate-tracker';
+import { getExchangeRate, getCacheTimestamp } from '../lib/exchange-rate';
 import type { ProviderQuote } from '../types/remittance';
+
+function formatTimeAgo(timestamp: number): string {
+  const seconds = Math.floor((Date.now() - timestamp) / 1000);
+  if (seconds < 60) return '<1 min';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  return `${hours}h ${minutes % 60}m`;
+}
 
 export default function RemittancePage() {
   const { t } = useTranslation();
@@ -22,6 +31,7 @@ export default function RemittancePage() {
   });
   const [quotes, setQuotes] = useState<ProviderQuote[]>([]);
   const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
+  const [ratesTimestamp, setRatesTimestamp] = useState<number | null>(null);
 
   // Sync amount changes to URL search params
   useEffect(() => {
@@ -41,6 +51,7 @@ export default function RemittancePage() {
           const midMarketRate = await getExchangeRate(selectedCorridor);
           const calculatedQuotes = calculateQuotes(amount, selectedCorridor, providers, midMarketRate);
           setQuotes(calculatedQuotes);
+          setRatesTimestamp(getCacheTimestamp());
         } catch (error) {
           console.error('Failed to fetch rates:', error);
           setQuotes([]);
@@ -63,7 +74,7 @@ export default function RemittancePage() {
       amount,
     });
 
-    // Use deep link with amount pre-filled
+    // Build the provider deep link
     const deepLink = buildDeepLink(
       quote.affiliateUrlTemplate,
       quote.affiliateUrl,
@@ -71,7 +82,12 @@ export default function RemittancePage() {
       selectedCorridor
     );
 
-    window.open(deepLink, '_blank', 'noopener,noreferrer');
+    // Wrap in Partnerize tracking URL if provider uses Partnerize
+    const partnerizeUrl = quote.partnerizeRef
+      ? buildPartnerizeUrl(quote.partnerizeRef, deepLink, selectedCorridor)
+      : null;
+
+    window.open(partnerizeUrl || deepLink, '_blank', 'noopener,noreferrer');
   };
 
   // Get target currency from corridor
@@ -134,8 +150,11 @@ export default function RemittancePage() {
       )}
 
       {/* Footer */}
-      <div className="text-center text-sm text-gray-500 py-4">
-        {t('remittance.updatedJustNow')}
+      <div className="text-center text-sm text-gray-500 py-4 space-y-1">
+        {ratesTimestamp && (
+          <div>{t('remittance.ratesRefreshed', { time: formatTimeAgo(ratesTimestamp) })}</div>
+        )}
+        <div>{t('remittance.updatedJustNow')}</div>
       </div>
     </div>
   );

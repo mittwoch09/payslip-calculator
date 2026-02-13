@@ -16,13 +16,13 @@ export default function RemittanceCTA({ netPay, onCompareRates }: RemittanceCTAP
       <p className="text-gray-700 text-sm mb-3">
         {t('remittance.cta.subtitle')}
       </p>
+      <p className="text-xs text-gray-600 mb-3">{t('remittance.affiliateDisclosure')}</p>
       <button
         onClick={onCompareRates}
         className="w-full py-3 bg-black text-white border-2 border-black font-bold active:translate-x-1 active:translate-y-1 transition-transform"
       >
         {t('remittance.cta.button')} →
       </button>
-      <p className="text-xs text-gray-500 mt-1">{t('footer.affiliateNotice')}</p>
     </div>
   );
 }

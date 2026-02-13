@@ -38,6 +38,7 @@ export function calculateQuotes(
       deliveryTime: provider.deliveryTime,
       affiliateUrl: provider.affiliateUrl,
       affiliateUrlTemplate: provider.affiliateUrlTemplate,
+      partnerizeRef: provider.partnerizeRef,
     };
   });
 
@@ -52,13 +53,13 @@ export function calculateQuotes(
  */
 export function getMockRate(corridorId: string): number {
   const mockRates: Record<string, number> = {
-    'SGD-BDT': 90.5,
-    'SGD-INR': 62.3,
-    'SGD-CNY': 5.35,
-    'SGD-MMK': 1580,
-    'SGD-PHP': 42.1,
-    'SGD-IDR': 11800,
-    'SGD-THB': 27.2,
+    'SGD-BDT': 91.2,
+    'SGD-INR': 63.1,
+    'SGD-CNY': 5.42,
+    'SGD-MMK': 1590,
+    'SGD-PHP': 42.5,
+    'SGD-IDR': 11900,
+    'SGD-THB': 26.8,
   };
 
   return mockRates[corridorId] || 1;
