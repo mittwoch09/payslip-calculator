@@ -10,19 +10,19 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const { t } = useTranslation();
   return (
-    <div className="min-h-screen bg-amber-50 text-black">
+    <div className="min-h-screen bg-amber-50 text-black flex flex-col">
       <header className="sticky top-0 z-50 bg-white border-b-3 border-black px-4 py-2">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <h1 className="text-lg font-black text-black">{t('app.title')}</h1>
           <LanguageSwitcher />
         </div>
       </header>
-      <main className="max-w-lg mx-auto px-4 py-6">
+      <main className="max-w-lg mx-auto px-4 py-6 flex-1">
         {children}
       </main>
       <footer className="border-t border-gray-300 bg-amber-50 py-6 px-4">
         <div className="max-w-lg mx-auto space-y-3">
-          <div className="flex flex-wrap gap-3 justify-center text-sm">
+          <div className="flex items-center gap-2.5 justify-center text-xs whitespace-nowrap">
             <Link
               to="/privacy"
               className="text-gray-600 hover:text-black transition-colors underline"
