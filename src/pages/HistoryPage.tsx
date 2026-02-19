@@ -62,7 +62,7 @@ export default function HistoryPage() {
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="bg-white border-2 border-black p-4 shadow-[3px_3px_0_black]"
+              className="bg-white border-2 border-black p-3"
             >
               <div
                 onClick={() => navigate(`/history/${entry.id}`)}
@@ -74,20 +74,20 @@ export default function HistoryPage() {
                     {formatCurrency(entry.netPay)}
                   </p>
                 </div>
-                <div className="flex justify-between items-center mt-1">
+                <div className="flex justify-between items-center">
                   <p className="text-gray-500 text-sm">
                     {formatDate(entry.periodStart)} - {formatDate(entry.periodEnd)}
                   </p>
                   <p className="text-gray-400 text-xs shrink-0">{t('history.netPay')}</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
+              <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-gray-100">
                 <p className="text-gray-400 text-xs">
                   {formatDate(entry.savedAt)}
                 </p>
                 <button
                   onClick={() => handleDelete(entry.id)}
-                  className="text-red-600 font-bold text-sm px-3 py-2 min-h-10"
+                  className="text-red-600 font-bold text-sm px-3 py-1"
                 >
                   {t('history.delete')}
                 </button>
