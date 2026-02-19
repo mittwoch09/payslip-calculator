@@ -106,16 +106,9 @@ export default function RemittancePage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-black font-bold min-h-12 px-2 hover:bg-gray-100 transition-colors"
-        >
-          {t('form.back')}
-        </button>
-        <h2 className="text-2xl font-black text-black">
-          💸 {t('remittance.title')}
-        </h2>
+      <div>
+        <button onClick={() => navigate('/')} className="text-gray-500 text-sm font-bold mb-1">&larr; {t('form.back')}</button>
+        <h2 className="text-2xl font-black text-black">💸 {t('remittance.title')}</h2>
       </div>
 
       {/* Affiliate Disclosure */}

@@ -211,8 +211,8 @@ export default function CapturePage() {
   if (step === 'camera') {
     return (
       <div>
-        <div className="flex items-center gap-4 mb-4">
-          <button onClick={() => { setOcrFailed(false); navigate('/capture/salary', { replace: true }); }} className="text-black font-bold min-h-12 px-2">{t('form.back')}</button>
+        <div className="mb-4">
+          <button onClick={() => { setOcrFailed(false); navigate('/capture/salary', { replace: true }); }} className="text-gray-500 text-sm font-bold mb-1">&larr; {t('form.back')}</button>
           <h2 className="text-2xl font-black text-black">{t('home.scan')}</h2>
         </div>
         {ocrFailed && (

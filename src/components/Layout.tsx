@@ -13,7 +13,9 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen bg-amber-50 text-black flex flex-col">
       <header className="sticky top-0 z-50 bg-white border-b-3 border-black px-4 py-2">
         <div className="flex items-center justify-between max-w-lg mx-auto">
-          <h1 className="text-lg font-black text-black">{t('app.title')}</h1>
+          <Link to="/" className="text-lg font-black text-black hover:opacity-80 transition-opacity">
+            {t('app.title')}
+          </Link>
           <LanguageSwitcher />
         </div>
       </header>
