@@ -22,6 +22,9 @@ export interface Provider {
   rateMargin: number;
   fees: Record<string, ProviderFee>;
   deliveryTime: string;
+  description?: string;    // i18n key for provider description
+  features?: string[];     // i18n keys for feature bullets
+  regulatedBy?: string;    // i18n key for regulation info
 }
 
 export interface ProviderQuote {
@@ -36,6 +39,7 @@ export interface ProviderQuote {
   affiliateUrl: string;
   affiliateUrlTemplate?: string;
   partnerizeRef?: string;
+  savingsVsBank?: number; // difference in receive amount vs typical bank transfer
 }
 
 export interface ClickEvent {

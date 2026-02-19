@@ -1,0 +1,5 @@
+# Payslip Calculator
+User-agent: *
+Allow: /
+
+Sitemap: /sitemap.xml

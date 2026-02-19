@@ -1,12 +1,13 @@
 {
-  "name": "Payslip Calculator",
+  "name": "Payslip Calculator - Singapore Migrant Workers",
   "short_name": "PayCalc",
-  "description": "Estimate your payslip from your timecard",
+  "description": "Free payslip calculator for Singapore migrant workers. Calculate overtime, rest day pay, public holiday pay per MOM rules. Compare remittance rates to send money home.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#2563eb",
   "orientation": "portrait",
+  "categories": ["finance", "utilities"],
   "icons": [
     { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]

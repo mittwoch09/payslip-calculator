@@ -1,11 +1,23 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+interface SectionProps {
+  heading: string;
+  body: string;
+}
+
+function Section({ heading, body }: SectionProps) {
+  return (
+    <div className="space-y-2">
+      <h3 className="text-base font-bold text-black">{heading}</h3>
+      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{body}</p>
+    </div>
+  );
+}
+
 export default function AffiliateDisclosurePage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const body = t('affiliateDisclosure.body');
-  const paragraphs = body.split('\n\n');
 
   return (
     <div className="space-y-4">
@@ -18,12 +30,23 @@ export default function AffiliateDisclosurePage() {
         </button>
         <h2 className="text-2xl font-black text-black">{t('affiliateDisclosure.title')}</h2>
       </div>
-      <div className="bg-white border-2 border-black p-4 space-y-4">
-        {paragraphs.map((p, i) => (
-          <p key={i} className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-            {p}
-          </p>
-        ))}
+      <div className="bg-white border-2 border-black p-4 space-y-6">
+        <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+          {t('affiliateDisclosure.body')}
+        </p>
+        <hr className="border-gray-200" />
+        <Section
+          heading={t('affiliateDisclosure.howWeEarn').split('\n')[0]}
+          body={t('affiliateDisclosure.howWeEarn').split('\n').slice(2).join('\n')}
+        />
+        <Section
+          heading={t('affiliateDisclosure.whatItMeans').split('\n')[0]}
+          body={t('affiliateDisclosure.whatItMeans').split('\n').slice(2).join('\n')}
+        />
+        <Section
+          heading={t('affiliateDisclosure.ourPromise').split('\n')[0]}
+          body={t('affiliateDisclosure.ourPromise').split('\n').slice(2).join('\n')}
+        />
       </div>
     </div>
   );

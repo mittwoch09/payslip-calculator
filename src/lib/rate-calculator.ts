@@ -1,6 +1,13 @@
 import type { Provider, ProviderQuote } from '../types/remittance';
 
 /**
+ * Conservative estimate for Singapore bank international wire transfers.
+ * Based on published DBS/OCBC/UOB pricing for non-promoted corridors as of Feb 2026.
+ * This is an approximation, not a quote from any specific bank.
+ */
+export const BANK_TRANSFER_BENCHMARK = { fixed: 25, percent: 0, rateMargin: 0.04 };
+
+/**
  * Calculate quotes from all providers for a given amount and corridor
  * @param amount - The amount to send in base currency
  * @param corridorId - The corridor ID (e.g., 'SGD-BDT')
@@ -14,6 +21,11 @@ export function calculateQuotes(
   providers: Provider[],
   midMarketRate: number
 ): ProviderQuote[] {
+  // Calculate bank benchmark receive amount for savings comparison
+  const bankFee = BANK_TRANSFER_BENCHMARK.fixed + (amount * BANK_TRANSFER_BENCHMARK.percent);
+  const bankRate = midMarketRate * (1 - BANK_TRANSFER_BENCHMARK.rateMargin);
+  const bankReceiveAmount = Math.floor((amount - bankFee) * bankRate);
+
   const quotes: ProviderQuote[] = providers.map((provider) => {
     // Get fee structure for this corridor
     const providerFee = provider.fees[corridorId] || { fixed: 0, percent: 0 };
@@ -27,6 +39,8 @@ export function calculateQuotes(
     // Calculate receive amount: floor((amount - fee) * providerRate)
     const receiveAmount = Math.floor((amount - fee) * exchangeRate);
 
+    const savingsVsBank = receiveAmount - bankReceiveAmount;
+
     return {
       providerId: provider.id,
       providerName: provider.name,
@@ -39,11 +53,28 @@ export function calculateQuotes(
       affiliateUrl: provider.affiliateUrl,
       affiliateUrlTemplate: provider.affiliateUrlTemplate,
       partnerizeRef: provider.partnerizeRef,
+      savingsVsBank,
     };
   });
 
   // Sort quotes by receiveAmount descending (best rate first)
   return quotes.sort((a, b) => b.receiveAmount - a.receiveAmount);
+}
+
+/**
+ * Estimate savings vs bank for a quick preview (used by RemittanceCTA)
+ * @returns savings amount in target currency, or null if rate unavailable
+ */
+export function estimateSavings(
+  amount: number,
+  corridorId: string,
+  providers: Provider[],
+  midMarketRate: number
+): number | null {
+  if (midMarketRate <= 1) return null;
+  const quotes = calculateQuotes(amount, corridorId, providers, midMarketRate);
+  if (quotes.length === 0) return null;
+  return quotes[0].savingsVsBank ?? null;
 }
 
 /**

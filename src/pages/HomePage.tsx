@@ -21,6 +21,19 @@ export default function HomePage() {
       </Link>
 
       <Link
+        to="/remittance"
+        className="w-full bg-white border-2 border-black shadow-[4px_4px_0_black] active:shadow-none active:translate-x-1 active:translate-y-1 p-4 flex flex-row items-center gap-3 transition-all"
+      >
+        <div className="w-12 h-12 flex items-center justify-center border-2 border-black bg-teal-200 text-2xl">
+          💸
+        </div>
+        <div className="flex flex-col items-start text-left">
+          <span className="text-lg font-bold text-black">{t('home.remittance')}</span>
+          <span className="text-sm text-gray-600">{t('home.remittanceDesc')}</span>
+        </div>
+      </Link>
+
+      <Link
         to="/entry"
         className="w-full bg-white border-2 border-black shadow-[4px_4px_0_black] active:shadow-none active:translate-x-1 active:translate-y-1 p-4 flex flex-row items-center gap-3 transition-all"
       >

@@ -25,6 +25,14 @@ export const providers: Provider[] = [
       'SGD-THB': { fixed: 3.99, percent: 0 },
     },
     deliveryTime: 'Minutes to 1 day',
+    description: 'providerInfo.remitly.description',
+    features: [
+      'providerInfo.remitly.fastDelivery',
+      'providerInfo.remitly.firstTransfer',
+      'providerInfo.remitly.mobile',
+      'providerInfo.remitly.support',
+    ],
+    regulatedBy: 'providerInfo.remitly.regulatedBy',
   },
   {
     id: 'wise',
@@ -36,7 +44,7 @@ export const providers: Provider[] = [
     affiliateId: undefined, // TODO: Replace with actual Wise affiliate tracking ID from partner dashboard
     // Partnerize tracking: after Wise affiliate approval, set camref from Partnerize dashboard
     // e.g. partnerizeRef: '1234567890abcdef'
-    partnerizeRef: '',
+    partnerizeRef: import.meta.env.VITE_WISE_CAMREF || '',
     rateMargin: 0.005,
     fees: {
       // Wise uses variable pricing; these are typical fees for ~S$500 transfers from Singapore
@@ -50,6 +58,14 @@ export const providers: Provider[] = [
       'SGD-THB': { fixed: 1.51, percent: 0.0062 },
     },
     deliveryTime: 'Usually within 24 hours',
+    description: 'providerInfo.wise.description',
+    features: [
+      'providerInfo.wise.midMarketRate',
+      'providerInfo.wise.regulated',
+      'providerInfo.wise.transparent',
+      'providerInfo.wise.speed',
+    ],
+    regulatedBy: 'providerInfo.wise.regulatedBy',
   },
 ];
 

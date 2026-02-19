@@ -51,3 +51,12 @@ export const corridors: Corridor[] = [
     flag: '🇹🇭',
   },
 ];
+
+/** Map UI language to most likely remittance corridor */
+export const languageToCorridorMap: Record<string, string> = {
+  bn: 'SGD-BDT',   // Bengali → Bangladesh
+  my: 'SGD-MMK',   // Myanmar → Myanmar
+  zh: 'SGD-CNY',   // Chinese → China
+  ta: 'SGD-INR',   // Tamil → India
+  en: 'SGD-BDT',   // English default → Bangladesh (largest corridor)
+};

@@ -4,11 +4,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import CorridorSelector from '../components/remittance/CorridorSelector';
 import AmountInput from '../components/remittance/AmountInput';
 import ProviderList from '../components/remittance/ProviderList';
-import { corridors } from '../data/corridors';
+import SalaryToRemittanceWidget from '../components/remittance/SalaryToRemittanceWidget';
+import { corridors, languageToCorridorMap } from '../data/corridors';
 import { providers } from '../data/providers';
 import { calculateQuotes } from '../lib/rate-calculator';
 import { buildDeepLink, buildPartnerizeUrl, trackClick } from '../lib/affiliate-tracker';
 import { getExchangeRate, getCacheTimestamp } from '../lib/exchange-rate';
+import { trackEvent } from '../lib/analytics';
 import type { ProviderQuote } from '../types/remittance';
 
 function formatTimeAgo(timestamp: number): string {
@@ -21,10 +23,12 @@ function formatTimeAgo(timestamp: number): string {
 }
 
 export default function RemittancePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedCorridor, setSelectedCorridor] = useState<string>('SGD-BDT');
+  const [selectedCorridor, setSelectedCorridor] = useState<string>(
+    () => languageToCorridorMap[i18n.language] || 'SGD-BDT'
+  );
   const [amount, setAmount] = useState<number>(() => {
     const param = searchParams.get('amount');
     return param ? Number(param) : 0;
@@ -41,6 +45,11 @@ export default function RemittancePage() {
       setSearchParams({}, { replace: true });
     }
   }, [amount, setSearchParams]);
+
+  // Track remittance page view
+  useEffect(() => {
+    trackEvent('remittance', 'page_view', selectedCorridor);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Calculate quotes whenever corridor or amount changes
   useEffect(() => {
@@ -66,6 +75,7 @@ export default function RemittancePage() {
   }, [selectedCorridor, amount]);
 
   const handleProviderClick = (quote: ProviderQuote) => {
+    trackEvent('remittance', 'provider_click', quote.providerId, amount);
     // Track click event
     trackClick({
       timestamp: Date.now(),
@@ -113,10 +123,22 @@ export default function RemittancePage() {
         {t('remittance.affiliateDisclosure')}
       </div>
 
+      {/* Salary-to-Remittance Widget */}
+      <SalaryToRemittanceWidget
+        corridorId={selectedCorridor}
+        onAmountCalculated={(amount) => {
+          setAmount(amount);
+          trackEvent('remittance', 'widget_amount_used', selectedCorridor, amount);
+        }}
+      />
+
       {/* Corridor Selector */}
       <CorridorSelector
         value={selectedCorridor}
-        onChange={setSelectedCorridor}
+        onChange={(corridor) => {
+          setSelectedCorridor(corridor);
+          trackEvent('remittance', 'corridor_selected', corridor);
+        }}
         corridors={corridors}
       />
 

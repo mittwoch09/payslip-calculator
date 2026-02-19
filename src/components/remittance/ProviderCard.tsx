@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { ProviderQuote } from '../../types/remittance';
+import { providers } from '../../data/providers';
+import ProviderInfo from './ProviderInfo';
 
 interface ProviderCardProps {
   quote: ProviderQuote;
@@ -15,6 +17,8 @@ export default function ProviderCard({
   onSendNow
 }: ProviderCardProps) {
   const { t } = useTranslation();
+
+  const provider = providers.find((p) => p.id === quote.providerId);
 
   return (
     <div className={`
@@ -55,6 +59,12 @@ export default function ProviderCard({
         </div>
       </div>
 
+      {quote.savingsVsBank != null && quote.savingsVsBank > 0 && quote.sendAmount > 100 && (
+        <div className="mt-2 text-sm font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-1">
+          {t('remittance.savingsVsBank', { amount: Math.floor(quote.savingsVsBank).toLocaleString(), currency: targetCurrency })}
+        </div>
+      )}
+
       <p className="mt-2 text-xs text-gray-500">
         {t('remittance.estimatedDisclaimer', { provider: quote.providerName })}
       </p>
@@ -65,6 +75,14 @@ export default function ProviderCard({
       >
         {quote.partnerizeRef ? `${t('remittance.checkRate')} → (${t('remittance.affiliateLink')})` : `${t('remittance.checkRate')} →`}
       </button>
+
+      {provider?.features && provider.regulatedBy && (
+        <ProviderInfo
+          providerName={quote.providerName}
+          features={provider.features}
+          regulatedBy={provider.regulatedBy}
+        />
+      )}
     </div>
   );
 }

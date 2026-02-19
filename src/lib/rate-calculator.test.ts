@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateQuotes, getMockRate } from './rate-calculator';
+import { calculateQuotes, getMockRate, BANK_TRANSFER_BENCHMARK, estimateSavings } from './rate-calculator';
 import type { Provider } from '../types/remittance';
 
 describe('calculateQuotes', () => {
@@ -146,5 +146,99 @@ describe('getMockRate', () => {
 
   it('handles empty string', () => {
     expect(getMockRate('')).toBe(1);
+  });
+});
+
+describe('BANK_TRANSFER_BENCHMARK', () => {
+  it('is exported with expected fixed fee', () => {
+    expect(BANK_TRANSFER_BENCHMARK.fixed).toBe(25);
+  });
+
+  it('has zero percent fee', () => {
+    expect(BANK_TRANSFER_BENCHMARK.percent).toBe(0);
+  });
+
+  it('has 4% rate margin', () => {
+    expect(BANK_TRANSFER_BENCHMARK.rateMargin).toBe(0.04);
+  });
+});
+
+describe('savingsVsBank in calculateQuotes', () => {
+  const mockProviders: Provider[] = [
+    {
+      id: 'provider-a',
+      name: 'Provider A',
+      logo: '/logos/a.svg',
+      affiliateUrl: 'https://a.com',
+      rateMargin: 0.01, // 1% margin — much better than bank's 4%
+      fees: {
+        'SGD-BDT': { fixed: 2, percent: 0 },
+      },
+      deliveryTime: '1 day',
+    },
+  ];
+
+  it('includes savingsVsBank field in each quote', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2);
+    expect(quotes[0]).toHaveProperty('savingsVsBank');
+  });
+
+  it('returns positive savings for SGD 500 to BDT (provider beats bank)', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2);
+    // Bank: (500 - 25) * (91.2 * 0.96) = 475 * 87.552 = 41,587 BDT
+    // Provider A: (500 - 2) * (91.2 * 0.99) = 498 * 90.288 = 44,963 BDT
+    // Savings should be positive
+    expect(quotes[0].savingsVsBank).toBeGreaterThan(0);
+  });
+
+  it('calculates correct bankReceiveAmount baseline', () => {
+    const midMarketRate = 91.2;
+    const amount = 500;
+    const bankFee = BANK_TRANSFER_BENCHMARK.fixed; // 25
+    const bankRate = midMarketRate * (1 - BANK_TRANSFER_BENCHMARK.rateMargin); // 87.552
+    const expectedBankReceive = Math.floor((amount - bankFee) * bankRate); // floor(475 * 87.552)
+
+    const quotes = calculateQuotes(amount, 'SGD-BDT', mockProviders, midMarketRate);
+    const providerReceive = quotes[0].receiveAmount;
+    const savings = quotes[0].savingsVsBank!;
+
+    expect(providerReceive - savings).toBe(expectedBankReceive);
+  });
+});
+
+describe('estimateSavings', () => {
+  const mockProviders: Provider[] = [
+    {
+      id: 'provider-a',
+      name: 'Provider A',
+      logo: '/logos/a.svg',
+      affiliateUrl: 'https://a.com',
+      rateMargin: 0.01,
+      fees: {
+        'SGD-BDT': { fixed: 2, percent: 0 },
+      },
+      deliveryTime: '1 day',
+    },
+  ];
+
+  it('returns null when midMarketRate is 1 (unknown corridor)', () => {
+    const result = estimateSavings(500, 'SGD-XXX', mockProviders, 1);
+    expect(result).toBeNull();
+  });
+
+  it('returns null when midMarketRate is <= 1', () => {
+    expect(estimateSavings(500, 'SGD-BDT', mockProviders, 0.5)).toBeNull();
+    expect(estimateSavings(500, 'SGD-BDT', mockProviders, 1)).toBeNull();
+  });
+
+  it('returns a positive number for a valid corridor (SGD 500 to BDT)', () => {
+    const savings = estimateSavings(500, 'SGD-BDT', mockProviders, 91.2);
+    expect(savings).not.toBeNull();
+    expect(savings!).toBeGreaterThan(0);
+  });
+
+  it('returns null when providers array is empty', () => {
+    const savings = estimateSavings(500, 'SGD-BDT', [], 91.2);
+    expect(savings).toBeNull();
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { buildAffiliateUrl, trackClick, getClickHistory } from './affiliate-tracker';
+import { buildAffiliateUrl, trackClick, getClickHistory, buildPartnerizeUrl } from './affiliate-tracker';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -238,5 +238,91 @@ describe('getClickHistory', () => {
     const history = getClickHistory();
     expect(history[0].timestamp).toBe(1);
     expect(history[1].timestamp).toBe(2);
+  });
+});
+
+describe('buildPartnerizeUrl', () => {
+  const CAMREF = 'testCamref123';
+
+  it('returns null when camref is empty string', () => {
+    const result = buildPartnerizeUrl('', 'https://wise.com/send-money/send-money-to-bangladesh');
+    expect(result).toBeNull();
+  });
+
+  it('builds correct URL without adref', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-bangladesh';
+    const result = buildPartnerizeUrl(CAMREF, destination);
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-BDT corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-bangladesh';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-BDT');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-BDT/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-INR corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-india';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-INR');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-INR/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-CNY corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-china';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-CNY');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-CNY/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-MMK corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-myanmar';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-MMK');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-MMK/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-PHP corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-philippines';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-PHP');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-PHP/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-IDR corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-indonesia';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-IDR');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-IDR/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('builds correct URL with adref for SGD-THB corridor', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-thailand';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-THB');
+    expect(result).toBe(
+      `https://prf.hn/click/camref:${CAMREF}/adref:SGD-THB/destination:${encodeURIComponent(destination)}`
+    );
+  });
+
+  it('URL-encodes destination containing query parameters', () => {
+    const destination = 'https://wise.com/send-money?amount=500&currency=BDT';
+    const result = buildPartnerizeUrl(CAMREF, destination, 'SGD-BDT');
+    expect(result).toContain(encodeURIComponent(destination));
+    expect(result).not.toContain('?amount=500');
+  });
+
+  it('omits adref segment when adref is undefined', () => {
+    const destination = 'https://wise.com/send-money/send-money-to-bangladesh';
+    const result = buildPartnerizeUrl(CAMREF, destination);
+    expect(result).not.toContain('/adref:');
   });
 });

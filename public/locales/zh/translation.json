@@ -9,6 +9,8 @@
     "manual": "手动输入",
     "scanDesc": "拍摄您的考勤卡照片",
     "manualDesc": "手动输入您的工时",
+    "remittance": "汇款回家",
+    "remittanceDesc": "比较汇率，节省手续费",
     "history": "查看历史",
     "historyDesc": "查看过去的工资单"
   },
@@ -165,6 +167,7 @@
     "affiliateLink": "Affiliate link",
     "estimatedDisclaimer": "Rates are estimates, not live quotes from {{provider}}",
     "ratesRefreshed": "Rates refreshed {{time}} ago",
+    "savingsVsBank": "比典型银行转账节省约 {{currency}} {{amount}}",
     "countries": {
       "china": "中国",
       "india": "印度",
@@ -177,8 +180,17 @@
     "cta": {
       "title": "需要汇款回家吗？",
       "subtitle": "比较汇率，节省手续费",
-      "button": "比较汇率"
+      "button": "比较汇率",
+      "savingsPreview": "比典型银行转账节省约 {{currency}} {{amount}}"
     }
+  },
+  "remittanceCalc": {
+    "title": "我能汇多少钱回家？",
+    "amount": "汇款金额 (SGD)",
+    "recipientGets": "您在{{country}}的家人收到",
+    "savings": "比普通银行转账多约 {{currency}} {{amount}}",
+    "useAmount": "比较服务商",
+    "enterSalary": "输入金额查看预估"
   },
   "footer": {
     "privacy": "Privacy Policy",
@@ -189,14 +201,36 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "body": "Payslip Calculator Privacy Policy\n\nLast updated: February 2025\n\n1. What We Collect\nThis application does not collect, transmit, or store any personal data on external servers. All payslip entries, calculation history, and preferences are stored exclusively in your browser's local storage on your device.\n\n2. Data Storage\nAll data remains on your device in your browser's local storage. We do not operate any backend servers or databases. You can delete all stored data at any time by clearing your browser's local storage or site data.\n\n3. Exchange Rate Data\nTo display estimated remittance rates, the app fetches mid-market exchange rates from the open.er-api.com public API. No personal information is sent with these requests — only the currency pair is transmitted.\n\n4. Third-Party Links\nThis application contains links to third-party remittance providers (such as Wise and Remitly). When you click these links, you leave our application and are subject to the privacy policies of those third-party services. We have no control over and assume no responsibility for the content or privacy practices of third-party sites.\n\n5. Cookies\nThis application does not use cookies. All preferences and data are stored using the browser's localStorage API.\n\n6. Analytics\nThis application does not use any third-party analytics services. No tracking pixels, fingerprinting, or behavioral analytics are employed.\n\n7. Children's Privacy\nThis application is intended for working adults. We do not knowingly collect information from children.\n\n8. Changes to This Policy\nWe may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated revision date.\n\n9. Contact\nIf you have questions about this Privacy Policy, please open an issue on our GitHub repository."
+    "body": "Payslip Calculator Privacy Policy\n\nLast updated: February 2026\n\n1. What We Collect\nThis application does not collect, transmit, or store any personal data on external servers. All payslip entries, calculation history, and preferences are stored exclusively in your browser's local storage on your device.\n\n2. Data Storage\nAll data remains on your device in your browser's local storage. We do not operate any backend servers or databases. You can delete all stored data at any time by clearing your browser's local storage or site data.\n\n3. Exchange Rate Data\nTo display estimated remittance rates, the app fetches mid-market exchange rates from the open.er-api.com public API. No personal information is sent with these requests — only the currency pair is transmitted.\n\n4. Third-Party Links\nThis application contains links to third-party remittance providers (such as Wise and Remitly). When you click these links, you leave our application and are subject to the privacy policies of those third-party services. We have no control over and assume no responsibility for the content or privacy practices of third-party sites.\n\n5. Cookies\nThis application does not use cookies. All preferences and data are stored using the browser's localStorage API.\n\n6. Analytics\n本应用程序使用轻量级客户端分析来了解功能的使用方式并改进汇款比较体验。分析数据包括：页面浏览、功能交互（如通道选择和服务商点击）以及随机生成的会话标识符。所有分析数据仅存储在您浏览器的本地存储中——绝不会传输到任何外部服务器。不使用 Cookie、跟踪像素、指纹识别或第三方分析服务。您可以随时通过清除浏览器的本地存储或站点数据来删除所有分析数据。\n\n7. Children's Privacy\nThis application is intended for working adults. We do not knowingly collect information from children.\n\n8. Changes to This Policy\nWe may update this Privacy Policy from time to time. Any changes will be reflected on this page with an updated revision date.\n\n9. Contact\nIf you have questions about this Privacy Policy, please open an issue on our GitHub repository."
   },
   "terms": {
     "title": "Terms of Service",
     "body": "Payslip Calculator Terms of Service\n\nLast updated: February 2025\n\n1. Acceptance of Terms\nBy using Payslip Calculator, you agree to these Terms of Service. If you do not agree, please do not use the application.\n\n2. Service Description\nPayslip Calculator is a free tool that helps Singapore-based workers estimate payslip calculations (including overtime, deductions, and allowances) and compare estimated remittance rates across providers. All calculations are performed locally in your browser.\n\n3. No Financial Advice\nThis application does not provide financial, legal, or tax advice. Payslip calculations are based on general Singapore Ministry of Manpower (MOM) guidelines and may not reflect your specific employment terms, collective agreements, or individual contract provisions. Always verify calculations with your employer or a qualified professional.\n\n4. Estimated Rates Only\nRemittance comparison rates displayed in this application are estimates only. They are calculated by applying approximate provider margins to mid-market exchange rates obtained from a public API. These are NOT live quotes from any remittance provider. Actual rates, fees, and transfer times may differ significantly. Always check the provider's official website for current pricing before making a transfer.\n\n5. Third-Party Services\nThis application contains links to third-party remittance providers. We are not affiliated with, endorsed by, or responsible for any third-party service. Your use of third-party services is governed by their respective terms and conditions.\n\n6. Affiliate Relationships\nSome links to remittance providers may be affiliate links. See our Affiliate Disclosure for details. Affiliate relationships do not influence the order or presentation of provider comparisons.\n\n7. No Warranty\nThis application is provided as-is without warranty of any kind, express or implied. We do not warrant that the application will be error-free, accurate, or continuously available.\n\n8. Limitation of Liability\nTo the maximum extent permitted by law, we shall not be liable for any damages arising from your use of or inability to use this application, including but not limited to financial losses from reliance on estimated rates or calculations.\n\n9. Data and Privacy\nPlease review our Privacy Policy for information about how data is handled in this application.\n\n10. Changes to Terms\nWe reserve the right to modify these terms at any time. Continued use of the application after changes constitutes acceptance of the updated terms.\n\n11. Governing Law\nThese terms are governed by the laws of Singapore."
   },
+  "providerInfo": {
+    "about": "关于 {{provider}}",
+    "wise": {
+      "description": "Wise（前身为TransferWise）是一家以透明定价著称的全球汇款服务。",
+      "midMarketRate": "使用真实的中间市场汇率",
+      "regulated": "受新加坡金融管理局(MAS)监管",
+      "transparent": "发送前显示透明费用",
+      "speed": "通常24小时内到账",
+      "regulatedBy": "获新加坡金融管理局(MAS)许可"
+    },
+    "remitly": {
+      "description": "Remitly是一家专注于国际汇款的数字汇款服务。",
+      "fastDelivery": "提供快速到账选项",
+      "firstTransfer": "首次转账通常有促销优惠",
+      "mobile": "移动端优先体验",
+      "support": "全天候客户支持",
+      "regulatedBy": "持牌汇款服务"
+    }
+  },
   "affiliateDisclosure": {
     "title": "Affiliate Disclosure",
-    "body": "Affiliate Disclosure\n\nLast updated: February 2026\n\nPayslip Calculator contains affiliate links to third-party remittance services. When you click on a link to a remittance provider from our application and complete a cross-currency transfer as a new customer, we earn a commission at no additional cost to you.\n\nCommission is earned per new customer who completes a cross-currency transfer through our affiliate links.\n\nOur affiliate partners may include:\n- Wise (via Partnerize)\n- Remitly\n\nThis commission helps us maintain and improve this free application.\n\nImportant: Our affiliate relationships do NOT influence:\n- The order in which providers are displayed\n- The estimated rates or fees shown\n- Our comparison methodology\n\nRates and fees shown are estimates — always verify on the provider's website before sending money. All rates displayed are independent estimates based on publicly available mid-market exchange rate data with approximate provider margins applied. They are not provided by, endorsed by, or guaranteed by any remittance provider.\n\nWe believe in full transparency. If you have questions about our affiliate relationships, please open an issue on our GitHub repository."
+    "body": "Affiliate Disclosure\n\nLast updated: February 2026\n\nPayslip Calculator contains affiliate links to third-party remittance services. When you click on a link to a remittance provider from our application and complete a cross-currency transfer as a new customer, we earn a commission at no additional cost to you.\n\nCommission is earned per new customer who completes a cross-currency transfer through our affiliate links.\n\nOur affiliate partners may include:\n- Wise (via Partnerize)\n- Remitly\n\nThis commission helps us maintain and improve this free application.\n\nImportant: Our affiliate relationships do NOT influence:\n- The order in which providers are displayed\n- The estimated rates or fees shown\n- Our comparison methodology\n\nRates and fees shown are estimates — always verify on the provider's website before sending money. All rates displayed are independent estimates based on publicly available mid-market exchange rate data with approximate provider margins applied. They are not provided by, endorsed by, or guaranteed by any remittance provider.\n\nWe believe in full transparency. If you have questions about our affiliate relationships, please open an issue on our GitHub repository.",
+    "howWeEarn": "我们如何获得收入\n\nPayslip Calculator 是免费使用的。当您通过我们的链接点击汇款服务商（如 Wise 或 Remitly）并作为新客户完成首次跨币种转账时，我们会获得佣金。该佣金由服务商通过 Partnerize 联盟网络支付 — 不会向您收取任何额外费用。",
+    "whatItMeans": "这对您意味着什么\n\n我们的联盟关系不会影响：\n• 服务商的显示顺序\n• 显示的预估汇率或手续费\n• 我们的比较方法\n\n所有显示的汇率都是基于公开的中间市场汇率数据的独立估算。它们不由任何汇款服务商提供、认可或保证。汇款前请务必在服务商网站查看实际汇率。",
+    "ourPromise": "我们的承诺\n\n我们相信外籍劳工应该拥有透明、诚实的工具。我们永远不会：\n• 显示误导性汇率以推动您选择特定服务商\n• 隐藏费用或增加差价\n• 根据佣金金额优先显示服务商\n\n如果您对我们的联盟关系有任何疑问，请在我们的 GitHub 仓库提出问题。"
   }
 }
