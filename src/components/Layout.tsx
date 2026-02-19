@@ -19,7 +19,7 @@ export default function Layout({ children }: LayoutProps) {
           <LanguageSwitcher />
         </div>
       </header>
-      <main className="max-w-lg mx-auto px-4 py-6 flex-1">
+      <main className="w-full max-w-lg mx-auto px-4 py-6 flex-1">
         {children}
       </main>
       <footer className="border-t border-gray-300 bg-amber-50 py-6 px-4">

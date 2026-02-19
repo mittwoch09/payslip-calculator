@@ -32,3 +32,4 @@ public/*.wasm
 
 # OMC state
 .omc/
+.vercel

@@ -58,36 +58,36 @@ export default function HistoryPage() {
           <p className="text-gray-400 text-lg">{t('history.empty')}</p>
         </div>
       ) : (
-        <div className="bg-white border-2 border-black divide-y divide-gray-200">
+        <div className="space-y-3">
           {entries.map((entry) => (
             <div
               key={entry.id}
-              className="px-4 py-3"
+              className="bg-white border-2 border-black p-4 shadow-[3px_3px_0_black]"
             >
               <div
                 onClick={() => navigate(`/history/${entry.id}`)}
                 className="cursor-pointer active:opacity-80"
               >
                 <div className="flex justify-between items-center">
-                  <p className="text-black font-bold truncate mr-2">{entry.employeeName || '-'}</p>
-                  <p className="text-black font-black text-lg shrink-0">
+                  <p className="text-black font-bold text-lg truncate mr-2">{entry.employeeName || '-'}</p>
+                  <p className="text-black font-black text-xl shrink-0">
                     {formatCurrency(entry.netPay)}
                   </p>
                 </div>
-                <div className="flex justify-between items-center mt-0.5">
-                  <p className="text-gray-500 text-xs">
+                <div className="flex justify-between items-center mt-1">
+                  <p className="text-gray-500 text-sm">
                     {formatDate(entry.periodStart)} - {formatDate(entry.periodEnd)}
                   </p>
                   <p className="text-gray-400 text-xs shrink-0">{t('history.netPay')}</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center mt-1">
+              <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-black">
                 <p className="text-gray-400 text-xs">
                   {formatDate(entry.savedAt)}
                 </p>
                 <button
                   onClick={() => handleDelete(entry.id)}
-                  className="text-red-500 font-bold text-xs px-2 py-1"
+                  className="text-red-600 font-bold text-sm px-3 py-1"
                 >
                   {t('history.delete')}
                 </button>

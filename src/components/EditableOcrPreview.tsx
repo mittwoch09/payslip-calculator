@@ -10,9 +10,9 @@ interface EditableOcrPreviewProps {
 }
 
 const DAY_TYPE_BADGE: Record<DayType, { short: string; cls: string }> = {
-  normal: { short: 'N', cls: 'bg-gray-200 border border-gray-400 text-black' },
-  rest: { short: 'R', cls: 'bg-orange-200 border border-orange-400 text-black' },
-  publicHoliday: { short: 'PH', cls: 'bg-red-200 border border-red-400 text-black' },
+  normal: { short: 'N', cls: 'bg-gray-100 border border-black text-black' },
+  rest: { short: 'R', cls: 'bg-orange-200 border border-black text-black' },
+  publicHoliday: { short: 'PH', cls: 'bg-red-200 border border-black text-black' },
 };
 
 const SHORT_DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -51,7 +51,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white border-2 border-black divide-y divide-gray-200">
+    <div className="space-y-1">
       {rows.length === 0 && (
         <div className="px-4 py-6 text-sm text-gray-500">{t('ocrPreview.empty')}</div>
       )}
@@ -68,7 +68,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
         return (
           <div
             key={row.date}
-            className={`px-3 py-2.5 space-y-1.5 ${edited ? 'border-l-4 border-l-amber-500' : ''}`}
+            className={`bg-white border-2 border-black px-3 py-2 space-y-1 mb-1 ${edited ? 'border-l-4 border-l-amber-500' : ''}`}
           >
             {/* Row 1: date, day, badge, hours info, OFF toggle */}
             <div className="flex items-center gap-1.5">
@@ -97,10 +97,10 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
               <div className="flex-1" />
               <button
                 onClick={() => onToggleOff(i)}
-                className={`min-h-8 min-w-[40px] px-2 text-[10px] font-bold transition-colors ${
+                className={`min-h-[36px] min-w-[48px] px-2 text-[11px] font-bold transition-colors ${
                   row.isOff
-                    ? 'bg-amber-200 text-black border border-amber-500'
-                    : 'bg-white text-gray-400 border border-gray-300'
+                    ? 'bg-amber-200 text-black border-2 border-black'
+                    : 'bg-white text-gray-400 border-2 border-black'
                 }`}
               >
                 {t('ocrPreview.offLabel')}
@@ -109,13 +109,13 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
 
             {/* Row 2: time inputs (full width, hidden when off) */}
             {!row.isOff && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <input
                   type="time"
                   value={row.clockIn}
                   placeholder={formatOcrPlaceholder(row.ocrRawIn)}
                   onChange={e => onUpdateTime(i, 'clockIn', e.target.value)}
-                  className="flex-1 bg-white border border-gray-400 text-gray-800 px-2 min-h-10 text-sm font-medium"
+                  className="flex-1 bg-white border-2 border-black text-black px-3 min-h-[48px] text-base font-medium"
                 />
                 <span className="text-black text-sm shrink-0">→</span>
                 <input
@@ -123,7 +123,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                   value={row.clockOut}
                   placeholder={formatOcrPlaceholder(row.ocrRawOut)}
                   onChange={e => onUpdateTime(i, 'clockOut', e.target.value)}
-                  className="flex-1 bg-white border border-gray-400 text-gray-800 px-2 min-h-10 text-sm font-medium"
+                  className="flex-1 bg-white border-2 border-black text-black px-3 min-h-[48px] text-base font-medium"
                 />
               </div>
             )}
@@ -137,17 +137,17 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
                     const cur = row.extraOtHours ?? 0;
                     onUpdateExtraOt(i, cur <= 0.5 ? undefined : cur - 0.5);
                   }}
-                  className="min-h-8 min-w-8 bg-white border border-gray-400 text-gray-600 text-lg font-black"
+                  className="min-h-[36px] min-w-[36px] bg-white border-2 border-black text-black text-lg font-black"
                 >
                   −
                 </button>
-                <span className="min-w-[32px] text-center text-sm font-bold text-black">{row.extraOtHours ?? 0}h</span>
+                <span className="min-w-[40px] text-center text-sm font-bold text-black">{row.extraOtHours ?? 0}h</span>
                 <button
                   onClick={() => {
                     const cur = row.extraOtHours ?? 0;
                     onUpdateExtraOt(i, Math.min(24, cur + 0.5));
                   }}
-                  className="min-h-8 min-w-8 bg-green-100 border border-green-500 text-green-800 text-lg font-black"
+                  className="min-h-[36px] min-w-[36px] bg-green-200 border-2 border-black text-black text-lg font-black"
                 >
                   +
                 </button>

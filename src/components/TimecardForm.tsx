@@ -127,12 +127,12 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
 
         <div>
           <label className="block font-bold text-black mb-1">{t('form.dayType')}</label>
-          <div className="flex">
+          <div className="flex gap-2">
             {dayTypeOptions.map(opt => (
               <button
                 key={opt.value}
                 onClick={() => setCurrent({ ...current, dayType: opt.value })}
-                className={`flex-1 min-h-12 font-bold text-sm border-2 border-black ${
+                className={`flex-1 min-h-12 font-bold border-2 border-black ${
                   current.dayType === opt.value
                     ? 'bg-black text-white'
                     : 'bg-white text-black'
@@ -166,21 +166,19 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
       </div>
 
       {entries.length > 0 && (
-        <div className="bg-white border-2 border-black divide-y divide-gray-200">
+        <div className="space-y-3">
           {entries.map((entry, i) => (
-            <div key={i} className="px-3 py-2.5 flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="font-bold text-sm">{entry.date}</div>
-                <div className="text-gray-600 text-xs mt-0.5">
-                  {entry.clockIn} – {entry.clockOut}
-                  {' · '}
-                  {t(`form.${entry.dayType === 'publicHoliday' ? 'publicHoliday' : entry.dayType === 'rest' ? 'restDay' : 'normal'}`)}
-                  {entry.extraOtHours && entry.extraOtHours > 0 && ` · +${entry.extraOtHours}h ${t('form.extraOtShort')}`}
+            <div key={i} className="bg-white border-2 border-black p-4 flex items-center justify-between gap-3">
+              <div>
+                <div className="font-bold text-base">{entry.date}</div>
+                <div className="text-black text-sm">
+                  {entry.clockIn} - {entry.clockOut} | {t(`form.${entry.dayType === 'publicHoliday' ? 'publicHoliday' : entry.dayType === 'rest' ? 'restDay' : 'normal'}`)}
+                  {entry.extraOtHours && entry.extraOtHours > 0 && ` | +${entry.extraOtHours}h ${t('form.extraOtShort')}`}
                 </div>
               </div>
               <button
                 onClick={() => removeEntry(i)}
-                className="text-red-500 font-bold shrink-0 text-xs px-2 py-1"
+                className="text-red-600 min-w-12 min-h-12 font-bold shrink-0"
               >
                 {t('form.removeDay')}
               </button>
@@ -190,7 +188,7 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
       )}
 
       {entries.length > 0 && (
-        <div className="sticky bottom-0 z-40 bg-amber-50 pt-2 pb-4 -mx-4 px-4">
+        <div>
           <button
             onClick={handleNext}
             className="w-full bg-black text-white border-2 border-black min-h-14 font-bold text-xl shadow-[3px_3px_0_#7c3aed] active:shadow-none active:translate-x-[3px] active:translate-y-[3px]"

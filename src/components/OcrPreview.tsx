@@ -28,7 +28,7 @@ export default function OcrPreview({ entries, previewRows, onChange, onConfirm, 
 
   return (
     <div className="space-y-4">
-      <div className="bg-violet-100 border border-gray-400 p-4">
+      <div className="bg-violet-100 border-2 border-black p-4">
         <p className="text-black font-medium">{t('ocr.reviewDesc')}</p>
       </div>
 
