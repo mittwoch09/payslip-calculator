@@ -51,7 +51,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
   const { t } = useTranslation();
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       {rows.length === 0 && (
         <div className="px-4 py-6 text-sm text-gray-500">{t('ocrPreview.empty')}</div>
       )}
@@ -68,7 +68,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
         return (
           <div
             key={row.date}
-            className={`bg-white border-2 border-black px-3 py-2 space-y-1 mb-1 ${edited ? 'border-l-4 border-l-amber-500' : ''}`}
+            className={`bg-white border-2 border-black px-3 py-3 space-y-2 ${edited ? 'border-l-4 border-l-amber-500' : ''}`}
           >
             {/* Row 1: date, day, badge, hours info, OFF toggle */}
             <div className="flex items-center gap-1.5">
@@ -130,7 +130,7 @@ export default function EditableOcrPreview({ rows, onUpdateTime, onToggleOff, on
 
             {/* Extra OT edit for all working days */}
             {!row.isOff && (
-              <div className="flex items-center gap-2 pt-0.5">
+              <div className="flex items-center gap-2 pt-1">
                 <span className="text-green-700 text-xs font-bold shrink-0">Extra OT</span>
                 <button
                   onClick={() => {

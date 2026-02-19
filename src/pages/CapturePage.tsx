@@ -177,7 +177,10 @@ export default function CapturePage() {
   if (step === 'preview') {
     return (
       <div>
-        <h2 className="text-2xl font-black text-black mb-4">{t('ocr.review')}</h2>
+        <div className="mb-4">
+          <button onClick={() => navigate('/capture/camera', { replace: true })} className="text-gray-500 text-sm font-bold mb-1">&larr; {t('form.back')}</button>
+          <h2 className="text-2xl font-black text-black">{t('ocr.review')}</h2>
+        </div>
         <OcrPreview
           entries={entries}
           previewRows={previewRows}

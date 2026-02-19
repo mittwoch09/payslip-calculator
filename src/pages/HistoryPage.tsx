@@ -81,13 +81,13 @@ export default function HistoryPage() {
                   <p className="text-gray-400 text-xs shrink-0">{t('history.netPay')}</p>
                 </div>
               </div>
-              <div className="flex justify-between items-center mt-3 pt-3 border-t-2 border-black">
+              <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
                 <p className="text-gray-400 text-xs">
                   {formatDate(entry.savedAt)}
                 </p>
                 <button
                   onClick={() => handleDelete(entry.id)}
-                  className="text-red-600 font-bold text-sm px-3 py-1"
+                  className="text-red-600 font-bold text-sm px-3 py-2 min-h-10"
                 >
                   {t('history.delete')}
                 </button>
