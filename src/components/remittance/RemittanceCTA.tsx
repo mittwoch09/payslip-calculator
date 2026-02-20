@@ -14,7 +14,7 @@ export default function RemittanceCTA({ netPay, onCompareRates }: RemittanceCTAP
   const { t, i18n } = useTranslation();
 
   // Calculate savings preview using sync mock rates
-  const corridorId = languageToCorridorMap[i18n.language] || 'SGD-BDT';
+  const corridorId = languageToCorridorMap[i18n.language] || 'SGD-INR';
   const targetCurrency = corridorId.split('-')[1];
   const mockRate = getMockRate(corridorId);
 

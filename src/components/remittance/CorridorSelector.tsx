@@ -10,7 +10,7 @@ interface CorridorSelectorProps {
 export default function CorridorSelector({ value, onChange, corridors }: CorridorSelectorProps) {
   const { t } = useTranslation();
 
-  const popularityOrder = ['SGD-BDT', 'SGD-MMK', 'SGD-INR', 'SGD-CNY', 'SGD-PHP', 'SGD-IDR', 'SGD-THB'];
+  const popularityOrder = ['SGD-INR', 'SGD-BDT', 'SGD-MMK', 'SGD-CNY', 'SGD-PHP', 'SGD-IDR', 'SGD-THB'];
   const sortedCorridors = [...corridors].sort((a, b) => {
     const aIdx = popularityOrder.indexOf(a.id);
     const bIdx = popularityOrder.indexOf(b.id);

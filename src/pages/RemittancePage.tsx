@@ -27,7 +27,7 @@ export default function RemittancePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCorridor, setSelectedCorridor] = useState<string>(
-    () => languageToCorridorMap[i18n.language] || 'SGD-BDT'
+    () => languageToCorridorMap[i18n.language] || 'SGD-INR'
   );
   const [amount, setAmount] = useState<number>(() => {
     const param = searchParams.get('amount');

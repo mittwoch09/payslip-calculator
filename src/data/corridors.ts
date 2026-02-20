@@ -58,5 +58,5 @@ export const languageToCorridorMap: Record<string, string> = {
   my: 'SGD-MMK',   // Myanmar → Myanmar
   zh: 'SGD-CNY',   // Chinese → China
   ta: 'SGD-INR',   // Tamil → India
-  en: 'SGD-BDT',   // English default → Bangladesh (largest corridor)
+  en: 'SGD-INR',   // English default → India
 };

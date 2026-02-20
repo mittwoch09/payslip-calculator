@@ -173,7 +173,7 @@ export default function TimecardForm({ entries, onChange, onNext }: TimecardForm
                 <div className="font-bold text-base">{entry.date}</div>
                 <div className="text-black text-sm">
                   {entry.clockIn} - {entry.clockOut} | {t(`form.${entry.dayType === 'publicHoliday' ? 'publicHoliday' : entry.dayType === 'rest' ? 'restDay' : 'normal'}`)}
-                  {entry.extraOtHours && entry.extraOtHours > 0 && ` | +${entry.extraOtHours}h ${t('form.extraOtShort')}`}
+                  {entry.extraOtHours > 0 && ` | +${entry.extraOtHours}h ${t('form.extraOtShort')}`}
                 </div>
               </div>
               <button
