@@ -34,6 +34,15 @@ img, video, canvas, svg {
   max-width: 100%;
 }
 
+/* iOS Safari: force date/time inputs to respect container width */
+input[type="date"],
+input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 html, body, #root {
   min-height: 100vh;
   overflow-x: hidden;
