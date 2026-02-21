@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import CorridorSelector from '../components/remittance/CorridorSelector';
@@ -37,6 +37,9 @@ export default function RemittancePage() {
   const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
   const [ratesTimestamp, setRatesTimestamp] = useState<number | null>(null);
   const [rateSource, setRateSource] = useState<string | null>(null);
+  const [activeGuide, setActiveGuide] = useState<string | null>(null);
+  const [activeGuideUrl, setActiveGuideUrl] = useState<string | null>(null);
+  const guideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync amount changes to URL search params
   useEffect(() => {
@@ -99,7 +102,19 @@ export default function RemittancePage() {
       ? buildPartnerizeUrl(quote.partnerizeRef, deepLink, selectedCorridor)
       : null;
 
-    window.open(partnerizeUrl || deepLink, '_blank', 'noopener,noreferrer');
+    // Store URL and show guide — user proceeds via guide CTA
+    setActiveGuideUrl(partnerizeUrl || deepLink);
+    if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
+    setActiveGuide(quote.providerId);
+  };
+
+  const handleGuideProceed = () => {
+    if (activeGuideUrl) {
+      window.open(activeGuideUrl, '_blank', 'noopener,noreferrer');
+    }
+    setActiveGuide(null);
+    setActiveGuideUrl(null);
+    if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
   };
 
   // Get target currency from corridor
@@ -161,6 +176,13 @@ export default function RemittancePage() {
               quotes={quotes}
               targetCurrency={targetCurrency}
               onProviderClick={handleProviderClick}
+              activeGuideProviderId={activeGuide}
+              onDismissGuide={() => {
+                setActiveGuide(null);
+                setActiveGuideUrl(null);
+                if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
+              }}
+              onGuideProceed={handleGuideProceed}
             />
           )}
         </div>

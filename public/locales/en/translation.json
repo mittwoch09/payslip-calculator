@@ -236,5 +236,38 @@
     "howWeEarn": "How We Earn\n\nPayslip Calculator is free to use. We earn a commission when you click a link to a remittance provider (such as Wise or Remitly) and complete your first cross-currency transfer as a new customer. This commission is paid by the provider through the Partnerize affiliate network — it costs you nothing extra.",
     "whatItMeans": "What This Means for You\n\nOur affiliate relationships do NOT influence:\n• The order in which providers are displayed\n• The estimated rates or fees shown\n• Our comparison methodology\n\nAll rates displayed are independent estimates based on publicly available mid-market exchange rate data. They are not provided by, endorsed by, or guaranteed by any remittance provider. Always check the provider's website for actual rates before sending money.",
     "ourPromise": "Our Promise\n\nWe believe migrant workers deserve transparent, honest tools. We will never:\n• Show misleading rates to push you toward a specific provider\n• Hide fees or add markups\n• Prioritize providers based on commission amounts\n\nIf you have questions about our affiliate relationships, please open an issue on our GitHub repository."
+  },
+  "checklist": {
+    "whatYouNeed": "What you'll need",
+    "tip": "Have these ready to complete your transfer faster",
+    "wise": {
+      "id": "Valid passport or Singapore work permit",
+      "email": "Email address for account signup",
+      "recipientName": "Recipient's full legal name",
+      "recipientBank": "Recipient's bank account number and bank name",
+      "phone": "Your Singapore phone number (for verification)"
+    },
+    "remitly": {
+      "id": "Valid passport or Singapore work permit",
+      "email": "Email address for account signup",
+      "recipientName": "Recipient's full legal name",
+      "recipientBank": "Recipient's bank account number or mobile wallet",
+      "recipientPhone": "Recipient's phone number"
+    }
+  },
+  "guide": {
+    "title": "Next steps on {{provider}}",
+    "goToProvider": "Go to {{provider}}",
+    "switchTab": "Switch to the new tab to get started",
+    "wise": {
+      "step1": "Sign up with your email and verify your identity",
+      "step2": "Enter how much to send and your recipient's bank details",
+      "step3": "Pay with bank transfer or card to complete your first transfer"
+    },
+    "remitly": {
+      "step1": "Create an account with your email or phone number",
+      "step2": "Choose delivery method and enter recipient's details",
+      "step3": "Pay and track your transfer in real-time"
+    }
   }
 }

@@ -6,12 +6,18 @@ interface ProviderListProps {
   quotes: ProviderQuote[];
   targetCurrency: string;
   onProviderClick: (quote: ProviderQuote) => void;
+  activeGuideProviderId?: string | null;
+  onDismissGuide?: () => void;
+  onGuideProceed?: () => void;
 }
 
 export default function ProviderList({
   quotes,
   targetCurrency,
   onProviderClick,
+  activeGuideProviderId,
+  onDismissGuide,
+  onGuideProceed,
 }: ProviderListProps) {
   const { t } = useTranslation();
 
@@ -32,6 +38,9 @@ export default function ProviderList({
           targetCurrency={targetCurrency}
           isBest={index === 0}
           onSendNow={() => onProviderClick(quote)}
+          showGuide={quote.providerId === activeGuideProviderId}
+          onDismissGuide={onDismissGuide ?? (() => {})}
+          onGuideProceed={onGuideProceed}
         />
       ))}
     </div>

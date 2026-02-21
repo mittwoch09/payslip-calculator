@@ -25,6 +25,8 @@ export interface Provider {
   description?: string;    // i18n key for provider description
   features?: string[];     // i18n keys for feature bullets
   regulatedBy?: string;    // i18n key for regulation info
+  checklist?: string[];    // i18n keys for pre-transfer checklist items
+  steps?: string[];        // i18n keys for post-click step-by-step guide
 }
 
 export interface QuoteOverride {

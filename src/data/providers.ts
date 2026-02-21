@@ -33,6 +33,18 @@ export const providers: Provider[] = [
       'providerInfo.remitly.support',
     ],
     regulatedBy: 'providerInfo.remitly.regulatedBy',
+    checklist: [
+      'checklist.remitly.id',
+      'checklist.remitly.email',
+      'checklist.remitly.recipientName',
+      'checklist.remitly.recipientBank',
+      'checklist.remitly.recipientPhone',
+    ],
+    steps: [
+      'guide.remitly.step1',
+      'guide.remitly.step2',
+      'guide.remitly.step3',
+    ],
   },
   {
     id: 'wise',
@@ -66,6 +78,18 @@ export const providers: Provider[] = [
       'providerInfo.wise.speed',
     ],
     regulatedBy: 'providerInfo.wise.regulatedBy',
+    checklist: [
+      'checklist.wise.id',
+      'checklist.wise.email',
+      'checklist.wise.recipientName',
+      'checklist.wise.recipientBank',
+      'checklist.wise.phone',
+    ],
+    steps: [
+      'guide.wise.step1',
+      'guide.wise.step2',
+      'guide.wise.step3',
+    ],
   },
 ];
 

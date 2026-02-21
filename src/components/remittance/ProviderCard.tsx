@@ -2,19 +2,27 @@ import { useTranslation } from 'react-i18next';
 import type { ProviderQuote } from '../../types/remittance';
 import { providers } from '../../data/providers';
 import ProviderInfo from './ProviderInfo';
+import PreTransferChecklist from './PreTransferChecklist';
+import TransferGuide from './TransferGuide';
 
 interface ProviderCardProps {
   quote: ProviderQuote;
   isBest: boolean;
   targetCurrency: string;
   onSendNow: () => void;
+  showGuide: boolean;
+  onDismissGuide: () => void;
+  onGuideProceed?: () => void;
 }
 
 export default function ProviderCard({
   quote,
   isBest,
   targetCurrency,
-  onSendNow
+  onSendNow,
+  showGuide,
+  onDismissGuide,
+  onGuideProceed,
 }: ProviderCardProps) {
   const { t } = useTranslation();
 
@@ -75,6 +83,22 @@ export default function ProviderCard({
       >
         {t('remittance.sendWithProvider', { provider: quote.providerName })} →
       </button>
+
+      {showGuide && provider?.steps && (
+        <TransferGuide
+          providerName={quote.providerName}
+          steps={provider.steps}
+          onDismiss={onDismissGuide}
+          onProceed={onGuideProceed}
+        />
+      )}
+
+      {provider?.checklist && (
+        <PreTransferChecklist
+          providerName={quote.providerName}
+          items={provider.checklist}
+        />
+      )}
 
       {provider?.features && provider.regulatedBy && (
         <ProviderInfo
