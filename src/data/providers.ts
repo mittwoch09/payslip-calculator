@@ -38,9 +38,9 @@ export const providers: Provider[] = [
     id: 'wise',
     name: 'Wise',
     logo: '/logos/wise_logo.svg',
-    affiliateUrl: 'https://wise.com/send-money/send-money-to-bangladesh',
-    // Wise public send money page: https://wise.com/send-money/send-money-to-{targetCountryCode}
-    affiliateUrlTemplate: 'https://wise.com/send-money/send-money-to-{targetCountryCode}',
+    affiliateUrl: 'https://wise.com/compare/',
+    // Wise compare page with pre-filled currency and amount: sourceCurrency=SGD, targetCurrency, sendAmount
+    affiliateUrlTemplate: 'https://wise.com/compare/?sourceCurrency=SGD&targetCurrency={targetCurrency}&sendAmount={amount}',
     affiliateId: undefined, // TODO: Replace with actual Wise affiliate tracking ID from partner dashboard
     // Partnerize tracking: after Wise affiliate approval, set camref from Partnerize dashboard
     // e.g. partnerizeRef: '1234567890abcdef'

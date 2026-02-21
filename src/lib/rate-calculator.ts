@@ -1,4 +1,4 @@
-import type { Provider, ProviderQuote } from '../types/remittance';
+import type { Provider, ProviderQuote, QuoteOverride } from '../types/remittance';
 
 /**
  * Conservative estimate for Singapore bank international wire transfers.
@@ -19,7 +19,8 @@ export function calculateQuotes(
   amount: number,
   corridorId: string,
   providers: Provider[],
-  midMarketRate: number
+  midMarketRate: number,
+  quoteOverrides?: Record<string, QuoteOverride>
 ): ProviderQuote[] {
   // Calculate bank benchmark receive amount for savings comparison
   const bankFee = BANK_TRANSFER_BENCHMARK.fixed + (amount * BANK_TRANSFER_BENCHMARK.percent);
@@ -27,18 +28,27 @@ export function calculateQuotes(
   const bankReceiveAmount = Math.floor((amount - bankFee) * bankRate);
 
   const quotes: ProviderQuote[] = providers.map((provider) => {
-    // Get fee structure for this corridor
-    const providerFee = provider.fees[corridorId] || { fixed: 0, percent: 0 };
+    const override = quoteOverrides?.[provider.id];
 
-    // Calculate fee: fixed + (amount * percent)
-    const fee = providerFee.fixed + (amount * providerFee.percent);
+    let fee: number;
+    let exchangeRate: number;
+    let rateSource: 'live' | 'estimated';
 
-    // Calculate provider rate: midMarketRate * (1 - rateMargin)
-    const exchangeRate = midMarketRate * (1 - provider.rateMargin);
+    if (override) {
+      // Use override values (from live API in Phase 2)
+      fee = override.fee;
+      exchangeRate = override.rate;
+      rateSource = override.rateSource || 'live';
+    } else {
+      // Use estimated values from provider config
+      const providerFee = provider.fees[corridorId] || { fixed: 0, percent: 0 };
+      fee = providerFee.fixed + (amount * providerFee.percent);
+      exchangeRate = midMarketRate * (1 - provider.rateMargin);
+      rateSource = 'estimated';
+    }
 
-    // Calculate receive amount: floor((amount - fee) * providerRate)
+    // Calculate receive amount
     const receiveAmount = Math.floor((amount - fee) * exchangeRate);
-
     const savingsVsBank = receiveAmount - bankReceiveAmount;
 
     return {
@@ -54,6 +64,7 @@ export function calculateQuotes(
       affiliateUrlTemplate: provider.affiliateUrlTemplate,
       partnerizeRef: provider.partnerizeRef,
       savingsVsBank,
+      rateSource,
     };
   });
 

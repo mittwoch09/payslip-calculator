@@ -162,6 +162,7 @@
     "clickForActualRate": "点击查看实际汇率",
     "affiliateDisclosure": "We earn a commission when you complete a transfer through our links, at no extra cost to you. This does not affect the rates or order shown.",
     "checkRate": "Check Rate",
+    "sendWithProvider": "通过 {{provider}} 汇款",
     "viewOnProvider": "View on {{provider}}",
     "estimatedLabel": "Est.",
     "affiliateLink": "Affiliate link",

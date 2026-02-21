@@ -9,7 +9,7 @@ import { corridors, languageToCorridorMap } from '../data/corridors';
 import { providers } from '../data/providers';
 import { calculateQuotes } from '../lib/rate-calculator';
 import { buildDeepLink, buildPartnerizeUrl, trackClick } from '../lib/affiliate-tracker';
-import { getExchangeRate, getCacheTimestamp } from '../lib/exchange-rate';
+import { getExchangeRate, getCacheTimestamp, getRateSource } from '../lib/exchange-rate';
 import { trackEvent } from '../lib/analytics';
 import type { ProviderQuote } from '../types/remittance';
 
@@ -36,6 +36,7 @@ export default function RemittancePage() {
   const [quotes, setQuotes] = useState<ProviderQuote[]>([]);
   const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
   const [ratesTimestamp, setRatesTimestamp] = useState<number | null>(null);
+  const [rateSource, setRateSource] = useState<string | null>(null);
 
   // Sync amount changes to URL search params
   useEffect(() => {
@@ -61,6 +62,7 @@ export default function RemittancePage() {
           const calculatedQuotes = calculateQuotes(amount, selectedCorridor, providers, midMarketRate);
           setQuotes(calculatedQuotes);
           setRatesTimestamp(getCacheTimestamp());
+          setRateSource(getRateSource());
         } catch (error) {
           console.error('Failed to fetch rates:', error);
           setQuotes([]);
@@ -166,10 +168,18 @@ export default function RemittancePage() {
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-500 py-4 space-y-1">
-        {ratesTimestamp && (
-          <div>{t('remittance.ratesRefreshed', { time: formatTimeAgo(ratesTimestamp) })}</div>
+        {ratesTimestamp && rateSource && (
+          <div>
+            {rateSource === 'wise'
+              ? t('remittance.rateSourceWise', { time: formatTimeAgo(ratesTimestamp) })
+              : rateSource === 'open-er-api'
+                ? t('remittance.rateSourceEstimated', { time: formatTimeAgo(ratesTimestamp) })
+                : t('remittance.rateSourceOffline')}
+          </div>
         )}
-        <div>{t('remittance.updatedJustNow')}</div>
+        {(!ratesTimestamp || !rateSource) && (
+          <div>{t('remittance.updatedJustNow')}</div>
+        )}
       </div>
     </div>
   );

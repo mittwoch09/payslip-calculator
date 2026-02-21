@@ -162,6 +162,7 @@
     "clickForActualRate": "တကယ့်နှုန်းထား ကြည့်ရန် နှိပ်ပါ",
     "affiliateDisclosure": "We earn a commission when you complete a transfer through our links, at no extra cost to you. This does not affect the rates or order shown.",
     "checkRate": "Check Rate",
+    "sendWithProvider": "{{provider}} ဖြင့် ပို့မည်",
     "viewOnProvider": "View on {{provider}}",
     "estimatedLabel": "Est.",
     "affiliateLink": "Affiliate link",

@@ -73,7 +73,7 @@ export default function ProviderCard({
         onClick={onSendNow}
         className="mt-3 w-full bg-black text-white font-bold py-3 px-4 hover:bg-gray-800 transition-colors"
       >
-        {quote.partnerizeRef ? `${t('remittance.checkRate')} → (${t('remittance.affiliateLink')})` : `${t('remittance.checkRate')} →`}
+        {t('remittance.sendWithProvider', { provider: quote.providerName })} →
       </button>
 
       {provider?.features && provider.regulatedBy && (

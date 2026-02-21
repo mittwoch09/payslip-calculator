@@ -27,6 +27,12 @@ export interface Provider {
   regulatedBy?: string;    // i18n key for regulation info
 }
 
+export interface QuoteOverride {
+  fee: number;
+  rate: number;
+  rateSource?: 'live' | 'estimated';
+}
+
 export interface ProviderQuote {
   providerId: string;
   providerName: string;
@@ -40,6 +46,7 @@ export interface ProviderQuote {
   affiliateUrlTemplate?: string;
   partnerizeRef?: string;
   savingsVsBank?: number; // difference in receive amount vs typical bank transfer
+  rateSource?: 'live' | 'estimated';
 }
 
 export interface ClickEvent {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { buildAffiliateUrl, trackClick, getClickHistory, buildPartnerizeUrl } from './affiliate-tracker';
+import { buildAffiliateUrl, trackClick, getClickHistory, buildPartnerizeUrl, buildDeepLink } from './affiliate-tracker';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -324,5 +324,67 @@ describe('buildPartnerizeUrl', () => {
     const destination = 'https://wise.com/send-money/send-money-to-bangladesh';
     const result = buildPartnerizeUrl(CAMREF, destination);
     expect(result).not.toContain('/adref:');
+  });
+});
+
+describe('buildDeepLink', () => {
+  const COMPARE_TEMPLATE = 'https://wise.com/compare/?sourceCurrency=SGD&targetCurrency={targetCurrency}&sendAmount={amount}';
+  const SEND_MONEY_TEMPLATE = 'https://wise.com/send-money/send-money-to-{targetCountryCode}';
+  const FALLBACK_URL = 'https://wise.com/compare/';
+
+  it('returns fallbackUrl when template is undefined', () => {
+    const result = buildDeepLink(undefined, FALLBACK_URL, 500, 'SGD-BDT');
+    expect(result).toBe(FALLBACK_URL);
+  });
+
+  it('replaces {targetCountryCode} placeholder', () => {
+    const result = buildDeepLink(SEND_MONEY_TEMPLATE, FALLBACK_URL, 500, 'SGD-BDT');
+    expect(result).toBe('https://wise.com/send-money/send-money-to-bangladesh');
+  });
+
+  it('replaces {targetCurrency} placeholder', () => {
+    const template = 'https://example.com/?currency={targetCurrency}';
+    const result = buildDeepLink(template, FALLBACK_URL, 500, 'SGD-BDT');
+    expect(result).toContain('currency=BDT');
+  });
+
+  it('replaces {targetCurrencyLower} placeholder', () => {
+    const template = 'https://example.com/?currency={targetCurrencyLower}';
+    const result = buildDeepLink(template, FALLBACK_URL, 500, 'SGD-INR');
+    expect(result).toContain('currency=inr');
+  });
+
+  it('replaces {amount} placeholder', () => {
+    const result = buildDeepLink(COMPARE_TEMPLATE, FALLBACK_URL, 750, 'SGD-BDT');
+    expect(result).toContain('sendAmount=750');
+  });
+
+  it('generates correct compare page URL for SGD-BDT', () => {
+    const result = buildDeepLink(COMPARE_TEMPLATE, FALLBACK_URL, 500, 'SGD-BDT');
+    expect(result).toBe('https://wise.com/compare/?sourceCurrency=SGD&targetCurrency=BDT&sendAmount=500');
+  });
+
+  it('generates correct compare page URL for SGD-INR', () => {
+    const result = buildDeepLink(COMPARE_TEMPLATE, FALLBACK_URL, 1000, 'SGD-INR');
+    expect(result).toBe('https://wise.com/compare/?sourceCurrency=SGD&targetCurrency=INR&sendAmount=1000');
+  });
+
+  it('generates correct compare page URL for SGD-MMK', () => {
+    const result = buildDeepLink(COMPARE_TEMPLATE, FALLBACK_URL, 300, 'SGD-MMK');
+    expect(result).toBe('https://wise.com/compare/?sourceCurrency=SGD&targetCurrency=MMK&sendAmount=300');
+  });
+
+  it('integration: buildDeepLink + buildPartnerizeUrl produces correct tracking URL', () => {
+    const deepLink = buildDeepLink(COMPARE_TEMPLATE, FALLBACK_URL, 500, 'SGD-BDT');
+    const camref = 'testCamref123';
+    const trackingUrl = buildPartnerizeUrl(camref, deepLink, 'SGD-BDT');
+
+    expect(trackingUrl).toBe(
+      `https://prf.hn/click/camref:${camref}/adref:SGD-BDT/destination:${encodeURIComponent(deepLink)}`
+    );
+    // Verify the encoded destination contains the compare page params
+    expect(trackingUrl).toContain(encodeURIComponent('sourceCurrency=SGD'));
+    expect(trackingUrl).toContain(encodeURIComponent('targetCurrency=BDT'));
+    expect(trackingUrl).toContain(encodeURIComponent('sendAmount=500'));
   });
 });

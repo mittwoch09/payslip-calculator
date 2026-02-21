@@ -162,6 +162,7 @@
     "clickForActualRate": "প্রকৃত হার দেখতে ক্লিক করুন",
     "affiliateDisclosure": "We earn a commission when you complete a transfer through our links, at no extra cost to you. This does not affect the rates or order shown.",
     "checkRate": "Check Rate",
+    "sendWithProvider": "{{provider}} দিয়ে পাঠান",
     "viewOnProvider": "View on {{provider}}",
     "estimatedLabel": "Est.",
     "affiliateLink": "Affiliate link",

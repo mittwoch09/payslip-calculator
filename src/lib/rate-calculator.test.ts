@@ -242,3 +242,78 @@ describe('estimateSavings', () => {
     expect(savings).toBeNull();
   });
 });
+
+describe('quoteOverrides', () => {
+  const mockProviders: Provider[] = [
+    {
+      id: 'wise',
+      name: 'Wise',
+      logo: '/logos/wise.svg',
+      affiliateUrl: 'https://wise.com',
+      rateMargin: 0.005,
+      fees: {
+        'SGD-BDT': { fixed: 1.51, percent: 0.0062 },
+      },
+      deliveryTime: '24 hours',
+    },
+    {
+      id: 'remitly',
+      name: 'Remitly',
+      logo: '/logos/remitly.svg',
+      affiliateUrl: 'https://remitly.com',
+      rateMargin: 0.012,
+      fees: {
+        'SGD-BDT': { fixed: 3.99, percent: 0 },
+      },
+      deliveryTime: '1 day',
+    },
+  ];
+
+  it('uses override fee and rate when provided', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2, {
+      wise: { fee: 3.5, rate: 91.0, rateSource: 'live' },
+    });
+    const wiseQuote = quotes.find(q => q.providerId === 'wise');
+    expect(wiseQuote?.fee).toBe(3.5);
+    expect(wiseQuote?.exchangeRate).toBe(91.0);
+    expect(wiseQuote?.rateSource).toBe('live');
+  });
+
+  it('uses estimated values when no override provided', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2);
+    const wiseQuote = quotes.find(q => q.providerId === 'wise');
+    expect(wiseQuote?.rateSource).toBe('estimated');
+  });
+
+  it('handles partial overrides (one provider has override, another does not)', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2, {
+      wise: { fee: 3.5, rate: 91.0, rateSource: 'live' },
+    });
+    const wiseQuote = quotes.find(q => q.providerId === 'wise');
+    const remitlyQuote = quotes.find(q => q.providerId === 'remitly');
+
+    expect(wiseQuote?.rateSource).toBe('live');
+    expect(remitlyQuote?.rateSource).toBe('estimated');
+  });
+
+  it('still sorts by receiveAmount with overrides', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2, {
+      wise: { fee: 3.5, rate: 91.0 },
+    });
+    expect(quotes[0].receiveAmount).toBeGreaterThanOrEqual(quotes[1].receiveAmount);
+  });
+
+  it('backward compatible - works without quoteOverrides parameter', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2);
+    expect(quotes).toHaveLength(2);
+    quotes.forEach(q => expect(q.rateSource).toBe('estimated'));
+  });
+
+  it('defaults rateSource to live when override has no rateSource', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2, {
+      wise: { fee: 3.5, rate: 91.0 },
+    });
+    const wiseQuote = quotes.find(q => q.providerId === 'wise');
+    expect(wiseQuote?.rateSource).toBe('live');
+  });
+});
