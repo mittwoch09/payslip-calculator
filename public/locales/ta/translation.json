@@ -173,6 +173,9 @@
     "liveQuoteTooltip": "இது {{provider}} இலிருந்து நிகழ்நேர விலை. இந்த விகிதத்தை பூட்ட கிளிக் செய்யுங்கள்.",
     "otherProviders": "பிற வழங்குநர்கள் (குறிப்புக்காக)",
     "comparisonSource": "Wise ஒப்பீட்டிலிருந்து தரவு",
+    "bankComparison": "சிங்கப்பூர் வங்கிகள் (ஒப்பீட்டிற்காக)",
+    "bankMarkup": "மாற்று விகிதத்தில் {{percent}}% மார்க்அப்",
+    "bankComparisonNote": "வங்கி விகிதங்கள் Wise ஒப்பீட்டு தரவிலிருந்து",
     "savingsSummary": "S${{amount}} அனுப்புங்கள், {{name}} {{currency}} {{receive}} வழங்குகிறது — வங்கியை விட {{currency}} {{savings}} சேமிப்பு",
     "rateGuarantee": "{{hours}} மணி நேரத்திற்கு விகிதம் உத்தரவாதம்",
     "countries": {

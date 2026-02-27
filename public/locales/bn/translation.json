@@ -173,6 +173,9 @@
     "liveQuoteTooltip": "এটি {{provider}} থেকে একটি রিয়েল-টাইম কোট। এই রেট লক করতে ক্লিক করুন।",
     "otherProviders": "অন্যান্য প্রদানকারী (রেফারেন্সের জন্য)",
     "comparisonSource": "Wise তুলনা থেকে ডেটা",
+    "bankComparison": "সিঙ্গাপুর ব্যাংক (তুলনার জন্য)",
+    "bankMarkup": "বিনিময় হারে {{percent}}% মার্কআপ",
+    "bankComparisonNote": "ব্যাংক হার Wise তুলনা ডেটা থেকে",
     "savingsSummary": "S${{amount}} পাঠান, {{name}} {{currency}} {{receive}} পৌঁছে দেয় — ব্যাংকের চেয়ে {{currency}} {{savings}} সাশ্রয়",
     "rateGuarantee": "{{hours}} ঘণ্টার জন্য রেট গ্যারান্টি",
     "countries": {

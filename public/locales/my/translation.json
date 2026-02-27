@@ -173,6 +173,9 @@
     "liveQuoteTooltip": "ဤသည် {{provider}} မှ တိုက်ရိုက် နှုန်းဖြစ်သည်။ ဤနှုန်းကို လော့ခ်ချရန် နှိပ်ပါ။",
     "otherProviders": "အခြား ငွေလွှဲဝန်ဆောင်မှုများ (ကိုးကားရန်)",
     "comparisonSource": "Wise နှိုင်းယှဉ်ချက်မှ ဒေတာ",
+    "bankComparison": "စင်ကာပူ ဘဏ်များ (နှိုင်းယှဉ်ရန်)",
+    "bankMarkup": "ငွေလဲနှုန်းတွင် {{percent}}% မတ်ကပ်",
+    "bankComparisonNote": "ဘဏ်နှုန်းများသည် Wise နှိုင်းယှဉ်ချက် ဒေတာမှ ဖြစ်သည်",
     "savingsSummary": "S${{amount}} ပို့ပါ၊ {{name}} မှ {{currency}} {{receive}} ရရှိမည် — ဘဏ်ထက် {{currency}} {{savings}} သက်သာ",
     "rateGuarantee": "{{hours}} နာရီအတွက် နှုန်း အာမခံ",
     "countries": {

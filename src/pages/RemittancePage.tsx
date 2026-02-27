@@ -12,6 +12,8 @@ import { buildDeepLink, buildPartnerizeUrl, trackClick } from '../lib/affiliate-
 import { getExchangeRate, getCacheTimestamp, getRateSource } from '../lib/exchange-rate';
 import { trackEvent } from '../lib/analytics';
 import { fetchWiseQuote } from '../lib/wise-quote';
+import { fetchComparison } from '../lib/wise-compare';
+import type { ComparisonProvider } from '../lib/wise-compare';
 import type { ProviderQuote } from '../types/remittance';
 
 function formatTimeAgo(timestamp: number): string {
@@ -35,6 +37,7 @@ export default function RemittancePage() {
     return param ? Number(param) : 0;
   });
   const [quotes, setQuotes] = useState<ProviderQuote[]>([]);
+  const [bankProviders, setBankProviders] = useState<ComparisonProvider[]>([]);
   const [isLoadingRates, setIsLoadingRates] = useState<boolean>(false);
   const [ratesTimestamp, setRatesTimestamp] = useState<number | null>(null);
   const [rateSource, setRateSource] = useState<string | null>(null);
@@ -63,25 +66,31 @@ export default function RemittancePage() {
         setIsLoadingRates(true);
         try {
           const targetCurrencyForQuote = selectedCorridor.split('-')[1];
-          const [midMarketRate, wiseQuote] = await Promise.all([
+          const [midMarketRate, wiseQuote, comparisonData] = await Promise.all([
             getExchangeRate(selectedCorridor),
             fetchWiseQuote('SGD', targetCurrencyForQuote, amount),
+            fetchComparison('SGD', targetCurrencyForQuote, amount),
           ]);
           const quoteOverrides = wiseQuote ? {
             wise: { fee: wiseQuote.fee, rate: wiseQuote.rate, rateSource: 'live' as const, deliveryEstimate: wiseQuote.deliveryEstimate }
           } : undefined;
           const calculatedQuotes = calculateQuotes(amount, selectedCorridor, providers, midMarketRate, quoteOverrides);
           setQuotes(calculatedQuotes);
+          setBankProviders(
+            comparisonData?.filter((p) => p.type === 'bank') ?? []
+          );
           setRatesTimestamp(getCacheTimestamp());
           setRateSource(getRateSource());
         } catch (error) {
           console.error('Failed to fetch rates:', error);
           setQuotes([]);
+          setBankProviders([]);
         } finally {
           setIsLoadingRates(false);
         }
       } else {
         setQuotes([]);
+        setBankProviders([]);
       }
     };
     updateQuotes();
@@ -203,6 +212,8 @@ export default function RemittancePage() {
                   if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
                 }}
                 onGuideProceed={handleGuideProceed}
+                bankProviders={bankProviders}
+                bestTargetAmount={quotes.length > 0 ? quotes[0].receiveAmount : undefined}
               />
             </>
           )}

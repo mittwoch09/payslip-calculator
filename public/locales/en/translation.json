@@ -176,6 +176,9 @@
     "liveQuoteTooltip": "This is a real-time quote from {{provider}}. Click to lock in this rate.",
     "otherProviders": "Other providers for reference",
     "comparisonSource": "Data from Wise comparison",
+    "bankComparison": "Singapore Banks (for comparison)",
+    "bankMarkup": "{{percent}}% markup on exchange rate",
+    "bankComparisonNote": "Bank rates from Wise comparison data",
     "savingsSummary": "Send S${{amount}}, {{name}} delivers {{currency}} {{receive}} — save {{currency}} {{savings}} vs bank",
     "rateGuarantee": "Rate guaranteed for {{hours}} hours",
     "countries": {
