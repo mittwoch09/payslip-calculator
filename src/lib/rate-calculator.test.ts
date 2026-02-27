@@ -316,4 +316,22 @@ describe('quoteOverrides', () => {
     const wiseQuote = quotes.find(q => q.providerId === 'wise');
     expect(wiseQuote?.rateSource).toBe('live');
   });
+
+  it('passes through deliveryEstimate from override', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2, {
+      wise: { fee: 3.5, rate: 91.0, rateSource: 'live', deliveryEstimate: 'Within 2 hours' },
+    });
+    const wiseQuote = quotes.find(q => q.providerId === 'wise');
+    expect(wiseQuote?.deliveryEstimate).toBe('Within 2 hours');
+    expect(wiseQuote?.deliveryTime).toBe('Within 2 hours');
+  });
+
+  it('uses provider deliveryTime when override has no deliveryEstimate', () => {
+    const quotes = calculateQuotes(500, 'SGD-BDT', mockProviders, 91.2, {
+      wise: { fee: 3.5, rate: 91.0 },
+    });
+    const wiseQuote = quotes.find(q => q.providerId === 'wise');
+    expect(wiseQuote?.deliveryEstimate).toBeUndefined();
+    expect(wiseQuote?.deliveryTime).toBe('24 hours');
+  });
 });

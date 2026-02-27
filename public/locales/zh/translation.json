@@ -169,6 +169,12 @@
     "estimatedDisclaimer": "Rates are estimates, not live quotes from {{provider}}",
     "ratesRefreshed": "Rates refreshed {{time}} ago",
     "savingsVsBank": "比典型银行转账节省约 {{currency}} {{amount}}",
+    "liveQuote": "实时报价",
+    "liveQuoteTooltip": "这是来自 {{provider}} 的实时报价。点击锁定此汇率。",
+    "otherProviders": "其他汇款服务商（仅供参考）",
+    "comparisonSource": "数据来自 Wise 比较",
+    "savingsSummary": "发送 S${{amount}}，{{name}} 送达 {{currency}} {{receive}} — 比银行节省 {{currency}} {{savings}}",
+    "rateGuarantee": "汇率保证 {{hours}} 小时",
     "countries": {
       "china": "中国",
       "india": "印度",

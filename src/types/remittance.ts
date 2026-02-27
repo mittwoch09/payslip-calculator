@@ -33,6 +33,7 @@ export interface QuoteOverride {
   fee: number;
   rate: number;
   rateSource?: 'live' | 'estimated';
+  deliveryEstimate?: string;
 }
 
 export interface ProviderQuote {
@@ -44,6 +45,7 @@ export interface ProviderQuote {
   exchangeRate: number;
   receiveAmount: number;
   deliveryTime: string;
+  deliveryEstimate?: string;
   affiliateUrl: string;
   affiliateUrlTemplate?: string;
   partnerizeRef?: string;

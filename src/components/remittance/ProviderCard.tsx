@@ -51,11 +51,21 @@ export default function ProviderCard({
 
       <div className="space-y-2">
         <div>
-          <span className="font-semibold">{t('remittance.fee')}:</span> {t('remittance.estimatedLabel')} S${quote.fee.toFixed(2)}
+          <span className="font-semibold">{t('remittance.fee')}:</span>{' '}
+          {quote.rateSource === 'live' ? (
+            <><span className="inline-block bg-green-100 text-green-800 text-xs font-bold px-1.5 py-0.5 mr-1">{t('remittance.liveQuote')}</span>S${quote.fee.toFixed(2)}</>
+          ) : (
+            <>{t('remittance.estimatedLabel')} S${quote.fee.toFixed(2)}</>
+          )}
         </div>
 
         <div>
-          <span className="font-semibold">{t('remittance.rate')}:</span> {t('remittance.estimatedLabel')} {quote.exchangeRate.toFixed(2)}
+          <span className="font-semibold">{t('remittance.rate')}:</span>{' '}
+          {quote.rateSource === 'live' ? (
+            <><span className="inline-block bg-green-100 text-green-800 text-xs font-bold px-1.5 py-0.5 mr-1">{t('remittance.liveQuote')}</span>{quote.exchangeRate.toFixed(2)}</>
+          ) : (
+            <>{t('remittance.estimatedLabel')} {quote.exchangeRate.toFixed(2)}</>
+          )}
         </div>
 
         <div>
@@ -63,7 +73,7 @@ export default function ProviderCard({
         </div>
 
         <div className="text-sm text-gray-600">
-          {quote.deliveryTime}
+          {quote.deliveryEstimate || quote.deliveryTime}
         </div>
       </div>
 
@@ -73,9 +83,11 @@ export default function ProviderCard({
         </div>
       )}
 
-      <p className="mt-2 text-xs text-gray-500">
-        {t('remittance.estimatedDisclaimer', { provider: quote.providerName })}
-      </p>
+      {quote.rateSource !== 'live' && (
+        <p className="mt-2 text-xs text-gray-500">
+          {t('remittance.estimatedDisclaimer', { provider: quote.providerName })}
+        </p>
+      )}
 
       <button
         onClick={onSendNow}

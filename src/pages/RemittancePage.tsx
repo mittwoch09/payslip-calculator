@@ -11,6 +11,7 @@ import { calculateQuotes } from '../lib/rate-calculator';
 import { buildDeepLink, buildPartnerizeUrl, trackClick } from '../lib/affiliate-tracker';
 import { getExchangeRate, getCacheTimestamp, getRateSource } from '../lib/exchange-rate';
 import { trackEvent } from '../lib/analytics';
+import { fetchWiseQuote } from '../lib/wise-quote';
 import type { ProviderQuote } from '../types/remittance';
 
 function formatTimeAgo(timestamp: number): string {
@@ -61,8 +62,15 @@ export default function RemittancePage() {
       if (amount > 0) {
         setIsLoadingRates(true);
         try {
-          const midMarketRate = await getExchangeRate(selectedCorridor);
-          const calculatedQuotes = calculateQuotes(amount, selectedCorridor, providers, midMarketRate);
+          const targetCurrencyForQuote = selectedCorridor.split('-')[1];
+          const [midMarketRate, wiseQuote] = await Promise.all([
+            getExchangeRate(selectedCorridor),
+            fetchWiseQuote('SGD', targetCurrencyForQuote, amount),
+          ]);
+          const quoteOverrides = wiseQuote ? {
+            wise: { fee: wiseQuote.fee, rate: wiseQuote.rate, rateSource: 'live' as const, deliveryEstimate: wiseQuote.deliveryEstimate }
+          } : undefined;
+          const calculatedQuotes = calculateQuotes(amount, selectedCorridor, providers, midMarketRate, quoteOverrides);
           setQuotes(calculatedQuotes);
           setRatesTimestamp(getCacheTimestamp());
           setRateSource(getRateSource());
@@ -172,18 +180,31 @@ export default function RemittancePage() {
               Loading exchange rates...
             </div>
           ) : (
-            <ProviderList
-              quotes={quotes}
-              targetCurrency={targetCurrency}
-              onProviderClick={handleProviderClick}
-              activeGuideProviderId={activeGuide}
-              onDismissGuide={() => {
-                setActiveGuide(null);
-                setActiveGuideUrl(null);
-                if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
-              }}
-              onGuideProceed={handleGuideProceed}
-            />
+            <>
+              {quotes.length > 0 && quotes[0].savingsVsBank != null && quotes[0].savingsVsBank > 0 && (
+                <div className="bg-green-50 border-2 border-green-300 p-3 text-green-800 font-bold text-center">
+                  {t('remittance.savingsSummary', {
+                    amount: amount,
+                    name: quotes[0].providerName,
+                    currency: targetCurrency,
+                    receive: quotes[0].receiveAmount.toLocaleString(),
+                    savings: Math.floor(quotes[0].savingsVsBank).toLocaleString(),
+                  })}
+                </div>
+              )}
+              <ProviderList
+                quotes={quotes}
+                targetCurrency={targetCurrency}
+                onProviderClick={handleProviderClick}
+                activeGuideProviderId={activeGuide}
+                onDismissGuide={() => {
+                  setActiveGuide(null);
+                  setActiveGuideUrl(null);
+                  if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
+                }}
+                onGuideProceed={handleGuideProceed}
+              />
+            </>
           )}
         </div>
       )}

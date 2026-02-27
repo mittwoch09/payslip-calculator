@@ -169,6 +169,12 @@
     "estimatedDisclaimer": "Rates are estimates, not live quotes from {{provider}}",
     "ratesRefreshed": "Rates refreshed {{time}} ago",
     "savingsVsBank": "வழக்கமான வங்கி பரிமாற்றத்தை விட ~{{currency}} {{amount}} சேமிக்கவும்",
+    "liveQuote": "நேரடி விலை",
+    "liveQuoteTooltip": "இது {{provider}} இலிருந்து நிகழ்நேர விலை. இந்த விகிதத்தை பூட்ட கிளிக் செய்யுங்கள்.",
+    "otherProviders": "பிற வழங்குநர்கள் (குறிப்புக்காக)",
+    "comparisonSource": "Wise ஒப்பீட்டிலிருந்து தரவு",
+    "savingsSummary": "S${{amount}} அனுப்புங்கள், {{name}} {{currency}} {{receive}} வழங்குகிறது — வங்கியை விட {{currency}} {{savings}} சேமிப்பு",
+    "rateGuarantee": "{{hours}} மணி நேரத்திற்கு விகிதம் உத்தரவாதம்",
     "countries": {
       "china": "சீனா",
       "india": "இந்தியா",

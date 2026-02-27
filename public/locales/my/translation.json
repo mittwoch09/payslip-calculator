@@ -169,6 +169,12 @@
     "estimatedDisclaimer": "Rates are estimates, not live quotes from {{provider}}",
     "ratesRefreshed": "Rates refreshed {{time}} ago",
     "savingsVsBank": "ပုံမှန် ဘဏ်လွှဲပြောင်းမှုထက် ~{{currency}} {{amount}} ချွေတာပါ",
+    "liveQuote": "တိုက်ရိုက် နှုန်း",
+    "liveQuoteTooltip": "ဤသည် {{provider}} မှ တိုက်ရိုက် နှုန်းဖြစ်သည်။ ဤနှုန်းကို လော့ခ်ချရန် နှိပ်ပါ။",
+    "otherProviders": "အခြား ငွေလွှဲဝန်ဆောင်မှုများ (ကိုးကားရန်)",
+    "comparisonSource": "Wise နှိုင်းယှဉ်ချက်မှ ဒေတာ",
+    "savingsSummary": "S${{amount}} ပို့ပါ၊ {{name}} မှ {{currency}} {{receive}} ရရှိမည် — ဘဏ်ထက် {{currency}} {{savings}} သက်သာ",
+    "rateGuarantee": "{{hours}} နာရီအတွက် နှုန်း အာမခံ",
     "countries": {
       "china": "တရုတ်",
       "india": "အိန္ဒိယ",

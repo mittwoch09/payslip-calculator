@@ -8,9 +8,10 @@ import { trackEvent } from '../../lib/analytics';
 interface RemittanceCTAProps {
   netPay: number;
   onCompareRates: () => void;
+  liveSavings?: number;
 }
 
-export default function RemittanceCTA({ netPay, onCompareRates }: RemittanceCTAProps) {
+export default function RemittanceCTA({ netPay, onCompareRates, liveSavings }: RemittanceCTAProps) {
   const { t, i18n } = useTranslation();
 
   // Calculate savings preview using sync mock rates
@@ -52,9 +53,14 @@ export default function RemittanceCTA({ netPay, onCompareRates }: RemittanceCTAP
     <div className="bg-violet-200 border-2 border-black p-4 shadow-[4px_4px_0_black]">
       <p className="text-black font-bold text-lg">💸 {t('remittance.cta.title')}</p>
       <p className="text-gray-700 text-sm mb-3">{t('remittance.cta.subtitle')}</p>
-      {savingsPreview && (
+      {liveSavings != null && liveSavings > 0 ? (
+        <p className="text-sm font-bold text-green-800 mb-3">
+          <span className="inline-block bg-green-100 text-green-800 text-xs font-bold px-1.5 py-0.5 mr-1">{t('remittance.liveQuote')}</span>
+          {t('remittance.cta.savingsPreview', { currency: targetCurrency, amount: Math.floor(liveSavings).toLocaleString() })}
+        </p>
+      ) : savingsPreview ? (
         <p className="text-sm font-bold text-green-800 mb-3">{savingsPreview}</p>
-      )}
+      ) : null}
       <p className="text-xs text-gray-600 mb-3">{t('remittance.affiliateDisclosure')}</p>
       <button
         onClick={() => {

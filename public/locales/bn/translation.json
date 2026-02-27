@@ -169,6 +169,12 @@
     "estimatedDisclaimer": "Rates are estimates, not live quotes from {{provider}}",
     "ratesRefreshed": "Rates refreshed {{time}} ago",
     "savingsVsBank": "সাধারণ ব্যাংক ট্রান্সফারের চেয়ে ~{{currency}} {{amount}} সাশ্রয় করুন",
+    "liveQuote": "লাইভ কোট",
+    "liveQuoteTooltip": "এটি {{provider}} থেকে একটি রিয়েল-টাইম কোট। এই রেট লক করতে ক্লিক করুন।",
+    "otherProviders": "অন্যান্য প্রদানকারী (রেফারেন্সের জন্য)",
+    "comparisonSource": "Wise তুলনা থেকে ডেটা",
+    "savingsSummary": "S${{amount}} পাঠান, {{name}} {{currency}} {{receive}} পৌঁছে দেয় — ব্যাংকের চেয়ে {{currency}} {{savings}} সাশ্রয়",
+    "rateGuarantee": "{{hours}} ঘণ্টার জন্য রেট গ্যারান্টি",
     "countries": {
       "china": "চীন",
       "india": "ভারত",
