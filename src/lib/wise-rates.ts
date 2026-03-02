@@ -1,5 +1,6 @@
-// Wise public /v1/rates API client
-// No authentication required — /v1/rates is a public endpoint
+// Wise /v1/rates API client
+// Note: /v1/rates now requires authentication (returns 401 without token)
+// Direct browser fetch will fail; falls back to proxy or open.er-api.com
 
 const WISE_API_BASE = 'https://api.wise.com';
 
@@ -11,9 +12,9 @@ interface WiseRateResponse {
 }
 
 /**
- * Fetch mid-market rate from Wise public API.
- * No authentication required — /v1/rates is a public endpoint.
- * Tries direct fetch first; falls back to proxy URL if CORS blocks.
+ * Fetch mid-market rate from Wise API.
+ * /v1/rates now requires auth — direct fetch will likely return 401.
+ * Falls back to proxy URL, then to open.er-api.com via exchange-rate.ts.
  */
 export async function fetchWiseRate(
   source: string,
