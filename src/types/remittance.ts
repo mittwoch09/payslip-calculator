@@ -32,6 +32,7 @@ export interface Provider {
 export interface QuoteOverride {
   fee: number;
   rate: number;
+  receiveAmount?: number;
   rateSource?: 'live' | 'estimated';
   deliveryEstimate?: string;
 }

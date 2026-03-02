@@ -72,7 +72,7 @@ export default function RemittancePage() {
             fetchComparison('SGD', targetCurrencyForQuote, amount),
           ]);
           const quoteOverrides = wiseQuote ? {
-            wise: { fee: wiseQuote.fee, rate: wiseQuote.rate, rateSource: 'live' as const, deliveryEstimate: wiseQuote.deliveryEstimate }
+            wise: { fee: wiseQuote.fee, rate: wiseQuote.rate, receiveAmount: wiseQuote.receiveAmount, rateSource: 'live' as const, deliveryEstimate: wiseQuote.deliveryEstimate }
           } : undefined;
           const calculatedQuotes = calculateQuotes(amount, selectedCorridor, providers, midMarketRate, quoteOverrides);
           setQuotes(calculatedQuotes);

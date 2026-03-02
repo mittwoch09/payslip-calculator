@@ -47,8 +47,10 @@ export function calculateQuotes(
       rateSource = 'estimated';
     }
 
-    // Calculate receive amount
-    const receiveAmount = Math.floor((amount - fee) * exchangeRate);
+    // Use Wise's pre-calculated amount when available (more accurate than recalculating)
+    const receiveAmount = override?.receiveAmount
+      ? Math.round(override.receiveAmount * 100) / 100
+      : Math.floor((amount - fee) * exchangeRate);
     const savingsVsBank = receiveAmount - bankReceiveAmount;
 
     return {
